@@ -1,0 +1,499 @@
+Front,Back
+What are the three main types of blood cells?,"Red Blood Cells (RBCs), White Blood Cells (WBCs), and Platelets."
+What is the primary function of Red Blood Cells (RBCs)?,Transport oxygen (O₂) from the lungs to tissues and carbon dioxide (CO₂) back to the lungs.
+Why do RBCs have a biconcave shape?,To increase surface area for gas exchange and allow flexibility in capillaries.
+What is the lifespan of RBCs?,Approximately 120 days.
+Where are RBCs destroyed?,In the spleen and liver.
+What are the two main categories of White Blood Cells (WBCs)?,Granulocytes and Agranulocytes.
+Name three types of granulocytes.,"Neutrophils, Eosinophils, Basophils."
+What is the function of neutrophils?,"First responders in infections, engulf pathogens via phagocytosis."
+Which WBC is involved in allergic reactions and parasite defense?,Eosinophils.
+What is the role of basophils?,Release histamine and mediate inflammation and allergic responses.
+What are the two types of agranulocytes?,Monocytes and Lymphocytes.
+What do monocytes differentiate into?,"Macrophages in tissues, responsible for phagocytosis and antigen presentation."
+What are the three main types of lymphocytes?,"B cells, T cells, and Natural Killer (NK) cells."
+What is the function of B cells?,Produce antibodies for humoral immunity.
+What is the function of T cells?,Cell-mediated immunity (Helper T cells and Cytotoxic T cells).
+What is the role of NK cells?,Destroy virus-infected and cancerous cells.
+What is the primary function of platelets?,Blood clotting (hemostasis).
+How do platelets help in clotting?,"They adhere to injury sites, release clotting factors, and form a platelet plug."
+What is the lifespan of platelets?,Approximately 8-10 days.
+What is an antigen-presenting cell (APC)?,A cell that processes and presents antigens to T cells via MHC molecules.
+Name three types of APCs.,"Dendritic cells, macrophages, and B cells."
+Which APC is the most potent?,Dendritic cells.
+What is the role of macrophages as APCs?,Engulf pathogens and present antigens to effector T cells.
+How do B cells function as APCs?,They internalize antigens via BCR and present them to T helper cells.
+What is the function of MHC-II?,Presents extracellular antigens to CD4+ T helper cells.
+What is the function of MHC-I?,Presents intracellular antigens to CD8+ cytotoxic T cells.
+What happens when a dendritic cell presents an antigen via MHC-II?,"It activates naïve CD4+ T cells, which differentiate into T helper cells."
+"Front","Back"
+"What is the primary function of cell-mediated immunity?","- Targets intracellular pathogens (e.g., viruses, cancer cells) and abnormal cells.  
+- Involves T cells (cytotoxic and helper T cells).  
+- Does not rely on antibodies.  
+
+Example: Cytotoxic T cells kill virus-infected cells, like a security guard taking out intruders inside a building."
+
+"What is the primary function of humoral immunity?","- Targets extracellular pathogens (e.g., bacteria, toxins) in bodily fluids.  
+- Involves B cells, which produce antibodies to neutralize or mark pathogens for destruction.  
+
+Example: Antibodies neutralize toxins, like a sponge soaking up a spill."
+
+"What are the primary cells involved in cell-mediated immunity?","- T cells, including:  
+  - Cytotoxic T cells (CD8+).  
+  - Helper T cells (CD4+).  
+
+Analogy: Cytotoxic T cells are like assassins, while helper T cells are like commanders directing the immune response."
+
+"What are the primary cells involved in humoral immunity?","- B cells, which differentiate into plasma cells to produce antibodies.  
+
+Analogy: B cells are like factories producing weapons (antibodies) to fight invaders."
+
+"How do cytotoxic T cells kill infected cells?","- Release perforin and granzymes.  
+- Induce apoptosis (programmed cell death) in infected or abnormal cells.  
+
+Example: Like a sniper shooting a target, cytotoxic T cells precisely eliminate infected cells."
+
+"What role do helper T cells play in immunity?","- Release cytokines to activate other immune cells (e.g., cytotoxic T cells, macrophages).  
+- Essential for coordinating both cell-mediated and humoral immunity.  
+
+Analogy: Helper T cells are like orchestra conductors, ensuring all parts of the immune system work together."
+
+"What is the role of antibodies in humoral immunity?","- Neutralize pathogens.  
+- Mark pathogens for destruction (opsonization).  
+- Activate the complement system.  
+
+Example: Antibodies act like flags, marking pathogens for destruction by other immune cells."
+
+"What is an example of a pathogen targeted by cell-mediated immunity?","- Intracellular pathogens like viruses (e.g., influenza, HIV).  
+- Cancer cells.  
+
+Example: Cytotoxic T cells attack HIV-infected cells, like soldiers targeting enemy hideouts."
+
+"What is an example of a pathogen targeted by humoral immunity?","- Extracellular pathogens like bacteria (e.g., Streptococcus pneumoniae).  
+- Toxins (e.g., tetanus toxin).  
+
+Example: Antibodies neutralize tetanus toxin, like a shield blocking a poison arrow."
+
+"How do cell-mediated and humoral immunity work together?","- Helper T cells (CD4+) activate both cytotoxic T cells (cell-mediated) and B cells (humoral).  
+- Antibodies from humoral immunity can mark pathogens for destruction by cells involved in cell-mediated immunity.  
+
+Analogy: Like a military operation, helper T cells coordinate the attack, while antibodies (humoral) and cytotoxic T cells (cell-mediated) execute the plan."
+
+"What is the difference in memory response between cell-mediated and humoral immunity?","- Cell-mediated immunity relies on memory T cells.  
+- Humoral immunity relies on memory B cells and antibodies.  
+
+Example: Memory T cells remember viruses, while memory B cells remember bacteria, like a library storing information on past invaders."
+
+"Which type of immunity is responsible for graft rejection?","- Cell-mediated immunity is responsible for graft rejection.  
+- Cytotoxic T cells recognize transplanted tissues as foreign and attack them.  
+
+Example: Like a bouncer kicking out an uninvited guest, cytotoxic T cells reject transplanted organs."
+
+"Which type of immunity is involved in fighting bacterial infections?","- Humoral immunity is involved in fighting bacterial infections.  
+- Antibodies produced by B cells target bacteria.  
+
+Example: Antibodies fight bacteria like Streptococcus pneumoniae, similar to how a net catches fish."
+
+"Which type of immunity is involved in fighting viral infections?","- Cell-mediated immunity is involved in fighting viral infections.  
+- Cytotoxic T cells kill virus-infected cells.  
+
+Example: Cytotoxic T cells attack influenza-infected cells, like a cleanup crew removing infected debris."
+
+"Can humoral immunity target intracellular pathogens?","- No, humoral immunity primarily targets extracellular pathogens.  
+- Intracellular pathogens are handled by cell-mediated immunity.  
+
+Analogy: Humoral immunity is like a security system for the outside of a building, while cell-mediated immunity handles threats inside."
+
+"Can cell-mediated immunity produce antibodies?","- No, cell-mediated immunity does not produce antibodies.  
+- Antibodies are produced by B cells in humoral immunity.  
+
+Analogy: Cell-mediated immunity is like hand-to-hand combat, while humoral immunity uses long-range weapons (antibodies)."
+"Front","Back"
+"What is the complement system?","- A group of small proteins that enhance the immune response.  
+- Functions include opsonization, cell lysis, inflammation, and clearance of immune complexes.  
+
+Example: Like a support team that helps antibodies and immune cells fight pathogens more effectively."
+
+"What are the key functions of the complement system?","1. **Opsonization**: Marks pathogens for destruction.  
+2. **Cell Lysis**: Forms pores in pathogen membranes (MAC).  
+3. **Inflammation**: Attracts immune cells to the infection site.  
+4. **Clearance of Immune Complexes**: Removes antigen-antibody complexes.  
+
+Example: Like a multitasking tool that tags, destroys, and cleans up pathogens."
+
+"What is opsonization in the complement system?","- The process of coating pathogens with complement proteins (e.g., C3b) to mark them for phagocytosis.  
+
+Example: Like putting a 'bullseye' on a pathogen so immune cells can easily find and destroy it."
+
+"What is the membrane attack complex (MAC)?","- A group of complement proteins (C5b, C6, C7, C8, C9) that form pores in pathogen membranes, leading to cell lysis.  
+
+Example: Like a drill making holes in a wall, causing it to collapse."
+
+"How does the complement system promote inflammation?","- Releases inflammatory mediators (e.g., C3a, C5a) that attract immune cells to the infection site.  
+
+Example: Like sending out a flare to call for backup during an attack."
+
+"What are the three activation pathways of the complement system?","1. **Classical Pathway**: Triggered by antigen-antibody complexes.  
+2. **Lectin Pathway**: Triggered by mannose-binding lectin (MBL) binding to pathogens.  
+3. **Alternative Pathway**: Triggered spontaneously by pathogens or foreign surfaces.  
+
+Example: Like three different alarm systems that detect and respond to intruders."
+
+"What triggers the classical pathway?","- Antigen-antibody complexes.  
+
+Example: When antibodies bind to a pathogen, the classical pathway is activated, like turning on a security system."
+
+"What triggers the lectin pathway?","- Mannose-binding lectin (MBL) binding to sugars on pathogen surfaces.  
+
+Example: Like a key fitting into a lock, MBL recognizes and binds to pathogens."
+
+"What triggers the alternative pathway?","- Spontaneous activation by pathogens or foreign surfaces.  
+
+Example: Like a tripwire that activates when a pathogen is detected."
+
+"What is the role of C3 in the complement system?","- C3 is central to all three pathways.  
+- Cleavage of C3 into C3a and C3b is a critical step for opsonization and inflammation.  
+
+Example: Like a master switch that turns on the complement system."
+
+"What are anaphylatoxins, and what do they do?","- Small proteins (e.g., C3a, C5a) released during complement activation.  
+- Promote inflammation by attracting immune cells.  
+
+Example: Like alarm bells that call immune cells to the site of infection."
+
+"How is the complement system regulated?","- Tightly controlled to prevent damage to host cells.  
+- Regulatory proteins include C1 inhibitor, Factor H, Factor I, and CD59.  
+
+Example: Like a safety valve that prevents the system from going out of control."
+
+"What happens if the complement system is overactivated?","- Can lead to damage of host cells and tissues, contributing to autoimmune diseases.  
+
+Example: Like a fire alarm that won’t stop ringing, causing chaos instead of helping."
+
+"What is the role of the complement system in bacterial infections?","- Helps clear bacteria by opsonization and lysis.  
+
+Example: The complement system targets bacteria like *Streptococcus pneumoniae*, like a cleanup crew removing trash."
+
+"How does the complement system contribute to autoimmune diseases?","- Dysregulation can lead to attacks on host cells, causing diseases like lupus or rheumatoid arthritis.  
+
+Example: Like a security system that mistakenly attacks the house it’s supposed to protect."
+
+"What is the role of CD59 in the complement system?","- Prevents the formation of the membrane attack complex (MAC) on host cells.  
+
+Example: Like a shield that protects your own cells from being destroyed by the complement system."
+"Front","Back"
+"What is plaque hybridization?","- A technique to detect specific DNA sequences in bacteriophage plaques.  
+- DNA from plaques is transferred to a membrane and probed with labeled DNA.  
+
+Example: Like using a 'molecular searchlight' to find a specific book in a library."
+
+"What are the steps in plaque hybridization?","1. Grow bacteriophages on a bacterial lawn to form plaques.  
+2. Transfer DNA from plaques to a membrane.  
+3. Hybridize with a labeled DNA probe.  
+4. Detect the probe to confirm the target sequence.  
+
+Example: Like a detective using clues to find a specific suspect."
+
+"What is an Oreo?","- A popular sandwich cookie with two chocolate wafers and a sweet cream filling.  
+- Known for its 'twist, lick, and dunk' eating ritual.  
+
+Example: A cultural icon in the world of cookies, often used in desserts like milkshakes and cheesecakes."
+
+"What are microsatellites?","- Short, repetitive DNA sequences (1–6 base pairs repeated 5–50 times).  
+- Also called Simple Sequence Repeats (SSRs) or Short Tandem Repeats (STRs).  
+
+Example: Like a genetic 'barcode' unique to each individual."
+
+"What are microsatellites used for?","- **Forensics**: DNA fingerprinting.  
+- **Genetics**: Marker-assisted breeding and population studies.  
+
+Example: Like using a unique pattern to identify individuals in a crowd."
+
+"What is a restriction membrane?","- A membrane (e.g., nitrocellulose or nylon) used to immobilize DNA, RNA, or proteins for analysis.  
+
+Example: Like a 'molecular sponge' that captures and holds target molecules for detection."
+
+"What are the applications of restriction membranes?","- **Southern blotting**: Detects DNA.  
+- **Northern blotting**: Detects RNA.  
+- **Western blotting**: Detects proteins.  
+
+Example: Like different types of filters for separating and analyzing molecules."
+
+"What is FISH (Fluorescence In Situ Hybridization)?","- A technique to detect and localize specific DNA or RNA sequences in cells or tissues using fluorescent probes.  
+
+Example: Like using a 'glow-in-the-dark tag' to find a specific location on a map."
+
+"What are the applications of FISH?","- Detecting chromosomal abnormalities (e.g., in cancer).  
+- Mapping genes on chromosomes.  
+- Studying gene expression.  
+
+Example: Like a highlighter marking important sections in a textbook."
+
+"What are enzymes?","- Biological catalysts that speed up chemical reactions without being consumed.  
+- Typically proteins with an active site for substrate binding.  
+
+Example: Like a 'molecular machine' that builds, breaks down, or transforms molecules."
+
+"What are examples of enzymes and their functions?","- **Amylase**: Breaks down starch.  
+- **DNA Polymerase**: Replicates DNA.  
+- **Lipase**: Breaks down fats.  
+
+Example: Like specialized workers in a factory, each with a specific job."
+
+"What is fermentation?","- A metabolic process that converts sugars into energy without oxygen (anaerobic).  
+- Types include lactic acid fermentation and alcoholic fermentation.  
+
+Example: Like a 'microbial kitchen' where sugars are turned into useful products."
+
+"What are the types of fermentation?","1. **Lactic Acid Fermentation**: Produces lactic acid (e.g., yogurt, sauerkraut).  
+2. **Alcoholic Fermentation**: Produces ethanol and CO2 (e.g., beer, wine).  
+
+Example: Like two different recipes for turning sugar into energy."
+
+"What are the applications of fermentation?","- Food production (e.g., bread, cheese, kimchi).  
+- Biofuel production (e.g., ethanol from corn).  
+
+Example: Like using microbes to create everyday products we use and consume."
+
+"What organisms are involved in fermentation?","- Microorganisms like yeast (e.g., *Saccharomyces cerevisiae*) and bacteria (e.g., *Lactobacillus*).  
+
+Example: Like tiny chefs working behind the scenes to make food and beverages."
+
+"What is the role of enzymes in fermentation?","- Enzymes catalyze the breakdown of sugars into simpler molecules like lactic acid or ethanol.  
+
+Example: Like a key that unlocks the energy stored in sugar molecules."
+"Front","Back"
+"What is the receptor mechanism of drug action?","- Drugs bind to specific receptors on cells to produce effects.  
+- Steps: Binding → Signal Transduction → Cellular Response.  
+
+Example: Beta-blockers bind to beta-adrenergic receptors to reduce heart rate."
+
+"How do genetic factors modify drug action?","- Genetic variations affect drug metabolism, targets, and transporters.  
+- Example: CYP2C9 mutations alter warfarin metabolism, requiring dose adjustments."
+
+"What is the difference between competitive and non-competitive antagonism?","- **Competitive**: Binds to the same site as the agonist, reversible.  
+- **Non-Competitive**: Binds to a different site, often irreversible.  
+
+Example: Naloxone (competitive) vs. Phenoxybenzamine (non-competitive)."
+
+"What are the sites of drug action?","- Receptors, enzymes, ion channels, transporters, DNA/RNA.  
+
+Example: ACE inhibitors act on enzymes, while calcium channel blockers act on ion channels."
+
+"Justify: 'Adverse effects depend on the use value of drugs.'","- Adverse effects are more acceptable if the drug treats a severe condition.  
+- Example: Chemotherapy side effects are tolerated for cancer treatment."
+
+"What is pharmacodynamics?","- Study of how drugs interact with the body to produce effects.  
+- Focus: Mechanisms of action, receptor binding, dose-response relationships.  
+
+Example: How morphine binds to opioid receptors to relieve pain."
+
+"What is a graded dose-response curve?","- A graph showing drug dose vs. effect magnitude.  
+- Key features: Potency (EC50) and efficacy (maximum effect).  
+
+Example: Pain relief vs. dose of ibuprofen."
+
+"How do you determine potency and efficacy from a dose-response curve?","- **Potency**: Position on the x-axis (lower EC50 = higher potency).  
+- **Efficacy**: Height of the curve (higher maximum effect = higher efficacy).  
+
+Example: Drug A is more potent than Drug B if it achieves the same effect at a lower dose."
+
+"What is the therapeutic index?","- Ratio of toxic dose (TD50) to effective dose (ED50).  
+- Formula: TI = TD50 / ED50.  
+
+Example: A drug with a TI of 10 is safer than one with a TI of 2."
+
+"Do you agree that a higher therapeutic index is preferable? Why?","- Yes, a higher TI means a wider margin between effective and toxic doses.  
+- Example: Penicillin has a high TI, making it safer than digoxin."
+
+"What is the difference between toxic dose and lethal dose?","- **Toxic Dose (TD50)**: Causes toxicity in 50% of the population.  
+- **Lethal Dose (LD50)**: Causes death in 50% of the population.  
+
+Example: TD50 assesses safety, while LD50 assesses lethality."
+
+"What is the pathophysiology of drug allergy?","- Immune system mistakenly identifies a drug as harmful.  
+- Steps: Sensitization → Re-exposure → Immune response.  
+
+Example: Penicillin allergy causing hives or anaphylaxis."
+
+"What is cytotoxic hypersensitivity?","- Type II hypersensitivity where antibodies destroy cells.  
+- Example: Hemolytic anemia caused by drug-induced antibodies attacking red blood cells."
+
+"What is the difference between drug allergy and side effects?","- **Drug Allergy**: Immune-mediated, not dose-dependent.  
+- **Side Effects**: Direct pharmacological effect, dose-dependent.  
+
+Example: Rash from penicillin (allergy) vs. nausea from aspirin (side effect)."
+"Front","Back"
+"What is the receptor mechanism of drug action?","- Drugs bind to specific receptors on cells to produce effects.  
+- Steps: Binding → Signal Transduction → Cellular Response.  
+
+Example: Beta-blockers bind to beta-adrenergic receptors to reduce heart rate."
+
+"How do genetic factors modify drug action?","- Genetic variations affect drug metabolism, targets, and transporters.  
+- Example: CYP2C9 mutations alter warfarin metabolism, requiring dose adjustments."
+
+"What is the difference between competitive and non-competitive antagonism?","- **Competitive**: Binds to the same site as the agonist, reversible.  
+- **Non-Competitive**: Binds to a different site, often irreversible.  
+
+Example: Naloxone (competitive) vs. Phenoxybenzamine (non-competitive)."
+
+"What are the sites of drug action?","- Receptors, enzymes, ion channels, transporters, DNA/RNA.  
+
+Example: ACE inhibitors act on enzymes, while calcium channel blockers act on ion channels."
+
+"Justify: 'Adverse effects depend on the use value of drugs.'","- Adverse effects are more acceptable if the drug treats a severe condition.  
+- Example: Chemotherapy side effects are tolerated for cancer treatment."
+
+"What is pharmacodynamics?","- Study of how drugs interact with the body to produce effects.  
+- Focus: Mechanisms of action, receptor binding, dose-response relationships.  
+
+Example: How morphine binds to opioid receptors to relieve pain."
+
+"What is a graded dose-response curve?","- A graph showing drug dose vs. effect magnitude.  
+- Key features: Potency (EC50) and efficacy (maximum effect).  
+
+Example: Pain relief vs. dose of ibuprofen."
+
+"How do you determine potency and efficacy from a dose-response curve?","- **Potency**: Position on the x-axis (lower EC50 = higher potency).  
+- **Efficacy**: Height of the curve (higher maximum effect = higher efficacy).  
+
+Example: Drug A is more potent than Drug B if it achieves the same effect at a lower dose."
+
+"What is the therapeutic index?","- Ratio of toxic dose (TD50) to effective dose (ED50).  
+- Formula: TI = TD50 / ED50.  
+
+Example: A drug with a TI of 10 is safer than one with a TI of 2."
+
+"Do you agree that a higher therapeutic index is preferable? Why?","- Yes, a higher TI means a wider margin between effective and toxic doses.  
+- Example: Penicillin has a high TI, making it safer than digoxin."
+
+"What is the difference between toxic dose and lethal dose?","- **Toxic Dose (TD50)**: Causes toxicity in 50% of the population.  
+- **Lethal Dose (LD50)**: Causes death in 50% of the population.  
+
+Example: TD50 assesses safety, while LD50 assesses lethality."
+
+"What is the pathophysiology of drug allergy?","- Immune system mistakenly identifies a drug as harmful.  
+- Steps: Sensitization → Re-exposure → Immune response.  
+
+Example: Penicillin allergy causing hives or anaphylaxis."
+
+"What is cytotoxic hypersensitivity?","- Type II hypersensitivity where antibodies destroy cells.  
+- Example: Hemolytic anemia caused by drug-induced antibodies attacking red blood cells."
+
+"What is the difference between drug allergy and side effects?","- **Drug Allergy**: Immune-mediated, not dose-dependent.  
+- **Side Effects**: Direct pharmacological effect, dose-dependent.  
+
+Example: Rash from penicillin (allergy) vs. nausea from aspirin (side effect)."
+"Front","Back"
+"What is restriction mapping?","- A technique to map the locations of restriction enzyme recognition sites on a DNA molecule.  
+- Creates a physical map of a DNA fragment or plasmid.  
+
+Example: Like creating a 'roadmap' of a DNA molecule, showing where specific landmarks (restriction sites) are located."
+
+"What are the steps in restriction mapping?","1. Digest the DNA with one or more restriction enzymes.  
+2. Separate the resulting fragments using gel electrophoresis.  
+3. Analyze the fragment sizes to determine the locations of the cut sites.  
+
+Example: Like cutting a string at specific points and measuring the pieces to figure out where the cuts were made."
+
+"What are restriction enzymes?","- Enzymes that cut DNA at specific recognition sequences.  
+- Used in restriction mapping to create DNA fragments of known sizes.  
+
+Example: Like molecular scissors that cut DNA at specific locations."
+
+"What is the purpose of restriction mapping?","- To create a physical map of a DNA fragment or plasmid.  
+- Used in cloning, genetic engineering, and genome analysis.  
+
+Example: Like drawing a map to navigate a DNA molecule."
+
+"What is gel electrophoresis used for in restriction mapping?","- To separate DNA fragments by size after restriction enzyme digestion.  
+- Helps determine the locations of restriction sites.  
+
+Example: Like sorting puzzle pieces by size to see how they fit together."
+
+"What are the applications of restriction mapping?","- Cloning and genetic engineering.  
+- Identifying mutations or polymorphisms in DNA.  
+- Constructing physical maps of genomes.  
+
+Example: Like using a map to find specific locations in a city."
+"Front","Back"
+"What is plaque hybridization?","- A technique to detect specific DNA sequences in bacteriophage plaques.  
+- DNA from plaques is transferred to a membrane and probed with labeled DNA.  
+
+Example: Like using a 'molecular searchlight' to find a specific book in a library."
+
+"What are the steps in plaque hybridization?","1. Grow bacteriophages on a bacterial lawn to form plaques.  
+2. Transfer DNA from plaques to a membrane.  
+3. Hybridize with a labeled DNA probe.  
+4. Detect the probe to confirm the target sequence.  
+
+Example: Like a detective using clues to find a specific suspect."
+
+"What is an Oreo?","- A popular sandwich cookie with two chocolate wafers and a sweet cream filling.  
+- Known for its 'twist, lick, and dunk' eating ritual.  
+
+Example: A cultural icon in the world of cookies, often used in desserts like milkshakes and cheesecakes."
+
+"What are microsatellites?","- Short, repetitive DNA sequences (1–6 base pairs repeated 5–50 times).  
+- Also called Simple Sequence Repeats (SSRs) or Short Tandem Repeats (STRs).  
+
+Example: Like a genetic 'barcode' unique to each individual."
+
+"What are microsatellites used for?","- **Forensics**: DNA fingerprinting.  
+- **Genetics**: Marker-assisted breeding and population studies.  
+
+Example: Like using a unique pattern to identify individuals in a crowd."
+
+"What is a restriction membrane?","- A membrane (e.g., nitrocellulose or nylon) used to immobilize DNA, RNA, or proteins for analysis.  
+
+Example: Like a 'molecular sponge' that captures and holds target molecules for detection."
+
+"What are the applications of restriction membranes?","- **Southern blotting**: Detects DNA.  
+- **Northern blotting**: Detects RNA.  
+- **Western blotting**: Detects proteins.  
+
+Example: Like different types of filters for separating and analyzing molecules."
+
+"What is FISH (Fluorescence In Situ Hybridization)?","- A technique to detect and localize specific DNA or RNA sequences in cells or tissues using fluorescent probes.  
+
+Example: Like using a 'glow-in-the-dark tag' to find a specific location on a map."
+
+"What are the applications of FISH?","- Detecting chromosomal abnormalities (e.g., in cancer).  
+- Mapping genes on chromosomes.  
+- Studying gene expression.  
+
+Example: Like a highlighter marking important sections in a textbook."
+
+"What are enzymes?","- Biological catalysts that speed up chemical reactions without being consumed.  
+- Typically proteins with an active site for substrate binding.  
+
+Example: Like a 'molecular machine' that builds, breaks down, or transforms molecules."
+
+"What are examples of enzymes and their functions?","- **Amylase**: Breaks down starch.  
+- **DNA Polymerase**: Replicates DNA.  
+- **Lipase**: Breaks down fats.  
+
+Example: Like specialized workers in a factory, each with a specific job."
+
+"What is fermentation?","- A metabolic process that converts sugars into energy without oxygen (anaerobic).  
+- Types include lactic acid fermentation and alcoholic fermentation.  
+
+Example: Like a 'microbial kitchen' where sugars are turned into useful products."
+
+"What are the types of fermentation?","1. **Lactic Acid Fermentation**: Produces lactic acid (e.g., yogurt, sauerkraut).  
+2. **Alcoholic Fermentation**: Produces ethanol and CO2 (e.g., beer, wine).  
+
+Example: Like two different recipes for turning sugar into energy."
+
+"What are the applications of fermentation?","- Food production (e.g., bread, cheese, kimchi).  
+- Biofuel production (e.g., ethanol from corn).  
+
+Example: Like using microbes to create everyday products we use and consume."
+
+"What organisms are involved in fermentation?","- Microorganisms like yeast (e.g., *Saccharomyces cerevisiae*) and bacteria (e.g., *Lactobacillus*).  
+
+Example: Like tiny chefs working behind the scenes to make food and beverages."
+
+"What is the role of enzymes in fermentation?","- Enzymes catalyze the breakdown of sugars into simpler molecules like lactic acid or ethanol.  
+
+Example: Like a key that unlocks the energy stored in sugar molecules."
