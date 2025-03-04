@@ -1,0 +1,112 @@
+Front,Back  
+What is the principle behind estimating citric acid content via titration?,"• Citric acid (weak acid) reacts with NaOH (strong base) in a 1:3 molar ratio.  
+• Neutralization reaction forms sodium citrate and water.  
+• Phenolphthalein indicates the endpoint (colorless → pink)."  
+
+Why is phenolphthalein used in citric acid titration?,"• It has a pH range of 8.2–10.0.  
+• Changes from colorless (acidic) to pink (basic), aligning with the reaction’s endpoint at pH ~7."  
+
+What is the chemical equation for citric acid and NaOH?,"C₆H₈O₇ + 3NaOH → Na₃C₆H₅O₇ + 3H₂O  
+Note the 1:3 molar ratio between citric acid and NaOH."  
+
+How is the citric acid concentration calculated?,"Citric Acid (g/L) = (V_NaOH × N_NaOH × M_citric_acid) / (V_sample × 3)  
+• M_citric_acid = 192.13 g/mol  
+• Divide by 3 due to the 1:3 reaction stoichiometry."  
+
+What precaution prevents over-titration?,"Stop adding NaOH when a faint pink color persists for 30 seconds. Overshooting leads to inflated citric acid values."  
+
+Why dilute lemon juice before titration?,"High acidity may require excessive NaOH. Dilution ensures the volume used fits the burette’s capacity (e.g., 50 mL)."  
+
+How does the procedure for acetic acid titration differ from citric acid?,"• Acetic acid reacts 1:1 with NaOH.  
+• Formula: (V_NaOH × N_NaOH × 60) / V_sample (no division by 3)."  
+
+What error occurs if air bubbles are in the burette?,"Underestimates NaOH volume, leading to lower calculated acid content. Always remove bubbles before titration."  
+
+Why rinse the burette with NaOH before filling?,"Residual water dilutes the NaOH, reducing its effective concentration and increasing volume used (false high acid content)."  
+
+What safety measure applies to handling NaOH?,"Wear gloves and goggles. NaOH is corrosive and can cause skin/eye damage."  
+
+How is the endpoint detected in vinegar titration?,"Phenolphthalein turns from colorless to persistent light pink (pH ~8.2)."  
+
+What is the molecular weight of acetic acid?,"60 g/mol. Key for calculating concentration: (V_NaOH × N_NaOH × 60) / V_sample."  
+
+Why standardize NaOH solutions periodically?,"NaOH absorbs CO₂ from air, forming Na₂CO₃ and reducing effective concentration. Standardization ensures accuracy."  
+
+What causes a faint pink color to disappear after titration?,"CO₂ in air dissolves in the solution, lowering pH. Ignore if it fades after 30 seconds; only initial persistence matters."  
+
+How is citric acid content expressed as a percentage?,"Citric Acid % = (Citric Acid (g/L) × V_sample) / (1000) × 100  
+Example: 15 g/L = 1.5% for 10 mL sample."  
+
+What equipment is critical for accurate titrations?,"• Calibrated burette and pipette.  
+• White tile to observe color changes clearly."  
+
+Why swirl the flask during titration?,"Ensures uniform mixing of NaOH and acid, preventing localized excess base that could delay endpoint detection."  
+
+What is a common misconception about indicator quantity?,"Using too much phenolphthalein (e.g., 10 drops) can mask the endpoint. Use only 2–3 drops."  
+
+How does pulp in lemon juice affect results?,"Pulp may absorb acid, reducing measured concentration. Always strain juice before titration."  
+
+What real-world application uses these titration methods?,"Food industry quality control (e.g., verifying acidity in beverages for nutritional labeling)."  
+
+Calculate citric acid % if 22 mL of 0.1 N NaOH titrates 10 mL juice.,"Citric Acid (g/L) = (22 × 0.1 × 192.13) / (10 × 3) = 14.1 g/L  
+% = (14.1/1000) × 100 = 1.41%."  
+
+Calculate acetic acid % if 18 mL of 0.1 N NaOH titrates 5 mL vinegar.,"Acetic Acid % = (18 × 0.1 × 60) / (5 × 100) = 2.16%."  
+
+Why is a 1:3 molar ratio critical in citric acid calculations?,"Citric acid is triprotic (3 H⁺ ions). Each molecule neutralizes 3 OH⁻ ions from NaOH."  
+
+What alternative method could estimate citric acid?,"Spectrophotometry or HPLC, but titration is cost-effective and simpler for rapid analysis."  
+
+How would expired phenolphthalein affect results?,"Fails to indicate endpoint, leading to over-titration. Always use fresh indicator."  
+
+Why is distilled water used for dilution?,"Tap water may contain ions (e.g., Ca²⁺) that interfere with the reaction or pH."  
+
+What error occurs if the burette isn’t rinsed with NaOH?,"Water dilutes NaOH, requiring more volume for titration → falsely high acid content."  
+
+Define normality in NaOH context.,"Normality (N) = equivalents/L. For NaOH, 1 N = 1 M (since each mole provides 1 OH⁻)."  
+
+Why repeat titrations 2–3 times?,"Averaging minimizes errors from measurement inaccuracies or endpoint misjudgment."  
+
+How does temperature affect titration?,"Extreme temps alter solution volumes and indicator pH ranges. Conduct at room temperature."  
+
+What is the role of a white tile in titration?,"Provides a neutral background to enhance color observation (e.g., detecting faint pink)."  
+
+Why avoid using methyl orange in these titrations?,"Methyl orange changes color at pH 3.1–4.4 (too acidic), whereas phenolphthalein aligns with neutral endpoints."  
+
+How to correct over-titration (bright pink solution)?,"Discard the sample and repeat. Adding acid back invalidates the stoichiometry."  
+
+What is the equivalence point vs. endpoint?,"Equivalence point: Stoichiometric completion. Endpoint: Indicator color change (slightly after equivalence in weak acid-strong base)."  
+
+Why is lemon juice titrated cold?,"Heat accelerates side reactions (e.g., oxidation of citric acid). Room temp ensures accuracy."  
+
+How to prepare 0.1 N NaOH from solid?,"Dissolve 4 g NaOH pellets in 1 L water. Standardize with a primary standard (e.g., KHP) for exact concentration."  
+
+What is the purpose of a hydrometer in the citric acid experiment?,"Optional: Measures juice density to estimate acidity indirectly, but titration is more accurate."  
+
+Why use a conical flask instead of a beaker for titration?,"Conical shape promotes better mixing during swirling, reducing splashing and improving endpoint detection."  
+
+How to calculate molarity from normality for citric acid?,"Molarity = Normality / 3 (since citric acid is triprotic). Example: 0.1 N NaOH = 0.033 M citric acid."  
+
+What is the acceptable color intensity at the endpoint?,"Light pink (not dark). Dark pink indicates excess NaOH and over-titration."  
+
+How does vinegar concentration affect sample volume choice?,"Highly concentrated vinegar requires dilution or smaller sample volume (e.g., 5 mL vs. 10 mL) to stay within burette capacity."  
+
+What is blank titration and is it needed here?,"Titrating a sample without analyte (e.g., water + indicator). Not required here, as lemon juice/vinegar provides the acid."  
+
+Why is the burette read at eye level?,"Prevents parallax error. Meniscus should align with the calibration mark for accurate volume measurement."  
+
+How to store NaOH solutions long-term?,"In airtight containers to prevent CO₂ absorption. Use a CO₂ trap (soda lime) if needed."  
+
+What causes precipitation in sodium citrate solutions?,"High concentrations may crystallize, but in this experiment, dilution prevents it."  
+
+What regulatory standards apply to vinegar acidity?,"FDA requires ≥4% acetic acid for commercial vinegar. Titration ensures compliance."  
+
+How would outdated NaOH affect acetic acid results?,"Lower NaOH concentration → higher volume used → overestimated acetic acid content. Standardize before use."  
+
+Why is the same pipette used for all samples?,"Ensures consistent volume measurement. Switching pipettes introduces calibration errors."  
+
+What is the detection limit of this titration method?,"Depends on burette precision (e.g., ±0.05 mL). Typically, ~0.01% acidity can be detected."  
+
+How to validate titration results statistically?,"Calculate standard deviation from 3 trials. Accept if %RSD < 2%."  
+
+What industry uses citric acid content data?,"Beverage industry to balance flavor (e.g., sodas) and preservation (acidic pH inhibits microbes)."  

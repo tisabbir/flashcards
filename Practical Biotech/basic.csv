@@ -1,0 +1,148 @@
+Front,Back  
+What is titration?,"Titration is a laboratory method to determine the concentration of an unknown solution by reacting it with a solution of known concentration (standard solution)."  
+
+What is a standard solution?,"A solution with a precisely known concentration, e.g., 0.1 N NaOH, used to titrate the analyte (citric acid or acetic acid)."  
+
+What is the purpose of an indicator in titration?,"An indicator (e.g., phenolphthalein) changes color at the endpoint, signaling the reaction’s completion between the acid and base."  
+
+Why is NaOH used in these experiments?,"NaOH is a strong base that reacts completely with weak acids (citric acid in lemon, acetic acid in vinegar) for accurate neutralization."  
+
+What is the difference between normality (N) and molarity (M)?,"• Molarity = moles of solute per liter.  
+• Normality = equivalents per liter. For NaOH, 1 M = 1 N (since it donates 1 OH⁻ ion)."  
+
+What is the endpoint in titration?,"The point where the indicator changes color (e.g., colorless → pink) indicating the reaction is complete."  
+
+Why is a burette used instead of a graduated cylinder?,"A burette allows precise measurement of small volume increments (0.1 mL accuracy), critical for titration accuracy."  
+
+What is the role of a conical flask in titration?,"Its narrow neck prevents splashing, and its shape allows easy swirling to mix solutions without spilling."  
+
+Why is distilled water used for dilution?,"Distilled water lacks ions that could react with the acid/base, ensuring no interference with the reaction."  
+
+What does a 0.1 N NaOH solution mean?,"It contains 0.1 equivalents of NaOH per liter. For NaOH, 0.1 N = 0.1 M (since each molecule provides 1 OH⁻ ion)."  
+
+What is a neutralization reaction?,"A reaction where an acid and base react to form salt and water. Example: H⁺ + OH⁻ → H₂O."  
+
+Why is lemon juice strained before titration?,"To remove pulp or seeds that could absorb acid or interfere with volume measurements."  
+
+What is the first step in setting up a titration?,"Rinsing the burette with the titrant (NaOH) to avoid dilution errors from residual water."  
+
+How do you read a burette accurately?,"Read at eye level, noting the bottom of the meniscus. Record to the nearest 0.05 mL (e.g., 25.00 mL)."  
+
+What is the primary safety precaution when handling NaOH?,"Wear gloves and goggles—NaOH is corrosive and can cause burns."  
+
+Why is phenolphthalein colorless in acidic solutions?,"In acidic conditions (pH < 8.2), phenolphthalein exists in a form that absorbs UV light but appears colorless to the eye."  
+
+What is a triprotic acid?,"An acid that donates three protons (H⁺ ions) per molecule. Citric acid (C₆H₈O₇) is triprotic."  
+
+Why does citric acid require 3 moles of NaOH per mole of acid?,"Citric acid has three acidic protons (triprotic), each reacting with one OH⁻ ion from NaOH: C₆H₈O₇ + 3NaOH → Na₃C₆H₅O₇ + 3H₂O."  
+
+What is the purpose of a blank titration?,"A control experiment without the analyte (e.g., water + indicator) to check for impurities. Not required here but common in advanced labs."  
+
+How is the molar mass of citric acid calculated?,"Sum the atomic masses: 6(12) + 8(1) + 7(16) = 192.13 g/mol."  
+
+What happens if you overshoot the endpoint?,"Excess NaOH makes the solution too basic, leading to overestimation of acid content. The trial must be discarded."  
+
+Why is the same pipette used for all samples?,"To minimize volume measurement errors. Different pipettes may have calibration variations."  
+
+What is the difference between equivalence point and endpoint?,"• Equivalence point: Exact stoichiometric completion of the reaction.  
+• Endpoint: Observed color change (may slightly lag equivalence point)."  
+
+Why is vinegar diluted before titration?,"High acetic acid concentration might require excessive NaOH, exceeding the burette’s capacity. Dilution ensures practicality."  
+
+What is the formula for percentage acidity?,"% Acid = (grams of acid per liter / 1000) × 100. Example: 10 g/L = 1%."  
+
+What is a common error in burette handling?,"Not removing air bubbles from the tip, leading to inaccurate volume readings."  
+
+Why is a white tile placed under the conical flask?,"To improve visibility of the indicator’s color change against a neutral background."  
+
+What is the role of a hydrometer in citric acid estimation?,"Optional: Measures density to estimate acidity, but titration is more accurate and direct."  
+
+Why must NaOH solutions be standardized?,"NaOH absorbs CO₂ from air, forming Na₂CO₃, which reduces its effective concentration over time."  
+
+What is the molar ratio for acetic acid and NaOH?,"1:1. CH₃COOH + NaOH → CH₃COONa + H₂O."  
+
+How does temperature affect titration results?,"High temperatures expand solutions, altering volumes. Perform titrations at room temperature."  
+
+What is the key takeaway for titration calculations?,"Use stoichiometry: Moles of acid = moles of base × molar ratio (1:3 for citric acid, 1:1 for acetic acid)."  
+
+What is a common misconception about acid strength?,"Weak vs. strong refers to dissociation, not concentration. Acetic acid is weak but can be highly concentrated."  
+
+Why rinse glassware with the solution it will hold?,"Prevents contamination or dilution. Example: Rinse burette with NaOH before filling."  
+
+What is the FDA requirement for vinegar acidity?,"At least 4% acetic acid by volume for commercial vinegar. Titration ensures compliance."  
+
+How would expired NaOH affect results?,"Lower NaOH concentration due to CO₂ absorption → higher calculated acid content. Standardize before use."  
+Front,Back  
+What is an acid in the context of titration?,"A substance that donates hydrogen ions (H⁺) in a reaction. Example: Citric acid (C₆H₈O₇) in lemon juice."  
+
+What is a base in titration?,"A substance that accepts hydrogen ions (H⁺). Example: Sodium hydroxide (NaOH), which provides hydroxide ions (OH⁻)."  
+
+What is a burette clamp used for?,"To securely hold the burette upright during titration, ensuring stability and precise control of solution flow."  
+
+Why is a pipette preferred for measuring lemon juice?,"Pipettes provide precise volume measurement (e.g., 10 mL ±0.02 mL), critical for accurate calculations."  
+
+What is the color change for phenolphthalein in basic solutions?,"Colorless in acidic solutions (pH < 8.2) → pink in basic solutions (pH > 10)."  
+
+What is a monoprotic acid? Give an example.,"An acid that donates one H⁺ ion per molecule. Example: Acetic acid (CH₃COOH)."  
+
+What is the purpose of swirling the flask during titration?,"To mix the acid and base thoroughly, ensuring a uniform reaction and accurate endpoint detection."  
+
+Name two types of titration.,"Acid-base titration (e.g., citric acid vs. NaOH), redox titration, precipitation titration."  
+
+Why is a white tile used under the conical flask?,"To provide a contrasting background, making it easier to detect subtle color changes (e.g., faint pink)."  
+
+What is a meniscus? How do you read it?,"The curved surface of a liquid in a burette. Read the bottom of the meniscus at eye level for accuracy."  
+
+What is a primary standard?,"A highly pure, stable compound used to prepare standard solutions (e.g., potassium hydrogen phthalate for NaOH standardization)."  
+
+Why is lemon juice titrated cold?,"Heat can degrade citric acid or alter reaction rates. Room temperature ensures reliable results."  
+
+What is a control experiment?,"An experiment without the analyte (e.g., titrating water + indicator) to check for procedural errors or contamination."  
+
+Why is a volumetric flask used in NaOH preparation?,"It ensures precise dilution to a specific volume (e.g., 1 L), critical for accurate normality/molarity."  
+
+What is the difference between analyte and titrant?,"Analyte: The substance being analyzed (e.g., citric acid). Titrant: The solution added (e.g., NaOH)."  
+
+Why is a funnel used to fill the burette?,"To avoid spills while transferring the titrant (e.g., NaOH) into the narrow burette opening."  
+
+What is the formula for moles using normality?,"Moles = (Normality × Volume in liters). For NaOH: 0.1 N × 0.025 L = 0.0025 moles."  
+
+What does "0.1 N NaOH" mean?,"It has 0.1 equivalents of OH⁻ ions per liter. For NaOH, 0.1 N = 0.1 M (1:1 ratio)."  
+
+What is a triprotic acid? Give an example.,"An acid that donates three H⁺ ions per molecule. Example: Citric acid (C₆H₈O₇)."  
+
+Why is citric acid called a weak acid?,"It does not fully dissociate in water, releasing H⁺ ions partially (unlike strong acids like HCl)."  
+
+What is the purpose of a beaker in titration?,"To hold excess titrant (e.g., NaOH) before transferring it to the burette."  
+
+What is a rinse bottle used for?,"To wash down the sides of the conical flask during titration, ensuring all acid reacts with the base."  
+
+What is the first step after completing a titration?,"Record the final burette reading and subtract the initial reading to find the volume of titrant used."  
+
+Why is distilled water added to the lemon juice in the flask?,"To dilute concentrated juice, making the reaction manageable and the endpoint easier to detect."  
+
+What is a common lab safety rule for handling acids/bases?,"Wear gloves, goggles, and a lab coat. Neutralize spills immediately with appropriate agents."  
+
+What is the role of a stir rod in titration?,"To manually mix solutions, though swirling the flask is preferred to avoid breakage."  
+
+Why is a fresh sample used for each titration trial?,"Residual titrant or indicator in the flask could skew results. Always start with a clean flask."  
+
+What is the purpose of a burette stand?,"To hold the burette vertically and securely, allowing precise control during titration."  
+
+What is a "rough titration"?,"A quick trial to estimate the volume of titrant needed, helping to narrow down the endpoint in subsequent trials."  
+
+Why is a conical flask used instead of a beaker for titration?,"Its conical shape allows efficient mixing during swirling without splashing, unlike a beaker."  
+
+What is the final step in the citric acid calculation?,"Convert grams per liter (g/L) to percentage by dividing by 10 (since 1% = 10 g/L for 10 mL sample)."  
+
+What is the main limitation of titration?,"It assumes a single reaction occurs. Impurities or side reactions can lead to errors."  
+
+Why avoid touching the tip of the pipette?,"Skin oils or contaminants can affect volume measurement accuracy. Hold the pipette by the top."  
+
+What is the role of a lab notebook?,"To record all data (volumes, observations) immediately, ensuring traceability and reducing errors."  
+
+What is the difference between accuracy and precision?,"Accuracy: Closeness to the true value. Precision: Consistency of repeated measurements."  
+
+Why use a standardized NaOH solution?,"To ensure its concentration is exact, as inaccuracies directly affect acid content calculations."  
+
+What is the shelf life of phenolphthalein?,"1–2 years if stored in a dark bottle. Expired indicator may fail to show color change."  
