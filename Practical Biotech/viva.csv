@@ -1,0 +1,100 @@
+Front,Back  
+What defines an organic acid?,"Organic acids are carbon-containing compounds with acidic properties, typically featuring a carboxyl group (–COOH). Examples include citric acid (C₆H₈O₇) and acetic acid (CH₃COOH). They are commonly found in biological systems and food products."  
+
+What is the general formula of a carboxylic acid?,"R–COOH, where R is an alkyl or aryl group. Example: Acetic acid (CH₃COOH)."  
+
+What is an acid-base conjugate pair?,"A pair of compounds related by the transfer of a proton (H⁺). The acid donates H⁺ to form its conjugate base, and the base accepts H⁺ to form its conjugate acid. Example: Acetic acid (CH₃COOH) and acetate ion (CH₃COO⁻)."  
+
+Write the conjugate base of H₂SO₄.,"HSO₄⁻ (hydrogen sulfate ion). H₂SO₄ donates one H⁺ to form HSO₄⁻."  
+
+Write the conjugate acid of NH₃.,"NH₄⁺ (ammonium ion). NH₃ accepts one H⁺ to form NH₄⁺."  
+
+Why do weak acids react with strong bases?,"Weak acids (e.g., CH₃COOH) partially dissociate in water, releasing H⁺ ions. Strong bases (e.g., NaOH) completely dissociate, providing OH⁻ ions. The OH⁻ ions neutralize H⁺ ions, driving the reaction to completion despite the weak acid’s partial dissociation."  
+
+What is the net ionic equation for a weak acid-strong base reaction?,"HA (weak acid) + OH⁻ (strong base) → A⁻ (conjugate base) + H₂O. Example: CH₃COOH + OH⁻ → CH₃COO⁻ + H₂O."  
+
+What is a neutralization reaction?,"A chemical reaction between an acid and a base to form a salt and water. Example: HCl (acid) + NaOH (base) → NaCl (salt) + H₂O."  
+
+What is the difference between complete and partial neutralization?,"• Complete neutralization: All H⁺ ions from the acid react with OH⁻ ions from the base.  
+• Partial neutralization: Only some H⁺ ions react, leaving excess acid or base."  
+
+What is a standard solution?,"A solution with a precisely known concentration, used as a reference in titrations. Example: 0.1 N NaOH, prepared and standardized using a primary standard like potassium hydrogen phthalate (KHP)."  
+
+What is a primary standard?,"A highly pure, stable compound used to prepare or standardize solutions. Example: Potassium hydrogen phthalate (KHP) for standardizing NaOH solutions."  
+
+What is the role of an indicator in titration?,"An indicator is a pH-sensitive dye that changes color at the endpoint, signaling the completion of the reaction. Example: Phenolphthalein changes from colorless (acidic) to pink (basic)."  
+
+What are the properties of a good indicator?,"• Sharp color change at the endpoint.  
+• Color change within the pH range of the titration.  
+• Stable and non-reactive with the analyte or titrant."  
+
+Give examples of acid-base indicators and their pH ranges.,"• Phenolphthalein: pH 8.2–10.0 (colorless to pink).  
+• Methyl orange: pH 3.1–4.4 (red to yellow).  
+• Bromothymol blue: pH 6.0–7.6 (yellow to blue)."  
+
+What is a normal solution (N)?,"A solution containing 1 gram equivalent of solute per liter. Normality depends on the reaction context (e.g., for H₂SO₄, 1 M = 2 N in acid-base reactions)."  
+
+How do you calculate normality (N)?,"N = Molarity (M) × n, where n = number of H⁺ or OH⁻ ions per molecule. Example: H₃PO₄ (n = 3) → 1 M = 3 N."  
+
+How do you prepare 0.1 N NaOH?,"1. Weigh 4.0 g NaOH pellets.  
+2. Dissolve in 1 L distilled water.  
+3. Standardize using a primary standard (e.g., KHP) to confirm exact concentration."  
+
+Why is standardization of NaOH necessary?,"NaOH absorbs CO₂ from air, forming Na₂CO₃, which reduces its effective concentration. Standardization ensures accuracy."  
+
+Why dilute a high-concentration acid before titration?,"High-concentration acids may require excessive titrant, exceeding the burette’s capacity. Dilution ensures the reaction is manageable and within the titration range."  
+
+What is the titration range?,"The pH range over which an indicator changes color, ideally matching the reaction’s equivalence point. Example: Phenolphthalein (pH 8.2–10.0) for weak acid-strong base titrations."  
+
+What is the equivalence point in titration?,"The point where moles of acid = moles of base (stoichiometric completion). Example: 1 mole CH₃COOH reacts with 1 mole NaOH."  
+
+What is the endpoint in titration?,"The point where the indicator changes color, signaling the reaction’s completion. It may slightly differ from the equivalence point."  
+
+Why is phenolphthalein used in weak acid-strong base titrations?,"Its pH range (8.2–10.0) aligns with the equivalence point of weak acid-strong base reactions (pH > 7)."  
+
+What is the difference between a strong acid and a weak acid?,"• Strong acid: Fully dissociates in water (e.g., HCl).  
+• Weak acid: Partially dissociates (e.g., CH₃COOH)."  
+
+What is the formula for normality (N)?,"N = Molarity (M) × n, where n = number of H⁺ or OH⁻ ions per molecule. Example: H₂SO₄ (n = 2) → 1 M = 2 N."  
+
+What is a primary standard?,"A highly pure, stable compound used to standardize solutions. Example: Potassium hydrogen phthalate (KHP) for NaOH standardization."  
+
+Why is CO₂ absorption a problem for NaOH solutions?,"CO₂ reacts with NaOH to form Na₂CO₃, reducing its effective concentration. Store NaOH in airtight containers."  
+
+What is the purpose of a blank titration?,"To check for impurities or errors in the procedure by titrating without the analyte (e.g., water + indicator)."  
+
+What is the pH at the equivalence point for weak acid-strong base titrations?,"pH > 7 (basic), as the conjugate base of the weak acid hydrolyzes water to produce OH⁻ ions."  
+
+What is the difference between molarity and normality?,"• Molarity: Moles of solute per liter of solution.  
+• Normality: Equivalents of solute per liter of solution (depends on reaction context)."  
+
+What is the role of a buffer in titration?,"Buffers maintain a stable pH, but they are not used in simple acid-base titrations. They are used in pH-dependent processes."  
+
+Why is a white tile used in titration?,"To provide a neutral background for clear observation of the indicator’s color change."  
+
+What is the formula for calculating acid concentration in titration?,"Acid concentration = (Volume of base × Normality of base × Molar mass of acid) / Volume of acid."  
+
+What is the difference between a monoprotic and polyprotic acid?,"• Monoprotic: Donates 1 H⁺ ion (e.g., HCl).  
+• Polyprotic: Donates >1 H⁺ ion (e.g., H₂SO₄, H₃PO₄)."  
+
+What is the purpose of rinsing glassware with the solution it will hold?,"To prevent contamination or dilution. Example: Rinse burette with NaOH before filling."  
+
+What is the significance of the titration curve?,"It shows pH vs. volume of titrant added, helping identify the equivalence point and buffer regions."  
+
+What is the role of a hydrometer in acid-base experiments?,"Optional: Measures solution density, but titration is more accurate for concentration determination."  
+
+What is the difference between a weak base and a strong base?,"• Weak base: Partially dissociates (e.g., NH₃).  
+• Strong base: Fully dissociates (e.g., NaOH)."  
+
+What is the formula for calculating percentage acidity?,"% Acid = (grams of acid per liter / 1000) × 100. Example: 15 g/L = 1.5%."  
+
+Why is a conical flask used in titration?,"Its narrow neck prevents splashing, and its shape allows efficient mixing during swirling."  
+
+What is the role of a stir rod in titration?,"To manually mix solutions, though swirling the flask is preferred to avoid breakage."  
+
+What is the purpose of a rinse bottle in titration?,"To wash down the sides of the flask, ensuring all acid/base reacts with the titrant."  
+
+What is the difference between a titrant and an analyte?,"• Titrant: The solution added (e.g., NaOH).  
+• Analyte: The solution being analyzed (e.g., citric acid)."  
+
+What is the significance of the titration range for an indicator?,"It ensures the indicator’s color change aligns with the reaction’s equivalence point for accurate results."  
