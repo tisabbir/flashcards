@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কাজ, ক্ষমতা ও শক্তি</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #1E1E1E;
+            box-sizing: border-box;
+            padding: 50px 80px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border-left: 10px solid #03DAC6; /* Accent color */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-title {
+            font-size: 3.2em;
+            color: #03DAC6; /* Accent color */
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+
+        .slide-content {
+            font-size: 1.6em;
+            color: #CFD8DC;
+        }
+        
+        .slide-content h3 {
+            color: #BB86FC; /* Secondary accent */
+            font-size: 1.5em;
+        }
+
+        .slide-content ul {
+            list-style-type: square;
+            padding-left: 40px;
+        }
+
+        .slide-content li, .slide-content p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        /* HTML Math Styling */
+        i.math-var { font-style: italic; }
+        sup.math-sup { font-size: 0.75em; vertical-align: super; }
+        sub.math-sub { font-size: 0.75em; vertical-align: sub; }
+
+        /* Image Styling */
+        .slide-content img {
+            max-width: 45%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+            float: right;
+            margin-left: 20px;
+        }
+        
+        /* Reveal items */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal-item.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* Special slide types */
+        .title-slide, .thank-you-slide {
+            background: linear-gradient(135deg, #2C3E50, #1a2a3a);
+            color: white;
+            align-items: center;
+            text-align: center;
+            border-left: 10px solid #BB86FC;
+        }
+        .title-slide .slide-title, .thank-you-slide .slide-title { font-size: 4.5em; color: white; border-bottom: none; }
+        .title-slide .slide-content, .thank-you-slide .slide-content { font-size: 1.8em; color: #ddd; }
+
+        .hook-slide {
+            align-items: center;
+            text-align: center;
+            background-color: #333;
+            border-left: 10px solid #FBC02D;
+        }
+        .hook-slide .slide-title { font-size: 2.8em; color: #FBC02D; }
+        .hook-slide .slide-content { font-size: 1.8em; }
+
+        .quiz-slide { border-left: 10px solid #E91E63; }
+        .quiz-slide .slide-title { color: #E91E63; }
+        .quiz-slide .quiz-option { font-size: 1.2em; margin: 10px 0; }
+        .quiz-slide .quiz-cq { font-size: 1.2em; background: #2a2a2a; padding: 15px; border-radius: 8px; border-left: 4px solid #E91E63; }
+        
+        .answer-slide { border-left: 10px solid #4CAF50; }
+        .answer-slide .slide-title { color: #4CAF50; }
+        .answer-slide .correct-answer {
+            background-color: #388E3C;
+            color: #FFFFFF;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1.2em;
+        }
+
+        .simulation-slide { border-left: 10px solid #2196F3; }
+        .simulation-slide .slide-title { color: #2196F3; }
+        .simulation-slide a { font-size: 1.2em; color: #90CAF9; text-decoration: none; background: #2a2a2a; padding: 10px 15px; border-radius: 5px; transition: background 0.3s; }
+        .simulation-slide a:hover { background: #333; }
+        
+        .video-slide { border-left: 10px solid #FF5722; }
+        .video-slide .slide-title { color: #FF5722; }
+        .video-slide iframe {
+            width: 70vw;
+            height: 40vw;
+            max-height: 450px;
+            border: none;
+            border-radius: 8px;
+        }
+
+        /* Navigation */
+        .nav-buttons { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+        .nav-buttons button { font-size: 1em; padding: 10px 20px; margin-left: 10px; background-color: #03DAC6; color: #121212; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        .nav-buttons button:hover { background-color: #018786; transform: scale(1.05); }
+
+        .slide-counter { position: fixed; bottom: 40px; left: 30px; font-size: 1.2em; color: #888; z-index: 1000; }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <div class="slide title-slide active">
+            <h1 class="slide-title">কাজ, ক্ষমতা ও শক্তি</h1>
+            <div class="slide-content">
+                <p class="reveal-item">অধ্যায় ৪</p>
+                <p class="reveal-item">[আপনার নাম/প্রতিষ্ঠানের নাম এখানে যোগ করুন]</p>
+            </div>
+        </div>
+
+        <div class="slide hook-slide">
+            <h2 class="slide-title">একটা প্রশ্ন...</h2>
+            <div class="slide-content">
+                <p class="reveal-item">তুমি যদি একটা দেয়ালকে সারাদিন ধরে ধাক্কা দাও, তুমি কি ক্লান্ত হবে?</p>
+                <p class="reveal-item">...অবশ্যই!</p>
+                <p class="reveal-item">কিন্তু ফিজিক্সের ভাষায়, তুমি কতটুকু 'কাজ' করেছ?</p>
+                <p class="reveal-item">...<strong>শূন্য (০)</strong>! 😮</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">"কাজ" কেন শিখব?</h2>
+            <div class="slide-content">
+                <img src="img/work_push_wall.jpg" alt="Pushing a wall">
+                <ul class="reveal-item">
+                    <li>ফিজিক্সের "কাজ" আর everyday "কাজ" এক জিনিস নয়।</li>
+                    <li class="reveal-item">‘কাজ’ কনসেপ্টটা বুঝলে তুমি বলতে পারবে একটা ইঞ্জিন কত শক্তিশালী।</li>
+                    <li class="reveal-item"><strong>উপমা:</strong> ফিজিক্সের 'কাজ' হলো শক্তি খরচ করার রসিদ। যদি কোনো জিনিস না নড়ে (সরণ <i>s</i>=0 হয়), তাহলে কোনো শক্তি খরচ হয়নি, তাই রসিদও শূন্য (কাজ <i>W</i>=0)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">কাজ (Work) কী?</h2>
+            <div class="slide-content">
+                <img src="img/work_definition.png" alt="Pushing a box">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> কোনো বস্তুর উপর বল (<i class="math-var">F</i>) প্রয়োগে যদি বস্তুটি বলের দিকে <i class="math-var">s</i> দূরত্ব অতিক্রম করে, তবে বল এবং সরণের গুণফলকে কাজ বলে।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">W</i> = <i class="math-var">F</i><i class="math-var">s</i></li>
+                    <li class="reveal-item"><strong>একক:</strong> জুল (J)</li>
+                    <li class="reveal-item"><strong>ঋণাত্মক কাজ:</strong> যদি বলের উল্টো দিকে সরণ হয় (যেমন ঘর্ষণ বল), তখন কাজ ঋণাত্মক (<i>W</i> = -<i>Fs</i>) হয়।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১ (কাজ)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১. কাজের একক কোনটি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) জুল</p>
+                    <p class="quiz-option">(খ) নিউটন</p>
+                    <p class="quiz-option">(গ) কেলভিন</p>
+                    <p class="quiz-option">(ঘ) ওয়াট</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১</h2>
+            <div class="slide-content">
+                <h3>১. কাজের একক কোনটি?</h3>
+                <p class="quiz-option correct-answer">(ক) জুল</p>
+                <p class="quiz-option">(খ) নিউটন</p>
+                <p class="quiz-option">(গ) কেলভিন</p>
+                <p class="quiz-option">(ঘ) ওয়াট</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> কাজের একক হলো জুল (J)।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ২ (কাজ)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২. ঘর্ষণজনিত বল দিয়ে করা কাজ সব সময় কী হয়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) ধনাত্মক (Positive)</p>
+                    <p class="quiz-option">(খ) ঋণাত্মক (Negative)</p>
+                    <p class="quiz-option">(গ) শূন্য (Zero)</p>
+                    <p class="quiz-option">(ঘ) সবগুলো</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ২</h2>
+            <div class="slide-content">
+                <h3>২. ঘর্ষণজনিত বল দিয়ে করা কাজ সব সময় কী হয়?</h3>
+                <p class="quiz-option">(ক) ধনাত্মক (Positive)</p>
+                <p class="quiz-option correct-answer">(খ) ঋণাত্মক (Negative)</p>
+                <p class="quiz-option">(গ) শূন্য (Zero)</p>
+                <p class="quiz-option">(ঘ) সবগুলো</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> ঘর্ষণ বল (Friction) সব সময় গতির বা সরণের উল্টো দিকে কাজ করে। তাই সরণের দিক বলের বিপরীত হওয়ায় কাজ ঋণাত্মক হয়।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ১</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">একটি দেয়াশলাইয়ের কাঠি দেয়াশলাই বাক্সে 5N বলে ঘষা হলো। কাঠিটিকে 5 cm টানা হলো।</p>
+                <h3 class="reveal-item">(ক) কাঠি ঘষাতে কত শক্তি ব্যয় হলো?</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                বল (<i class="math-var">F</i>) = 5 N<br>
+                সরণ (<i class="math-var">s</i>) = 5 cm = 0.05 m</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong><br>
+                ব্যয়িত শক্তি = কৃত কাজ (<i class="math-var">W</i>) = <i class="math-var">F</i> × <i class="math-var">s</i></p>
+                
+                <p class="reveal-item"><strong>হিসাব:</strong><br>
+                <i class="math-var">W</i> = 5 N × 0.05 m = 0.25 J</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> 0.25 জুল।</h3>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ২</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">40 kg ভরের এক বালক সিঁড়ি দিয়ে 12 s ছাদে ওঠে। সিঁড়িতে ধাপের সংখ্যা 20টি এবং প্রতিটি ধাপের উচ্চতা 20 cm।</p>
+                <h3 class="reveal-item">(গ) ছাদে ওঠতে সে কত কাজ করল? (g=9.8 m/s²)</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                ভর (<i class="math-var">m</i>) = 40 kg<br>
+                ধাপের সংখ্যা = 20 টি<br>
+                প্রতি ধাপের উচ্চতা = 20 cm = 0.2 m</p>
+                
+                <p class="reveal-item"><strong>১ম ধাপ: মোট উচ্চতা (h) বের করা</strong><br>
+                মোট উচ্চতা (<i class="math-var">h</i>) = 20 × 0.2 m = 4 m</p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: কাজ (W) বের করা</strong><br>
+                ওজনের বিরুদ্ধে কাজ (<i class="math-var">W</i>) = <i class="math-var">mgh</i><br>
+                <i class="math-var">W</i> = 40 × 9.8 × 4 = 1568 J</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> 1568 জুল।</h3>
+            </div>
+        </div>
+
+        <div class="slide simulation-slide">
+            <h2 class="slide-title">সিমুলেশন: কাজ ও বল</h2>
+            <div class="slide-content">
+                <p class="reveal-item">বল প্রয়োগ করে দেখি কখন কাজ হয় আর কখন হয় না!</p>
+                <br>
+                <a class="reveal-item" href="https://phet.colorado.edu/sims/html/forces-and-motion-basics/latest/forces-and-motion-basics_bn.html" target="_blank">PhET: Forces and Motion (Bangla)</a>
+            </div>
+        </div>
+
+        <div class="slide video-slide">
+            <h2 class="slide-title">ভিডিও লেসন: কাজ</h2>
+            <div class="slide-content">
+                <p class="reveal-item">"কাজ" সম্পর্কে আরও ভালোভাবে বুঝতে এই ভিডিওটি দেখুন।</p>
+                <iframe class="reveal-item" 
+                    src="https://www.youtube.com/embed/your_video_id_here" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+                <p class="reveal-item"><em>(টিপ: YouTube-এ ভিডিওর নিচে Share > Embed থেকে কোডটি কপি করুন)</em></p>
+            </div>
+        </div>
+
+        <div class="slide hook-slide">
+            <h2 class="slide-title">শক্তি কী?</h2>
+            <div class="slide-content">
+                <p class="reveal-item">তোমার ফোন কেন চার্জ করতে হয়? 🔋</p>
+                <p class="reveal-item">গাড়ি চালাতে কেন তেল লাগে? 🚗</p>
+                <p class="reveal-item">দৌড়ানোর পর তুমি কেন ক্লান্ত হয়ে যাও? 🏃</p>
+                <p class="reveal-item">এক কথায় উত্তর: <strong>শক্তি (Energy)</strong></p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">"শক্তি" কেন শিখব?</h2>
+            <div class="slide-content">
+                <img src="img/energy_battery.jpg" alt="Charging battery">
+                <ul>
+                    <li class="reveal-item">শক্তি হলো এই মহাবিশ্বের "টাকা"। এটা ছাড়া কিছুই করা যায় না।</li>
+                    <li class="reveal-item"><strong>উপমা:</strong> যদি 'কাজ' (Work) হয় কোনো কিছু *কেনা*, তবে 'শক্তি' (Energy) হলো তোমার পকেটের *টাকা* যা দিয়ে তুমি ওটা কিনবে।</li>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> কাজ করার সামর্থ্যকেই শক্তি বলে।</li>
+                    <li class="reveal-item">কাজ ও শক্তির একক একই: <strong>জুল (J)</strong>।</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <h2 class="slide-title">শক্তি: গতিশক্তি</h2>
+            <div class="slide-content">
+                <img src="img/energy_roller_coaster.jpg" alt="Roller coaster">
+                <h3>গতিশক্তি (Kinetic Energy)</h3>
+                <ul>
+                    <li class="reveal-item"><strong>উপমা:</strong> এটা হলো "চলতি" শক্তি। কোনো জিনিস নড়াচড়া করলেই তার এই শক্তি থাকে। যেমন: চলন্ত বাস, ছোড়া ঢিল।</li>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> কোনো বস্তু তার গতির জন্য যে শক্তি লাভ করে।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">T</i> = <sup>1</sup>/<sub>2</sub><i class="math-var">mv</i><sup class="math-sup">2</sup></li>
+                    <li class="reveal-item"><strong>গুরুত্বপূর্ণ:</strong> বেগ (<i class="math-var">v</i>) যদি ২ গুণ বাড়ে, গতিশক্তি <i class="math-var">v</i><sup class="math-sup">2</sup> বা ৪ গুণ বেড়ে যায়!</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">শক্তি: বিভব শক্তি</h2>
+            <div class="slide-content">
+                <img src="img/energy_dam.jpg" alt="Water dam">
+                <h3>বিভব শক্তি (Potential Energy)</h3>
+                <ul>
+                    <li class="reveal-item"><strong>উপমা:</strong> এটা হলো " জমানো" বা "স্টোর করা" শক্তি। এটা কাজ করার জন্য প্রস্তুত হয়ে আছে।</li>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> কোনো বস্তুর অবস্থা বা অবস্থানের জন্য তার মধ্যে যে শক্তি সঞ্চিত থাকে।</li>
+                    <li class="reveal-item"><strong>অবস্থানের জন্য:</strong> <i class="math-var">V</i> = <i class="math-var">mgh</i></li>
+                    <li class="reveal-item"><strong>অবস্থার জন্য (স্প্রিং):</strong> <i class="math-var">V</i> = <sup>1</sup>/<sub>2</sub><i class="math-var">kx</i><sup class="math-sup">2</sup></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৩ (শক্তি)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩. কোনো বস্তুর বেগ দ্বিগুণ করলে তার গতিশক্তি কতগুণ বাড়বে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) ২ গুণ</p>
+                    <p class="quiz-option">(খ) ৪ গুণ</p>
+                    <p class="quiz-option">(গ) ৮ গুণ</p>
+                    <p class="quiz-option">(ঘ) ১/২ গুণ</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৩</h2>
+            <div class="slide-content">
+                <h3>৩. কোনো বস্তুর বেগ দ্বিগুণ করলে তার গতিশক্তি কতগুণ বাড়বে?</h3>
+                <p class="quiz-option">(ক) ২ গুণ</p>
+                <p class="quiz-option correct-answer">(খ) ৪ গুণ</p>
+                <p class="quiz-option">(গ) ৮ গুণ</p>
+                <p class="quiz-option">(ঘ) ১/২ গুণ</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> গতিশক্তি <i class="math-var">T</i> ∝ <i class="math-var">v</i><sup class="math-sup">2</sup>। বেগ (<i class="math-var">v</i>) ২ গুণ হলে, গতিশক্তি (২)<sup class="math-sup">2</sup> = ৪ গুণ বাড়বে।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৪ (শক্তি)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৪. 5 kg ভরের একটি বস্তুকে 50 cm উপরে রাখলে তার বিভব শক্তি কত? (g=9.8 m/s²)</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 245 J</p>
+                    <p class="quiz-option">(খ) 24.5 J</p>
+                    <p class="quiz-option">(গ) 4.9 J</p>
+                    <p class="quiz-option">(ঘ) 2.45 J</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৪</h2>
+            <div class="slide-content">
+                <p class="quiz-option">(ক) 245 J</p>
+                <p class="quiz-option">(খ) 24.5 J</p>
+                <p class="quiz-option">(গ) 4.9 J</p>
+                <p class="quiz-option correct-answer">(ঘ) 2.45 J</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> বিভব শক্তি <i>V</i> = <i>mgh</i>।<br>
+                এখানে, <i>m</i>=5kg, <i>g</i>=9.8 m/s², <i>h</i>=50cm = 0.5m।<br>
+                <i>V</i> = 5 × 9.8 × 0.5 = 2.45 J।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৩</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">100 m ওপর থেকে 5 kg ভরের একটি বস্তু ছেড়ে দেওয়া হয়েছে।</p>
+                <h3 class="reveal-item">(গ) কোন উচ্চতায় বস্তুটির গতিশক্তি তার বিভব শক্তির দ্বিগুণ হবে?</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৩</h2>
+            <div class="slide-content">
+                <p class="reveal-item">ধরি, ভূমি থেকে <i class="math-var">x</i> উচ্চতায় ঘটনাটি ঘটবে।<br>
+                মোট উচ্চতা, <i class="math-var">H</i> = 100 m।</p>
+                
+                <p class="reveal-item">ঐ <i class="math-var">x</i> উচ্চতায়,<br>
+                বিভব শক্তি, <i class="math-var">V</i> = <i>mgh</i> = <i>mgx</i><br>
+                গতিশক্তি, <i class="math-var">T</i> = মোট শক্তি - বিভব শক্তি = <i>mgH</i> - <i>mgx</i></p>
+                
+                <p class="reveal-item"><strong>প্রশ্নমতে,</strong><br>
+                গতিশক্তি = ২ × বিভব শক্তি<br>
+                <i>mgH</i> - <i>mgx</i> = 2 × (<i>mgx</i>)<br>
+                <i>H</i> - <i class="math-var">x</i> = 2<i class="math-var">x</i><br>
+                <i>H</i> = 3<i class="math-var">x</i><br>
+                <i class="math-var">x</i> = <i>H</i> / 3 = 100 / 3 = 33.33 m</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> ভূমি থেকে 33.33 m উচ্চতায়।</h3>
+            </div>
+        </div>
+
+        <div class="slide simulation-slide">
+            <h2 class="slide-title">সিমুলেশন: শক্তির রূপান্তর</h2>
+            <div class="slide-content">
+                <p class="reveal-item">দেখো কিভাবে একটা স্কেটবোর্ডার-এর বিভব শক্তি গতিশক্তিতে রূপান্তরিত হয়!</p>
+                <br>
+                <a class="reveal-item" href="https://phet.colorado.edu/sims/html/energy-skate-park-basics/latest/energy-skate-park-basics_bn.html" target="_blank">PhET: Energy Skate Park (Bangla)</a>
+            </div>
+        </div>
+        
+        <div class="slide video-slide">
+            <h2 class="slide-title">ভিডিও লেসন: গতি ও বিভব শক্তি</h2>
+            <div class="slide-content">
+                <p class="reveal-item">গতিশক্তি ও বিভব শক্তির মধ্যে পার্থক্য দেখুন।</p>
+                <iframe class="reveal-item" 
+                    src="https://www.youtube.com/embed/your_video_id_here" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">শক্তির বিভিন্ন উৎস</h2>
+            <div class="slide-content">
+                <img src="img/energy_sources.jpg" alt="Energy sources">
+                <p class="reveal-item">আমরা যে শক্তি ব্যবহার করি তা প্রধানত দুটি উৎস থেকে আসে:</p>
+                <ul>
+                    <li class="reveal-item"><strong>অনবায়নযোগ্য শক্তি (Non-Renewable):</strong>
+                        যেগুলো ব্যবহার করলে শেষ হয়ে যায়।
+                        <br><em>যেমন: তেল, গ্যাস, কয়লা, নিউক্লিয়ার শক্তি।</em>
+                    </li>
+                    <li class="reveal-item"><strong>নবায়নযোগ্য শক্তি (Renewable):</strong>
+                        যেগুলো সহজে ফুরিয়ে যাবে না।
+                        <br><em>যেমন: সৌরশক্তি, বায়ুশক্তি, জলবিদ্যুৎ।</em>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">শক্তির নিত্যতা</h2>
+            <div class="slide-content">
+                <img src="img/energy_pendulum.gif" alt="Pendulum">
+                <ul>
+                    <li class="reveal-item"><strong>সূত্র:</strong> শক্তির কোনো সৃষ্টি বা বিনাশ নেই। শক্তি কেবল এক রূপ থেকে অন্য রূপে পরিবর্তিত হয়।</li>
+                    <li class="reveal-item"><strong>উপমা (পেন্ডুলাম):</strong>
+                        <ul>
+                            <li>সর্বোচ্চ উঁচুতে: সব বিভব শক্তি (<i>V</i>), গতিশক্তি (<i>T</i>) শূন্য।</li>
+                            <li>সর্বনিম্ন বিন্দুতে: সব গতিশক্তি (<i>T</i>), বিভব শক্তি (<i>V</i>) শূন্য।</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item">এভাবে মোট শক্তি (<i>T</i> + <i>V</i>) সবসময় একই থাকে।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ভর ও শক্তির সম্পর্ক</h2>
+            <div class="slide-content">
+                <img src="img/energy_nuclear.jpg" alt="Nuclear Plant">
+                <ul>
+                    <li class="reveal-item">বিজ্ঞানী আইনস্টাইন দেখিয়েছেন যে বস্তুর ভর আর শক্তি একই ব্যাপার।</li>
+                    <li class="reveal-item">অল্প একটু ভরকে শক্তিতে রূপান্তর করতে পারলে আমরা অনেক বেশি শক্তি পেতে পারি।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">E</i> = <i class="math-var">m</i><i class="math-var">c</i><sup class="math-sup">2</sup>
+                        <ul>
+                            <li><i class="math-var">E</i> = শক্তি</li>
+                            <li><i class="math-var">m</i> = ভর</li>
+                            <li><i class="math-var">c</i> = আলোর বেগ (অনেক বড়)</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item">নিউক্লিয়ার বিদ্যুৎকেন্দ্রে এই সূত্রেই শক্তি উৎপন্ন হয়।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৫ (শক্তির নিত্যতা)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৫. শক্তির সংরক্ষণশীলতা নীতি থেকে কী পাওয়া যায়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) মহাবিশ্বের মোট শক্তি নির্দিষ্ট ও অপরিবর্তনীয়।</p>
+                    <p class="quiz-option">(খ) শক্তিকে ধ্বংস করা যায়।</p>
+                    <p class="quiz-option">(গ) শক্তিকে সৃষ্টি করা যায়।</p>
+                    <p class="quiz-option">(ঘ) নবায়নযোগ্য শক্তি ব্যবহার করা যাবে না।</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৫</h2>
+            <div class="slide-content">
+                <h3>৫. শক্তির সংরক্ষণশীলতা নীতি থেকে কী পাওয়া যায়?</h3>
+                <p class="quiz-option correct-answer">(ক) মহাবিশ্বের মোট শক্তি নির্দিষ্ট ও অপরিবর্তনীয়।</p>
+                <p class="quiz-option">(খ) শক্তিকে ধ্বংস করা যায়।</p>
+                <p class="quiz-option">(গ) শক্তিকে সৃষ্টি করা যায়।</p>
+                <p class="quiz-option">(ঘ) নবায়নযোগ্য শক্তি ব্যবহার করা যাবে না।</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> শক্তির নিত্যতা সূত্র বলে, শক্তিকে সৃষ্টি বা ধ্বংস করা যায় না, শুধু এক রূপ থেকে অন্য রূপে নেওয়া যায়। তাই মোট শক্তি নির্দিষ্ট থাকে।</p>
+            </div>
+        </div>
+
+        <div class="slide hook-slide">
+            <h2 class="slide-title">ক্ষমতা (Power) কী?</h2>
+            <div class="slide-content">
+                <p class="reveal-item">তোমাকে আর তোমার বন্ধুকে ১০০টি ইট ৫ তলায় তুলতে বলা হলো।</p>
+                <p class="reveal-item">তুমি কাজটা করলে ২ ঘণ্টায়, আর তোমার বন্ধু করলো ৫ ঘণ্টায়।</p>
+                <p class="reveal-item">দু'জনেই কিন্তু <strong>একই কাজ</strong> (<i class="math-var">W</i>) করেছ! 😮</p>
+                <p class="reveal-item">তাহলে তফাৎটা কোথায়? ... তফাৎটা হলো <strong>ক্ষমতায়</strong>!</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ক্ষমতা (Power)</h2>
+            <div class="slide-content">
+                <img src="img/power_stairs.jpg" alt="Running up stairs">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> ক্ষমতা হলো কাজ করার হার (অর্থাৎ কে কত দ্রুত কাজ করতে পারে)।</li>
+                    <li class="reveal-item"><strong>উপমা:</strong> 'কাজ' যদি হয় ১০০টি ইট উপরে তোলা, 'ক্ষমতা' হলো প্রতি মিনিটে বা প্রতি সেকেন্ডে তুমি কয়টি ইট তুলছ।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">P</i> = <i class="math-var">W</i> / <i class="math-var">t</i> (ক্ষমতা = কাজ / সময়)</li>
+                    <li class="reveal-item"><strong>একক:</strong> ওয়াট (W)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <h2 class="slide-title">কর্মদক্ষতা (Efficiency)</h2>
+            <div class="slide-content">
+                <img src="img/efficiency_gears.jpg" alt="Engine gears">
+                <ul>
+                    <li class="reveal-item"><strong>উপমা:</strong> তুমি একটি ইঞ্জিনকে 100 জুল শক্তি (তেল) দিলে, কিন্তু ইঞ্জিনটি মাত্র 30 জুল কাজ করলো (গাড়ি চললো)। বাকি 70 জুল তাপ বা শব্দ হয়ে নষ্ট হলো।</li>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> কোনো যন্ত্র থেকে প্রাপ্ত কার্যকর শক্তি (কাজ) এবং যন্ত্রে প্রদত্ত মোট শক্তির অনুপাতকে কর্মদক্ষতা বলে।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong><br>
+                    কর্মদক্ষতা = (কাজের পরিমাণ / প্রদত্ত শক্তি) × 100%</li>
+                    <li class="reveal-item">বাস্তবে কোনো যন্ত্রের কর্মদক্ষতা 100% হয় না।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৬ (ক্ষমতা)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৬. 10s এ 500J কাজ করলে ক্ষমতা কত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 5000 W</p>
+                    <p class="quiz-option">(খ) 50 W</p>
+                    <p class="quiz-option">(গ) 5 W</p>
+                    <p class="quiz-option">(ঘ) 0.5 W</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৬</h2>
+            <div class="slide-content">
+                <h3>৬. 10s এ 500J কাজ করলে ক্ষমতা কত?</h3>
+                <p class="quiz-option">(ক) 5000 W</p>
+                <p class="quiz-option correct-answer">(খ) 50 W</p>
+                <p class="quiz-option">(গ) 5 W</p>
+                <p class="quiz-option">(ঘ) 0.5 W</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> ক্ষমতা <i>P</i> = <i>W</i> / <i>t</i> = 500 J / 10 s = 50 W।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৪</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">1000 W এর একটি মোটর ব্যবহার করে 15s এ একটি 10 kg ভরের বস্তুকে 10 m উপরে তোলা হলো।</p>
+                <h3 class="reveal-item">(গ) মোটরটির কর্মদক্ষতা কত? (g=9.8 m/s²)</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৪</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>১ম ধাপ: প্রদত্ত শক্তি (Input)</strong><br>
+                প্রদত্ত ক্ষমতা = 1000 W, সময় = 15 s<br>
+                প্রদত্ত শক্তি = ক্ষমতা × সময় = 1000 × 15 = 15000 J</p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: লভ্য কাজ (Output)</strong><br>
+                কৃত কাজ (<i class="math-var">W</i>) = <i class="math-var">mgh</i><br>
+                <i class="math-var">W</i> = 10 × 9.8 × 10 = 980 J</p>
+                
+                <p class="reveal-item"><strong>৩য় ধাপ: কর্মদক্ষতা</strong><br>
+                কর্মদক্ষতা = (কাজের পরিমাণ / প্রদত্ত শক্তি) × 100%<br>
+                কর্মদক্ষতা = (980 / 15000) × 100% = 6.53%</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> 6.53%।</h3>
+            </div>
+        </div>
+        
+        <div class="slide video-slide">
+            <h2 class="slide-title">ভিডিও লেসন: ক্ষমতা ও কর্মদক্ষতা</h2>
+            <div class="slide-content">
+                <p class="reveal-item">ক্ষমতা এবং কর্মদক্ষতার গণিতগুলো সহজে বুঝুন।</p>
+                <iframe class="reveal-item" 
+                    src="https://www.youtube.com/embed/your_video_id_here" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <!-- Questions -->
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ১</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">1kW ক্ষমতা ও 70% কর্মদক্ষতা বিশিষ্ট একটি মোটর 4 মিনিটে 30m উচ্চতায় পানি উত্তোলন করতে ব্যবহৃত হয়। অপরদিকে 2kW ক্ষমতাবিশিষ্ট একটি মোটর 2 মিনিটে 1000kg ভরের পানি 10m উচ্চতায় উঠাতে সক্ষম।</p>
+                <div class="reveal-item">
+                    <p>(ক) বাষ্পীভবন কি?</p>
+                    <p>(খ) একটি বৈদ্যুতিক পাওয়ার স্টেশনের ক্ষমতা 200MW বলতে কি বুঝ?</p>
+                    <p>(গ) প্রথম ইঞ্জিন কতটুকু পানি উত্তোলন করতে পারে?</p>
+                    <p>(ঘ) পানি উত্তোলনের কাজে তুমি কোন মোটরটি ব্যবহার করবে? গাণিতিক যুক্তি দাও।</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ক ও খ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) বাষ্পীভবন:</strong> যে প্রক্রিয়ায় কোনো তরল পদার্থ নির্দিষ্ট স্ফুটনাঙ্ক তাপমাত্রায় না পৌঁছে, যেকোনো তাপমাত্রায় তার উপরিতল থেকে ধীরে ধীরে বাষ্পে পরিণত হয়, তাকে বাষ্পীভবন বলে।</p>
+                <p class="reveal-item"><strong>(খ) উত্তর:</strong> একটি বৈদ্যুতিক পাওয়ার স্টেশনের ক্ষমতা 200MW বলতে বুঝায় যে, স্টেশনটি প্রতি সেকেন্ডে 200 মেগাজুল (বা $200 \times 10^6$ জুল) বৈদ্যুতিক শক্তি সরবরাহ করতে পারে বা অন্য শক্তিকে এই হারে বৈদ্যুতিক শক্তিতে রূপান্তর করতে পারে।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (গ) - ধাপ ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে (প্রথম মোটর):</strong><br>
+                প্রদত্ত ক্ষমতা, <i class="math-var">P<sub>in</sub></i> = 1 kW = 1000 W<br>
+                কর্মদক্ষতা, $\eta$ = 70% = 0.7<br>
+                সময়, <i class="math-var">t</i> = 4 min = 240 s<br>
+                উচ্চতা, <i class="math-var">h</i> = 30 m</p>
+                
+                <p class="reveal-item"><strong>১ম ধাপ: লভ্য ক্ষমতা (P_out) বের করা</strong><br>
+                $\eta$ = <i class="math-var">P<sub>out</sub></i> / <i class="math-var">P<sub>in</sub></i><br>
+                <i class="math-var">P<sub>out</sub></i> = <i class="math-var">P<sub>in</sub></i> × $\eta$ = 1000 × 0.7 = 700 W</p>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (গ) - ধাপ ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>২য় ধাপ: লভ্য কাজ (W_out) বের করা</strong><br>
+                <i class="math-var">W<sub>out</sub></i> = <i class="math-var">P<sub>out</sub></i> × <i class="math-var">t</i> = 700 × 240 = 168000 J</p>
+                
+                <p class="reveal-item"><strong>৩য় ধাপ: পানির ভর (m) বের করা</strong><br>
+                কৃতকাজ, <i class="math-var">W<sub>out</sub></i> = <i class="math-var">mgh</i><br>
+                168000 = <i class="math-var">m</i> × 9.8 × 30<br>
+                <i class="math-var">m</i> = 168000 / (9.8 × 30) = 571.43 kg</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> প্রথম ইঞ্জিনটি 571.43 kg পানি উত্তোলন করতে পারে।</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ঘ) - ধাপ ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item">দুটি মোটরের মধ্যে কোনটি বেশি ভালো তা তুলনা করার জন্য আমাদের দ্বিতীয় মোটরের কর্মদক্ষতা বের করতে হবে।</p>
+                <p class="reveal-item"><strong>দ্বিতীয় মোটরের ক্ষেত্রে:</strong><br>
+                প্রদত্ত ক্ষমতা, <i class="math-var">P<sub>in</sub></i> = 2 kW = 2000 W<br>
+                সময়, <i class="math-var">t</i> = 2 min = 120 s<br>
+                ভর, <i class="math-var">m</i> = 1000 kg<br>
+                উচ্চতা, <i class="math-var">h</i> = 10 m</p>
+
+                <p class="reveal-item"><strong>লভ্য ক্ষমতা, <i class="math-var">P<sub>out</sub></i> = কাজ / সময় = <i class="math-var">mgh</i> / <i class="math-var">t</i></strong><br>
+                <i class="math-var">P<sub>out</sub></i> = (1000 × 9.8 × 10) / 120 = 98000 / 120 = 816.67 W</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ঘ) - ধাপ ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>কর্মদক্ষতা, $\eta$ = <i class="math-var">P<sub>out</sub></i> / <i class="math-var">P<sub>in</sub></i></strong><br>
+                $\eta_2$ = (816.67 / 2000) × 100% = 40.83%</p>
+                
+                <p class="reveal-item"><strong>সিদ্ধান্ত:</strong><br>
+                প্রথম মোটরের কর্মদক্ষতা = 70%<br>
+                দ্বিতীয় মোটরের কর্মদক্ষতা = 40.83%</p>
+                
+                <p class="reveal-item">যেহেতু প্রথম মোটরের কর্মদক্ষতা বেশি, তাই পানি উত্তোলনের কাজে প্রথম মোটরটি ব্যবহার করা বেশি সাশ্রয়ী ও যৌক্তিক।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ২</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">20g ভরের একটি বস্তু খাড়া উপরের দিকে নিক্ষেপ করা হলো। 10s পর এটি ভূ-পৃষ্ঠে পৌছে। (g=9.8 m/s²)</p>
+                <div class="reveal-item">
+                    <p>(ক) পিচ কী?</p>
+                    <p>(খ) গড় দ্রুতি ব্যাখ্যা করো।</p>
+                    <p>(গ) বস্তুটি সর্বোচ্চ কত উচ্চতায় উঠবে নির্ণয় করো।</p>
+                    <p>(ঘ) ভূ-পৃষ্ঠে পৌঁছার 2s পূর্বে বস্তুটির যান্ত্রিক শক্তি কত? গাণিতিকভাবে বিশ্লেষণ করো।</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (ক ও খ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) পিচ (Pitch):</strong> শব্দের যে বৈশিষ্ট্য দিয়ে আমরা চিকন (উচ্চ স্বর) ও মোটা (নিম্ন স্বর) শব্দের মধ্যে পার্থক্য করতে পারি, তাকে পিচ বলে। এটি কম্পাঙ্কের উপর নির্ভরশীল।</p>
+                <p class="reveal-item"><strong>(খ) গড় দ্রুতি:</strong> কোনো বস্তু যদি সুষম বা অসম দ্রুতিতে চলে, তবে তার মোট অতিক্রান্ত দূরত্বকে মোট সময় দিয়ে ভাগ করলে যে মান পাওয়া যায়, তাকে গড় দ্রুতি বলে।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (গ) - ধাপ ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                মোট বিচরণ কাল, <i class="math-var">T</i> = 10 s</p>
+                
+                <p class="reveal-item"><strong>১ম ধাপ: সর্বোচ্চ উচ্চতায় ওঠার সময় (t)</strong><br>
+                বস্তুটির উপরে উঠতে যে সময় লাগে, নিচে নামতেও একই সময় লাগে।<br>
+                সর্বোচ্চ উচ্চতায় ওঠার সময়, <i class="math-var">t</i> = <i class="math-var">T</i> / 2 = 10 / 2 = 5 s</p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: আদি বেগ (u) নির্ণয়</strong><br>
+                সর্বোচ্চ উচ্চতায় শেষ বেগ, <i class="math-var">v</i> = 0 m/s<br>
+                <i class="math-var">v</i> = <i class="math-var">u</i> - <i class="math-var">gt</i><br>
+                0 = <i class="math-var">u</i> - 9.8 × 5<br>
+                <i class="math-var">u</i> = 49 m/s</p>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (গ) - ধাপ ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>৩য় ধাপ: সর্বোচ্চ উচ্চতা (H) নির্ণয়</strong><br>
+                <i class="math-var">H</i> = <i class="math-var">ut</i> - <sup>1</sup>/<sub>2</sub><i class="math-var">gt</i><sup class="math-sup">2</sup><br>
+                <i class="math-var">H</i> = (49 × 5) - (0.5 × 9.8 × 5<sup class="math-sup">2</sup>)<br>
+                <i class="math-var">H</i> = 245 - 122.5 = 122.5 m</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> বস্তুটি সর্বোচ্চ 122.5 m উচ্চতায় উঠবে।</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item">শক্তির নিত্যতা সূত্রানুযায়ী, বাধাহীনভাবে পড়ন্ত বস্তুর ক্ষেত্রে যেকোনো বিন্দুতে মোট যান্ত্রিক শক্তি (বিভব শক্তি + গতিশক্তি) সর্বদা সমান ও ধ্রুব থাকে।</p>
+                
+                <p class="reveal-item">ভূ-পৃষ্ঠে পৌঁছার 2s পূর্বে (অর্থাৎ t = 8s এ) মোট যান্ত্রিক শক্তি হবে বস্তুটির সর্বোচ্চ উচ্চতায় মোট যান্ত্রিক শক্তির সমান।</p>
+                
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                ভর, <i class="math-var">m</i> = 20 g = 0.02 kg<br>
+                (গ) থেকে প্রাপ্ত সর্বোচ্চ উচ্চতা, <i class="math-var">H</i> = 122.5 m</p>
+                
+                <p class="reveal-item"><strong>সর্বোচ্চ উচ্চতায় মোট যান্ত্রিক শক্তি:</strong><br>
+                (সেখানে গতিশক্তি = 0)<br>
+                মোট শক্তি = বিভব শক্তি = <i class="math-var">mgh</i><br>
+                মোট শক্তি = 0.02 × 9.8 × 122.5 = 24.01 J</p>
+
+                <h3 class="reveal-item"><strong>বিশ্লেষণ:</strong> ভূ-পৃষ্ঠে পৌঁছার 2s পূর্বেও বস্তুটির মোট যান্ত্রিক শক্তি <strong>24.01 J</strong> থাকবে।</h3>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ৩</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">1.5kg ভরের একটি বস্তুকে 720 ms⁻¹ বেগে খাড়া উপরের দিকে নিক্ষেপ করা হলো। (g=9.8 m/s²)</p>
+                <div class="reveal-item">
+                    <p>(ক) ভরবেগের সংরক্ষণ সূত্রটি লিখ।</p>
+                    <p>(খ) নৌকা থেকে লাফ দিলে নৌকা পেছনের দিকে সরে যায় কেন?</p>
+                    <p>(গ) 20s পর বস্তুটির গতিশক্তি নির্ণয় করো।</p>
+                    <p>(ঘ) ভূ-পৃষ্ঠ থেকে 180m উচ্চতায় বস্তুটির মোট যান্ত্রিক শক্তি, ভূ-পৃষ্ঠে পৌছানোর মুহূর্তে বস্তুর গতিশক্তির সমান—দেখাও।</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৩ (ক ও খ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) ভরবেগের সংরক্ষণ সূত্র:</strong> একাধিক বস্তুর মধ্যে শুধু ক্রিয়া-প্রতিক্রিয়া বল কাজ করলে, কোনো নির্দিষ্ট দিকে তাদের মোট ভরবেগের কোনো পরিবর্তন হয় না। (সংঘর্ষের আগে মোট ভরবেগ = সংঘর্ষের পরে মোট ভরবেগ)।</p>
+                <p class="reveal-item"><strong>(খ) উত্তর:</strong> নিউটনের তৃতীয় সূত্র অনুসারে, প্রত্যেক ক্রিয়ারই একটি সমান ও বিপরীত প্রতিক্রিয়া আছে। নৌকা থেকে লাফ দেওয়ার সময়, আরোহী নৌকার উপর একটি বল (ক্রিয়া) প্রয়োগ করে। নৌকাও আরোহীর উপর সমান ও বিপরীত বল (প্রতিক্রিয়া) প্রয়োগ করে, যার ফলে আরোহী সামনে এগোয় এবং নৌকা পেছনের দিকে সরে যায়।</g>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৩ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                ভর, <i class="math-var">m</i> = 1.5 kg<br>
+                আদি বেগ, <i class="math-var">u</i> = 720 m/s<br>
+                সময়, <i class="math-var">t</i> = 20 s</p>
+                
+                <p class="reveal-item"><strong>১ম ধাপ: 20s পর বেগ (v) নির্ণয়</strong><br>
+                (বস্তুটি উপরের দিকে উঠছে)<br>
+                <i class="math-var">v</i> = <i class="math-var">u</i> - <i class="math-var">gt</i><br>
+                <i class="math-var">v</i> = 720 - (9.8 × 20)<br>
+                <i class="math-var">v</i> = 720 - 196 = 524 m/s</p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: গতিশক্তি (T) নির্ণয়</strong><br>
+                <i class="math-var">T</i> = <sup>1</sup>/<sub>2</sub><i class="math-var">mv</i><sup class="math-sup">2</sup><br>
+                <i class="math-var">T</i> = 0.5 × 1.5 × (524)<sup class="math-sup">2</sup><br>
+                <i class="math-var">T</i> = 0.75 × 274576 = 205932 J</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> গতিশক্তি 205,932 J (বা 205.93 kJ)।</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৩ (ঘ) - ধাপ ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item">শক্তির নিত্যতা অনুসারে, বস্তুর মোট যান্ত্রিক শক্তি সর্বদা ধ্রুব থাকে।</p>
+                
+                <p class="reveal-item"><strong>১ম ধাপ: নিক্ষেপের মুহূর্তে মোট শক্তি (ভূ-পৃষ্ঠে)</strong><br>
+                (বিভব শক্তি = 0)<br>
+                মোট শক্তি = গতিশক্তি = <sup>1</sup>/<sub>2</sub><i class="math-var">mu</i><sup class="math-sup">2</sup><br>
+                মোট শক্তি = 0.5 × 1.5 × (720)<sup class="math-sup">2</sup> = 388,800 J</p>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৩ (ঘ) - ধাপ ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>২য় ধাপ: 180m উচ্চতায় মোট শক্তি</strong><br>
+                শক্তির নিত্যতা অনুসারে, 180m উচ্চতায়ও মোট যান্ত্রিক শক্তি একই থাকবে।<br>
+                সুতরাং, 180m উচ্চতায় মোট শক্তি = 388,800 J।</p>
+
+                <p class="reveal-item"><strong>৩য় ধাপ: ভূ-পৃষ্ঠে পৌছানোর মুহূর্তে গতিশক্তি</strong><br>
+                ভূ-পৃষ্ঠে পৌছানোর মুহূর্তে উচ্চতা শূন্য (বিভব শক্তি = 0)।<br>
+                তাই, মোট শক্তি = গতিশক্তি = 388,800 J।</p>
+
+                <h3 class="reveal-item"><strong>বিশ্লেষণ:</strong> দেখা যাচ্ছে, উভয় ক্ষেত্রেই শক্তি 388,800 J। সুতরাং, উক্তিটি সঠিক। (দেখানো হলো)</h3>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ৪</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">...খেলার শুরুতে রেফারি m ভরের বাস্কেটবলকে উলম্বভাবে উপরে ছুঁড়ল এবং এটি ভূমিতে স্পর্শ করার পূর্বে 6.25 sec বাতাসে থাকল...</p>
+                <div class="reveal-item">
+                    <p>(ক) চলন গতি বলতে কী বোঝ?</p>
+                    <p>(খ) বাস্কেটবলটি কত সময়ে সর্বোচ্চ উচ্চতায় পৌঁছাবে? ব্যাখ্যা করো।</p>
+                    <p>(গ) বাস্কেটবল কর্তৃক অতিক্রান্ত সর্বোচ্চ উচ্চতা বের করো। (g=9.8 m/s²)</p>
+                    <p>(ঘ) “বলটির উপরে যে পরিমাণ কাজ হয়েছে (ভূমি থেকে সর্বোচ্চ উচ্চতায়) সেটি গতিশক্তির পরিবর্তনের সমান” – উক্তিটি প্রমাণ করো।</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৪ (ক ও খ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) চলন গতি:</strong> কোনো বস্তু যদি এমনভাবে চলতে থাকে যে তার সকল কণা একই সময়ে একই দিকে সমান দূরত্ব অতিক্রম করে, তবে সেই গতিকে চলন গতি বলে।</p>
+                <p class="reveal-item"><strong>(খ) উত্তর:</strong> বস্তুর মোট বিচরণ কাল (<i class="math-var">T</i>) = 6.25 s।<br>
+                বস্তুর উপরে উঠতে যে সময় লাগে (উত্থান কাল), নিচে নামতেও একই সময় লাগে (পতন কাল)।<br>
+                সুতরাং, সর্বোচ্চ উচ্চতায় পৌঁছানোর সময়, <i class="math-var">t</i> = <i class="math-var">T</i> / 2 = 6.25 / 2 = 3.125 s।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৪ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(খ) থেকে প্রাপ্ত:</strong><br>
+                সর্বোচ্চ উচ্চতায় ওঠার সময়, <i class="math-var">t</i> = 3.125 s</p>
+                
+                <p class="reveal-item"><strong>১ম ধাপ: আদি বেগ (u) নির্ণয়</strong><br>
+                সর্বোচ্চ উচ্চতায় শেষ বেগ, <i class="math-var">v</i> = 0 m/s<br>
+                <i class="math-var">v</i> = <i class="math-var">u</i> - <i class="math-var">gt</i><br>
+                0 = <i class="math-var">u</i> - 9.8 × 3.125<br>
+                <i class="math-var">u</i> = 30.625 m/s</p>
+
+                <p class="reveal-item"><strong>২য় ধাপ: সর্বোচ্চ উচ্চতা (H) নির্ণয়</strong><br>
+                <i class="math-var">v</i><sup class="math-sup">2</sup> = <i class="math-var">u</i><sup class="math-sup">2</sup> - 2<i class="math-var">gH</i><br>
+                0 = (30.625)<sup class="math-sup">2</sup> - 2 × 9.8 × <i class="math-var">H</i><br>
+                19.6 <i class="math-var">H</i> = 937.89<br>
+                <i class="math-var">H</i> = 937.89 / 19.6 = 47.85 m</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> সর্বোচ্চ উচ্চতা 47.85 m।</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৪ (ঘ) - ধাপ ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item">উক্তিটি হলো কাজ-শক্তি উপপাদ্য। আমরা এটি প্রমাণ করবো।</p>
+                <p class="reveal-item"><strong>১ম ধাপ: কৃতকাজ (W) নির্ণয়</strong><br>
+                ভূমি থেকে সর্বোচ্চ উচ্চতায় (<i>H</i> = 47.85 m) উঠতে অভিকর্ষ বলের বিরুদ্ধে কাজ হয়।<br>
+                কৃতকাজ, <i class="math-var">W</i> = -<i class="math-var">mgh</i> (অভিকর্ষ বলের দ্বারা কাজ)<br>
+                <i class="math-var">W</i> = -<i class="math-var">m</i> × 9.8 × 47.85 = -468.93<i class="math-var">m</i> জুল</p>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৪ (ঘ) - ধাপ ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>২য় ধাপ: গতিশক্তির পরিবর্তন (ΔT) নির্ণয়</strong><br>
+                আদি বেগ, <i class="math-var">u</i> = 30.625 m/s<br>
+                সর্বোচ্চ উচ্চতায় শেষ বেগ, <i class="math-var">v</i> = 0 m/s<br>
+                আদি গতিশক্তি, <i class="math-var">T<sub>i</sub></i> = <sup>1</sup>/<sub>2</sub><i class="math-var">mu</i><sup class="math-sup">2</sup> = 0.5 × <i class="math-var">m</i> × (30.625)<sup class="math-sup">2</sup> = 468.93<i class="math-var">m</i> জুল<br>
+                শেষ গতিশক্তি, <i class="math-var">T<sub>f</sub></i> = 0 জুল</p>
+                
+                <p class="reveal-item">Δ<i class="math-var">T</i> = <i class="math-var">T<sub>f</sub></i> - <i class="math-var">T<sub>i</sub></i> = 0 - 468.93<i class="math-var">m</i> = -468.93<i class="math-var">m</i> জুল</p>
+
+                <h3 class="reveal-item"><strong>বিশ্লেষণ:</strong> যেহেতু কৃতকাজ (-468.93<i class="math-var">m</i>) এবং গতিশক্তির পরিবর্তন (-468.93<i class="math-var">m</i>) সমান, তাই উক্তিটি প্রমাণিত।</h3>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ৫</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">জনাব আলম একটি পাম্প স্থাপন করেছেন যেটি প্রতি মিনিটে (t=60s) 100 m গভীর (h) নলকূপ থেকে 1500 লিটার (m=1500kg) পানি উত্তোলন করতে পারে। পাম্পটির কর্মদক্ষতা 70% ($\eta$)।</p>
+                <div class="reveal-item">
+                    <p>(ক) মুক্তভাবে পড়ন্ত বস্তুর তৃতীয় সূত্রটি লিখ।</p>
+                    <p>(খ) অবতল লেন্স বাস্তব বিম্ব গঠন করতে পারেনা কেন?</p>
+                    <p>(গ) পাম্পটির জন্য প্রদত্ত শক্তি নির্ণয় করো। (g=9.8 m/s²)</p>
+                    <p>(ঘ) যদি পাম্পটির কর্মদক্ষতা 60% হয় সেক্ষেত্রে 1500 লিটার পানি উত্তোলনের জন্য অতিরিক্ত কত সময় লাগবে?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৫ (ক ও খ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) পড়ন্ত বস্তুর তৃতীয় সূত্র:</strong> মুক্তভাবে পড়ন্ত বস্তু নির্দিষ্ট সময়ে যে দূরত্ব অতিক্রম করে, তা ঐ সময়ের বর্গের সমানুপাতিক। ($h \propto t^2$)</p>
+                <p class="reveal-item"><strong>(খ) উত্তর:</strong> অবতল লেন্স আলোকরশ্মিকে অপসারিত (ছড়িয়ে) করে। এই অপসারিত রশ্মিগুলো কোনো বিন্দুতে প্রকৃতপক্ষে মিলিত হয় না, বরং লেন্সের সামনে কোনো বিন্দু থেকে আসছে বলে মনে হয়। তাই অবতল লেন্স দ্বারা বাস্তব বিম্ব গঠিত হয় না, অবাস্তব বিম্ব গঠিত হয়।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৫ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>১ম ধাপ: লভ্য কাজ (W_out) নির্ণয়</strong><br>
+                <i class="math-var">W<sub>out</sub></i> = <i class="math-var">mgh</i><br>
+                <i class="math-var">W<sub>out</sub></i> = 1500 × 9.8 × 100 = 1,470,000 J<br>
+                (এই কাজটি হয় প্রতি মিনিটে বা 60s এ)</p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: প্রদত্ত শক্তি (W_in) নির্ণয়</strong><br>
+                কর্মদক্ষতা, $\eta$ = <i class="math-var">W<sub>out</sub></i> / <i class="math-var">W<sub>in</sub></i><br>
+                0.7 = 1,470,000 / <i class="math-var">W<sub>in</sub></i><br>
+                <i class="math-var">W<sub>in</sub></i> = 1,470,000 / 0.7 = 2,100,000 J</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> পাম্পটির জন্য প্রদত্ত শক্তি 2,100,000 J (বা 2100 kJ)।</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৫ (ঘ) - ধাপ ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(গ) থেকে পাই,</strong> পাম্পটির প্রদত্ত ক্ষমতা, <i class="math-var">P<sub>in</sub></i> = প্রদত্ত শক্তি / সময়<br>
+                <i class="math-var">P<sub>in</sub></i> = 2,100,000 J / 60 s = 35,000 W (এটি পাম্পের আসল ক্ষমতা)</p>
+                
+                <p class="reveal-item"><strong>যদি কর্মদক্ষতা 60% ($\eta'$) হয়:</strong><br>
+                নতুন লভ্য ক্ষমতা, <i class="math-var">P'<sub>out</sub></i> = <i class="math-var">P<sub>in</sub></i> × $\eta'$<br>
+                <i class="math-var">P'<sub>out</sub></i> = 35,000 × 0.6 = 21,000 W</p>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৫ (ঘ) - ধাপ ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>1500 লিটার পানি তুলতে প্রয়োজনীয় কাজ (W_out) একই থাকে:</strong><br>
+                <i class="math-var">W<sub>out</sub></i> = 1,470,000 J</p>
+
+                <p class="reveal-item"><strong>নতুন প্রয়োজনীয় সময় (t'):</strong><br>
+                <i class="math-var">t'</i> = <i class="math-var">W<sub>out</sub></i> / <i class="math-var">P'<sub>out</sub></i> = 1,470,000 / 21,000 = 70 s</p>
+                
+                <p class="reveal-item"><strong>অতিরিক্ত সময়:</strong><br>
+                অতিরিক্ত সময় = <i class="math-var">t'</i> - <i class="math-var">t</i> = 70 s - 60 s = 10 s</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> 10 সেকেন্ড অতিরিক্ত সময় লাগবে।</h3>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ৬</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">একটি ইঞ্জিন প্রতি মিনিটে (t=60s) 2000 লিটার (m=2000kg) পানি 18m উঁচু (h) একটি দালানের ছাদে তুলতে সক্ষম। যার কর্মদক্ষতা 70% ($\eta$)।</p>
+                <div class="reveal-item">
+                    <p>(ক) প্যাসকেলের সূত্রটি লিখ।</p>
+                    <p>(খ) কোনো বস্তুর বিভব শক্তি 60J বলতে কী বুঝায়?</p>
+                    <p>(গ) ইঞ্জিনের ক্ষমতা নির্ণয় কর। (g=9.8 m/s²)</p>
+                    <p>(ঘ) যদি ইঞ্জিনের কর্মদক্ষতা 60% হতো তাহলে সকল পানি একই উচ্চতায় তুলতে পূর্বের তুলনায় সময় কতগুণ বেশি লাগবে?</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৬ (ক ও খ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) প্যাসকেলের সূত্র:</strong> আবদ্ধ পাত্রে তরল বা বায়বীয় পদার্থের কোনো অংশের উপর বাইরে থেকে চাপ প্রয়োগ করলে সেই চাপ কিছুমাত্র না কমে তরল বা বায়বীয় পদার্থের সবদিকে সমানভাবে সঞ্চালিত হয় এবং পাত্রের গায়ে লম্বভাবে ক্রিয়া করে।</p>
+                <p class="reveal-item"><strong>(খ) উত্তর:</strong> কোনো বস্তুর বিভব শক্তি 60J বলতে বুঝায় যে, বস্তুটিকে তার স্বাভাবিক অবস্থান বা অবস্থা থেকে পরিবর্তন করে বর্তমান অবস্থানে বা অবস্থায় আনতে 60J কাজ সম্পন্ন হয়েছে। (যেমন, 1kg ভরের বস্তুকে ভূমি থেকে 6.12m উঁচুতে তুললে তার বিভব শক্তি 60J হয়)।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৬ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item">"ইঞ্জিনের ক্ষমতা" বলতে ইঞ্জিনের প্রদত্ত ক্ষমতা (<i class="math-var">P<sub>in</sub></i>) বুঝায়।</p>
+                <p class="reveal-item"><strong>১ম ধাপ: লভ্য ক্ষমতা (P_out) নির্ণয়</strong><br>
+                (এটি পানি তোলার ক্ষমতা)<br>
+                <i class="math-var">P<sub>out</sub></i> = কাজ / সময় = <i class="math-var">mgh</i> / <i class="math-var">t</i><br>
+                <i class="math-var">P<sub>out</sub></i> = (2000 × 9.8 × 18) / 60<br>
+                <i class="math-var">P<sub>out</sub></i> = 352800 / 60 = 5880 W</p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: ইঞ্জিনের প্রদত্ত ক্ষমতা (P_in) নির্ণয়</strong><br>
+                $\eta$ = <i class="math-var">P<sub>out</sub></i> / <i class="math-var">P<sub>in</sub></i><br>
+                0.7 = 5880 / <i class="math-var">P<sub>in</sub></i><br>
+                <i class="math-var">P<sub>in</sub></i> = 5880 / 0.7 = 8400 W</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> ইঞ্জিনের ক্ষমতা 8400 W (বা 8.4 kW)।</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৬ (ঘ) - ধাপ ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item">ইঞ্জিনের প্রদত্ত ক্ষমতা (<i class="math-var">P<sub>in</sub></i>) 8400 W (ধ্রুব)।<br>
+                পানি তোলার কাজ (<i class="math-var">W<sub>out</sub></i>) 352800 J (ধ্রুব)।</p>
+
+                <p class="reveal-item"><strong>১ম ক্ষেত্রে (70%):</strong><br>
+                লভ্য ক্ষমতা, <i class="math-var">P<sub>out1</sub></i> = 5880 W<br>
+                সময়, <i class="math-var">t<sub>1</sub></i> = 60 s</p>
+                
+                <p class="reveal-item"><strong>২য় ক্ষেত্রে (60%):</strong><br>
+                নতুন লভ্য ক্ষমতা, <i class="math-var">P<sub>out2</sub></i> = <i class="math-var">P<sub>in</sub></i> × $\eta_2$<br>
+                <i class="math-var">P<sub>out2</sub></i> = 8400 × 0.6 = 5040 W</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৬ (ঘ) - ধাপ ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>নতুন সময় (t_2):</strong><br>
+                <i class="math-var">t<sub>2</sub></i> = <i class="math-var">W<sub>out</sub></i> / <i class="math-var">P<sub>out2</sub></i> = 352800 / 5040 = 70 s</p>
+                
+                <p class="reveal-item"><strong>সময়ের তুলনা (কতগুণ):</strong><br>
+                <i class="math-var">t<sub>2</sub></i> / <i class="math-var">t<sub>1</sub></i> = 70 / 60 = 1.167 গুণ</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> 1.167 গুণ বেশি সময় লাগবে।</h3>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ৭</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">50m উঁচু একটি স্থাপনার উপর 20kg ভরের একটি বস্তু A অবস্থান থেকে 5ms⁻¹ বেগে চলছে। বস্তুর উপর বল প্রয়োগ করায় 5 sec পর B অবস্থানে 30ms⁻¹ বেগ প্রাপ্ত হয়।</p>
+                <div class="reveal-item">
+                    <p>(ক) সাম্য বল কী?</p>
+                    <p>(খ) বল প্রয়োগ করলে সকল ক্ষেত্রে কাজ সম্পন্ন হয় না কেন? ব্যাখ্যা করো।</p>
+                    <p>(গ) বস্তুর উপর প্রযুক্ত বলের মান কত?</p>
+                    <p>(ঘ) A ও B অবস্থানে বস্তুটির মোট শক্তির কোনোরূপ তারতম্য হবে কি? গাণিতিক যুক্তির সাহায্যে মতামত দাও।</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৭ (ক ও খ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) সাম্য বল:</strong> কোনো বস্তুর উপর একাধিক বল ক্রিয়া করলে যদি বলগুলোর লব্ধি শূন্য হয় (অর্থাৎ বস্তুর ত্বরণ শূন্য হয়), তবে ঐ বলগুলোকে সাম্য বল বলে।</p>
+                <p class="reveal-item"><strong>(খ) উত্তর:</strong> কাজের সংজ্ঞা ($W=Fs$) অনুসারে, কাজ সম্পন্ন হওয়ার জন্য বল ($F$) এবং বলের দিকে সরণ ($s$) উভয়ই থাকতে হয়। যদি বল প্রয়োগ করা হয় কিন্তু বস্তুর কোনো সরণ না ঘটে (যেমন দেয়ালকে ধাক্কা দিলে, $s=0$), তবে কৃতকাজ $W=0$ হয়। তাই বল প্রয়োগ করলেই সকল ক্ষেত্রে কাজ সম্পন্ন হয় না।</g>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৭ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                ভর, <i class="math-var">m</i> = 20 kg<br>
+                আদি বেগ, <i class="math-var">u</i> = 5 m/s<br>
+                শেষ বেগ, <i class="math-var">v</i> = 30 m/s<br>
+                সময়, <i class="math-var">t</i> = 5 s</p>
+                
+                <p class="reveal-item"><strong>১ম ধাপ: ত্বরণ (a) নির্ণয়</strong><br>
+                <i class="math-var">v</i> = <i class="math-var">u</i> + <i class="math-var">at</i><br>
+                30 = 5 + <i class="math-var">a</i> × 5<br>
+                5<i class="math-var">a</i> = 25<br>
+                <i class="math-var">a</i> = 5 m/s<sup class="math-sup">2</sup></p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: প্রযুক্ত বল (F) নির্ণয়</strong><br>
+                <i class="math-var">F</i> = <i class="math-var">ma</i><br>
+                <i class="math-var">F</i> = 20 × 5 = 100 N</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> প্রযুক্ত বলের মান 100 N।</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৭ (ঘ) - ধাপ ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item">উভয় অবস্থানেই উচ্চতা, <i class="math-var">h</i> = 50 m (ধ্রুব)।<br>
+                সুতরাং, উভয় অবস্থানে বিভব শক্তি (PE) একই।<br>
+                PE = <i class="math-var">mgh</i> = 20 × 9.8 × 50 = 9800 J</p>
+                
+                <p class="reveal-item"><strong>A অবস্থানে মোট শক্তি (E_A):</strong><br>
+                গতিশক্তি (KE_A) = <sup>1</sup>/<sub>2</sub><i class="math-var">mu</i><sup class="math-sup">2</sup> = 0.5 × 20 × 5<sup class="math-sup">2</sup> = 250 J<br>
+                <i class="math-var">E<sub>A</sub></i> = PE + KE_A = 9800 + 250 = 10050 J</p>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৭ (ঘ) - ধাপ ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>B অবস্থানে মোট শক্তি (E_B):</strong><br>
+                গতিশক্তি (KE_B) = <sup>1</sup>/<sub>2</sub><i class="math-var">mv</i><sup class="math-sup">2</sup> = 0.5 × 20 × 30<sup class="math-sup">2</sup> = 9000 J<br>
+                বিভব শক্তি (PE) = 9800 J (একই)<br>
+                <i class="math-var">E<sub>B</sub></i> = PE + KE_B = 9800 + 9000 = 18800 J</p>
+
+                <h3 class="reveal-item"><strong>সিদ্ধান্ত:</strong> A ও B অবস্থানে মোট শক্তি সমান নয় (<i class="math-var">E<sub>B</sub></i> > <i class="math-var">E<sub>A</sub></i>)। কারণ, বাইরে থেকে বল প্রয়োগ করায় বস্তুর উপর কাজ হয়েছে, যা তার মোট যান্ত্রিক শক্তি বৃদ্ধি করেছে।</h3>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ৮</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">100m গভীর কুয়া থেকে একটি পাম্পের সাহায্যে প্রতি মিনিটে (t=60s) 1500 লিটার (m=1500kg) পানি উত্তোলন করা হয়। পাম্পের কর্মদক্ষতা 70% ($\eta$)।</p>
+                <div class="reveal-item">
+                    <p>(ক) প্লবতা কাকে বলে?</p>
+                    <p>(খ) কোনো বস্তু তরলে ভাসা বা ডোবার কারণ বুঝিয়ে দাও।</p>
+                    <p>(গ) পাম্পের ক্ষমতা নির্ণয় কর। (g=9.8 m/s²)</p>
+                    <p>(ঘ) পাম্পের কর্মদক্ষতা 60% হলে 1500 লিটার পানি তুলতে পূর্বাপেক্ষা কত বেশি সময় লাগবে?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৮ (ক ও খ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) প্লবতা:</strong> কোনো বস্তুকে তরল বা বায়বীয় পদার্থে নিমজ্জিত করলে ঐ পদার্থ বস্তুর উপর লম্বভাবে যে ঊর্ধমুখী লব্ধি বল প্রয়োগ করে, তাকে প্লবতা বলে।</p>
+                <p class="reveal-item"><strong>(খ) উত্তর:</strong> বস্তুর ওজন ($W$) এবং বস্তুর দ্বারা অপসারিত তরলের ওজন (প্লবতা, $F$) এর উপর ভাসা বা ডোবা নির্ভর করে।<br>
+                ১. $W > F$ হলে, বস্তু ডুবে যাবে।<br>
+                ২. $W = F$ হলে, বস্তু সম্পূর্ণ নিমজ্জিত অবস্থায় ভাসবে।<br>
+                ৩. $W < F$ হলে, বস্তু আংশিক নিমজ্জিত অবস্থায় ভাসবে।</p>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৮ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>১ম ধাপ: লভ্য ক্ষমতা (P_out) নির্ণয়</strong><br>
+                (এটি পানি তোলার ক্ষমতা)<br>
+                <i class="math-var">P<sub>out</sub></i> = কাজ / সময় = <i class="math-var">mgh</i> / <i class="math-var">t</i><br>
+                <i class="math-var">P<sub>out</sub></i> = (1500 × 9.8 × 100) / 60<br>
+                <i class="math-var">P<sub>out</sub></i> = 1470000 / 60 = 24500 W</p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: পাম্পের প্রদত্ত ক্ষমতা (P_in) নির্ণয়</strong><br>
+                $\eta$ = <i class="math-var">P<sub>out</sub></i> / <i class="math-var">P<sub>in</sub></i><br>
+                0.7 = 24500 / <i class="math-var">P<sub>in</sub></i><br>
+                <i class="math-var">P<sub>in</sub></i> = 24500 / 0.7 = 35000 W</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> পাম্পের (প্রদত্ত) ক্ষমতা 35000 W (বা 35 kW)।</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৮ (ঘ) - ধাপ ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item">পাম্পের প্রদত্ত ক্ষমতা (<i class="math-var">P<sub>in</sub></i>) 35000 W (ধ্রুব)।<br>
+                পানি তোলার কাজ (<i class="math-var">W<sub>out</sub></i>) 1,470,000 J (ধ্রুব)।</p>
+
+                <p class="reveal-item"><strong>১ম ক্ষেত্রে (70%):</strong> সময় <i class="math-var">t<sub>1</sub></i> = 60 s।</p>
+                
+                <p class="reveal-item"><strong>২য় ক্ষেত্রে (60%):</strong><br>
+                নতুন লভ্য ক্ষমতা, <i class="math-var">P<sub>out2</sub></i> = <i class="math-var">P<sub>in</sub></i> × $\eta_2$<br>
+                <i class="math-var">P<sub>out2</sub></i> = 35000 × 0.6 = 21000 W</p>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৮ (ঘ) - ধাপ ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>নতুন সময় (t_2):</strong><br>
+                <i class="math-var">t<sub>2</sub></i> = <i class="math-var">W<sub>out</sub></i> / <i class="math-var">P<sub>out2</sub></i> = 1470000 / 21000 = 70 s</p>
+                
+                <p class="reveal-item"><strong>অতিরিক্ত সময়:</strong><br>
+                অতিরিক্ত সময় = <i class="math-var">t<sub>2</sub></i> - <i class="math-var">t<sub>1</sub></i> = 70 s - 60 s = 10 s</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> 10 সেকেন্ড বেশি সময় লাগবে।</h3>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ৯</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">15kW এর একটি তড়িৎমোটর (P_in) 1000kg পানি (m) 0.5 মিনিটে (t) 300m উঁচু (h) ছাদে উঠাতে পারে। (g=9.8 m/s²)</p>
+                <div class="reveal-item">
+                    <p>(ক) বিভব শক্তি কাকে বলে?</p>
+                    <p>(খ) অনুদৈর্ঘ্য তরঙ্গ ও অনুপ্রস্থ তরঙ্গের মধ্যে পার্থক্য লিখ।</p>
+                    <p>(গ) মোটরটির কর্মদক্ষতা নির্ণয় কর।</p>
+                    <p>(ঘ) কর্মদক্ষতা 75% হলে উল্লিখিত সময়ে মোটরটির ব্যয়িত শক্তির পরিমাণ গাণিতিকভাবে বিশ্লেষণ কর।</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৯ (ক ও খ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) বিভব শক্তি:</strong> কোনো বস্তুকে তার স্বাভাবিক অবস্থান বা অবস্থা থেকে পরিবর্তন করে অন্য কোনো অবস্থান বা অবস্থায় আনলে বস্তু কাজ করার যে সামর্থ্য অর্জন করে, তাকে বিভব শক্তি বলে।</p>
+                <p class="reveal-item"><strong>(খ) পার্থক্য:</strong><br>
+                ১. <strong>অনুদৈর্ঘ্য তরঙ্গ:</strong> মাধ্যমের কণাগুলো তরঙ্গের দিকের সাথে সমান্তরালে কাঁপে। (যেমন: শব্দ তরঙ্গ)।<br>
+                ২. <strong>অনুপ্রস্থ তরঙ্গ:</strong> মাধ্যমের কণাগুলো তরঙ্গের দিকের সাথে সমকোণে কাঁপে। (যেমন: আলোক তরঙ্গ)।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৯ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                প্রদত্ত ক্ষমতা, <i class="math-var">P<sub>in</sub></i> = 15 kW = 15000 W<br>
+                ভর, <i class="math-var">m</i> = 1000 kg<br>
+                সময়, <i class="math-var">t</i> = 0.5 min = 30 s<br>
+                উচ্চতা, <i class="math-var">h</i> = 300 m</p>
+                
+                <p class="reveal-item"><strong>১ম ধাপ: লভ্য ক্ষমতা (P_out) নির্ণয়</strong><br>
+                <i class="math-var">P<sub>out</sub></i> = কাজ / সময় = <i class="math-var">mgh</i> / <i class="math-var">t</i><br>
+                <i class="math-var">P<sub>out</sub></i> = (1000 × 9.8 × 300) / 30<br>
+                <i class="math-var">P<sub>out</sub></i> = 2940000 / 30 = 98000 W</p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: কর্মদক্ষতা ($\eta$) নির্ণয়</strong><br>
+                $\eta$ = (<i class="math-var">P<sub>out</sub></i> / <i class="math-var">P<sub>in</sub></i>) × 100%<br>
+                $\eta$ = (98000 / 15000) × 100% = 653.33%</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> 653.33%। (দ্রষ্টব্য: এই প্রশ্নটি অবাস্তব, কারণ লভ্য ক্ষমতা প্রদত্ত ক্ষমতার চেয়ে অনেক বেশি, $\eta > 100\%$ হওয়া অসম্ভব)।</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৯ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item">"উল্লিখিত সময়ে" অর্থাৎ <i class="math-var">t</i> = 30 s।<br>
+                "ব্যয়িত শক্তি" বলতে প্রদত্ত শক্তি (<i class="math-var">W<sub>in</sub></i>) বুঝায়।</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি, প্রদত্ত ক্ষমতা <i class="math-var">P<sub>in</sub></i> = 15000 W।</strong></p>
+                <p class="reveal-item">(এখানে কর্মদক্ষতা 75% তথ্যটি অপ্রাসঙ্গিক, কারণ ব্যয়িত শক্তি শুধুমাত্র প্রদত্ত ক্ষমতা ও সময়ের উপর নির্ভরশীল)।</p>
+                
+                <p class="reveal-item"><strong>ব্যয়িত শক্তি (<i class="math-var">W<sub>in</sub></i>) = <i class="math-var">P<sub>in</sub></i> × <i class="math-var">t</i></strong><br>
+                <i class="math-var">W<sub>in</sub></i> = 15000 W × 30 s<br>
+                <i class="math-var">W<sub>in</sub></i> = 450,000 J (বা 450 kJ)</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> ব্যয়িত শক্তির পরিমাণ 450,000 J।</h3>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ১০</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">রহিমের ভর 30 kg এবং করিমের ভর 20 kg। একটি দৌড় প্রতিযোগিতায় রহিম 5 m/s এবং করিম 6 m/s বেগে দৌড়ায়।</p>
+                <div class="reveal-item">
+                    <p>(ক) নিউটনের দ্বিতীয় সূত্রটি লিখ।</p>
+                    <p>(খ) রহিমের গতিশক্তি ঋণাত্মক হতে পারে কিনা? ব্যাখ্যা কর।</p>
+                    <p>(গ) দৌড়ের সময় কার গতিশক্তি কম ছিল- নির্ণয় কর।</p>
+                    <p>(ঘ) যদি রহিম ও করিমের ভরবেগ সমান হত তাহলে কার গতিশক্তি অপেক্ষাকৃত বেশি হত? বিশ্লেষণ কর।</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১০ (ক ও খ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) নিউটনের দ্বিতীয় সূত্র:</strong> বস্তুর ভরবেগের পরিবর্তনের হার তার উপর প্রযুক্ত বলের সমানুপাতিক এবং বল যেদিকে ক্রিয়া করে বস্তুর ভরবেগের পরিবর্তনও সেদিকে ঘটে।</p>
+                <p class="reveal-item"><strong>(খ) উত্তর:</strong> না, রহিমের গতিশক্তি ঋণাত্মক হতে পারে না।<br>
+                গতিশক্তির সূত্র <i class="math-var">T</i> = <sup>1</sup>/<sub>2</sub><i class="math-var">mv</i><sup class="math-sup">2</sup>। এখানে, ভর (<i class="math-var">m</i>) একটি ধ্রুবক ও ধনাত্মক রাশি। বেগ (<i class="math-var">v</i>) ঋণাত্মক হলেও তার বর্গ (<i class="math-var">v</i><sup class="math-sup">2</sup>) সর্বদা ধনাত্মক হয়। দুটি ধনাত্মক রাশির গুণফল সর্বদা ধনাত্মক। তাই গতিশক্তি কখনো ঋণাত্মক হতে পারে না (সর্বনিম্ন শূন্য হতে পারে)।</p>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১০ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>রহিমের গতিশক্তি (T_R):</strong><br>
+                ভর, <i class="math-var">m<sub>R</sub></i> = 30 kg<br>
+                বেগ, <i class="math-var">v<sub>R</sub></i> = 5 m/s<br>
+                <i class="math-var">T<sub>R</sub></i> = <sup>1</sup>/<sub>2</sub><i class="math-var">m<sub>R</sub>v<sub>R</sub></i><sup class="math-sup">2</sup> = 0.5 × 30 × 5<sup class="math-sup">2</sup> = 15 × 25 = 375 J</p>
+                
+                <p class="reveal-item"><strong>করিমের গতিশক্তি (T_K):</strong><br>
+                ভর, <i class="math-var">m<sub>K</sub></i> = 20 kg<br>
+                বেগ, <i class="math-var">v<sub>K</sub></i> = 6 m/s<br>
+                <i class="math-var">T<sub>K</sub></i> = <sup>1</sup>/<sub>2</sub><i class="math-var">m<sub>K</sub>v<sub>K</sub></i><sup class="math-sup">2</sup> = 0.5 × 20 × 6<sup class="math-sup">2</sup> = 10 × 36 = 360 J</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> যেহেতু 360 J < 375 J, তাই করিমের গতিশক্তি কম ছিল।</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১০ (ঘ) - ধাপ ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item">আমরা জানি, ভরবেগ <i class="math-var">p</i> = <i class="math-var">mv</i><br>
+                এবং গতিশক্তি <i class="math-var">T</i> = <sup>1</sup>/<sub>2</sub><i class="math-var">mv</i><sup class="math-sup">2</sup></p>
+                
+                <p class="reveal-item"><strong>সম্পর্ক:</strong><br>
+                <i class="math-var">T</i> = <sup>1</sup>/<sub>2</sub> × (<i class="math-var">m</i><sup class="math-sup">2</sup><i class="math-var">v</i><sup class="math-sup">2</sup>) / <i class="math-var">m</i> = <sup>1</sup>/<sub>2</sub> × (<i class="math-var">p</i><sup class="math-sup">2</sup> / <i class="math-var">m</i>)<br>
+                সুতরাং, <i class="math-var">T</i> = <i class="math-var">p</i><sup class="math-sup">2</sup> / 2<i class="math-var">m</i></p>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১০ (ঘ) - ধাপ ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>বিশ্লেষণ:</strong><br>
+                যদি ভরবেগ (<i class="math-var">p</i>) সমান বা ধ্রুবক হয়, তবে গতিশক্তি (<i class="math-var">T</i>) ভরের (<i class="math-var">m</i>) ব্যস্তানুপাতিক। (<i class="math-var">T</i> ∝ 1/<i class="math-var">m</i>)</p>
+                
+                <p class="reveal-item">এর অর্থ, যার ভর কম, তার গতিশক্তি বেশি হবে।</p>
+                
+                <p class="reveal-item">রহিমের ভর (30 kg) > করিমের ভর (20 kg)।</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> ভরবেগ সমান হলে, করিমের (যার ভর কম) গতিশক্তি অপেক্ষাকৃত বেশি হত।</h3>
+            </div>
+        </div>
+        <!-- Questions -->
+
+
+        <div class="slide thank-you-slide">
+            <h1 class="slide-title">ধন্যবাদ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">প্রশ্নোত্তর পর্ব</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter" id="slideCounter"></div>
+
+    <div class="nav-buttons">
+        <button id="prevBtn">পূর্ববর্তী</button>
+        <button id="nextBtn">পরবর্তী</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slideCounter');
+        let revealIndex = 0;
+
+        function showSlide(index) {
+            // Ensure index is within bounds
+            if (index >= totalSlides) {
+                index = 0;
+            } else if (index < 0) {
+                index = totalSlides - 1;
+            }
+            currentSlide = index;
+
+            // Remove 'active' class from all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Add 'active' class to the current slide
+            const activeSlide = slides[currentSlide];
+            activeSlide.classList.add('active');
+
+            // Reset reveal items for the new slide
+            revealIndex = 0;
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            revealItems.forEach(item => item.classList.remove('is-visible'));
+
+            // Update slide counter
+            slideCounter.textContent = `স্লাইড ${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function revealNext() {
+            const activeSlide = slides[currentSlide];
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            
+            if (revealIndex < revealItems.length) {
+                revealItems[revealIndex].classList.add('is-visible');
+                revealIndex++;
+                return true; // An item was revealed
+            }
+            return false; // No items left to reveal
+        }
+
+        function handleNext() {
+            if (!revealNext()) {
+                // If no items were revealed (or no items to reveal), go to next slide
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function handlePrev() {
+            showSlide(currentSlide - 1);
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', handleNext);
+        document.getElementById('prevBtn').addEventListener('click', handlePrev);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === ' ') {
+                event.preventDefault(); // Stop space from scrolling
+                handleNext();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                handlePrev();
+            }
+        });
+
+        // Initial call to show the first slide
+        showSlide(0);
+    </script>
+
+</body>
+</html>

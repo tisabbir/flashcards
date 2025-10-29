@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কাজ, ক্ষমতা ও শক্তি</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #1E1E1E;
+            box-sizing: border-box;
+            padding: 50px 80px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border-left: 10px solid #03DAC6; /* Accent color */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-title {
+            font-size: 3.2em;
+            color: #03DAC6; /* Accent color */
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+
+        .slide-content {
+            font-size: 1.6em;
+            color: #CFD8DC;
+        }
+        
+        .slide-content h3 {
+            color: #BB86FC; /* Secondary accent */
+            font-size: 1.5em;
+        }
+
+        .slide-content ul {
+            list-style-type: square;
+            padding-left: 40px;
+        }
+
+        .slide-content li, .slide-content p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        /* HTML Math Styling */
+        i.math-var {
+            font-style: italic;
+        }
+        sup.math-sup {
+            font-size: 0.75em;
+            vertical-align: super;
+        }
+        sub.math-sub {
+            font-size: 0.75em;
+            vertical-align: sub;
+        }
+
+        /* Image Styling */
+        .slide-content img {
+            max-width: 45%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+            float: right;
+            margin-left: 20px;
+        }
+        
+        /* Reveal items */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        
+        .reveal-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Special slide types */
+        .title-slide, .thank-you-slide {
+            background: linear-gradient(135deg, #2C3E50, #1a2a3a);
+            color: white;
+            align-items: center;
+            text-align: center;
+            border-left: 10px solid #BB86FC;
+        }
+        .title-slide .slide-title, .thank-you-slide .slide-title { font-size: 4.5em; color: white; border-bottom: none; }
+        .title-slide .slide-content, .thank-you-slide .slide-content { font-size: 1.8em; color: #ddd; }
+
+        .hook-slide {
+            align-items: center;
+            text-align: center;
+            background-color: #333;
+            border-left: 10px solid #FBC02D;
+        }
+        .hook-slide .slide-title { font-size: 2.8em; color: #FBC02D; }
+        .hook-slide .slide-content { font-size: 1.8em; }
+
+        .quiz-slide { border-left: 10px solid #E91E63; }
+        .quiz-slide .slide-title { color: #E91E63; }
+        .quiz-slide .quiz-option { font-size: 1.2em; margin: 10px 0; }
+        .quiz-slide .quiz-cq { font-size: 1.2em; background: #2a2a2a; padding: 15px; border-radius: 8px; border-left: 4px solid #E91E63; }
+        
+        .answer-slide { border-left: 10px solid #4CAF50; }
+        .answer-slide .slide-title { color: #4CAF50; }
+        .answer-slide .correct-answer {
+            background-color: #388E3C;
+            color: #FFFFFF;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1.2em;
+        }
+
+        .simulation-slide { border-left: 10px solid #2196F3; }
+        .simulation-slide .slide-title { color: #2196F3; }
+        .simulation-slide a { font-size: 1.2em; color: #90CAF9; text-decoration: none; background: #2a2a2a; padding: 10px 15px; border-radius: 5px; transition: background 0.3s; }
+        .simulation-slide a:hover { background: #333; }
+
+        /* Navigation */
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+        .nav-buttons button { font-size: 1em; padding: 10px 20px; margin-left: 10px; background-color: #03DAC6; color: #121212; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        .nav-buttons button:hover { background-color: #018786; transform: scale(1.05); }
+
+        .slide-counter { position: fixed; bottom: 40px; left: 30px; font-size: 1.2em; color: #888; z-index: 1000; }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <div class="slide title-slide active">
+            <h1 class="slide-title">কাজ, ক্ষমতা ও শক্তি</h1>
+            <div class="slide-content">
+                <p class="reveal-item">অধ্যায় ৪</p>
+                <p class="reveal-item">তারেকুল ইসলাম সাব্বির</p>
+            </div>
+        </div>
+
+        <div class="slide hook-slide">
+            <h2 class="slide-title">একটা প্রশ্ন...</h2>
+            <div class="slide-content">
+                <p class="reveal-item">তুমি যদি একটা দেয়ালকে সারাদিন ধরে ধাক্কা দাও, তুমি কি ক্লান্ত হবে?</p>
+                <p class="reveal-item">...অবশ্যই!</p>
+                <p class="reveal-item">কিন্তু ফিজিক্সের ভাষায়, তুমি কতটুকু 'কাজ' করেছ?</p>
+                <p class="reveal-item">...<strong>শূন্য (০)</strong>! 😮</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">"কাজ" কেন শিখব?</h2>
+            <div class="slide-content">
+                <img src="41.png">
+                <ul class="reveal-item">
+                    <li>ফিজিক্সের "কাজ" আর everyday "কাজ" এক জিনিস নয়।</li>
+                    <li class="reveal-item">‘কাজ’ কনসেপ্টটা বুঝলে তুমি বলতে পারবে একটা ইঞ্জিন কত শক্তিশালী।</li>
+                    <li class="reveal-item"><strong>উপমা:</strong> ফিজিক্সের 'কাজ' হলো শক্তি খরচ করার রসিদ। যদি কোনো জিনিস না নড়ে (সরণ <i>s</i>=0 হয়), তাহলে কোনো শক্তি খরচ হয়নি, তাই রসিদও শূন্য (কাজ <i>W</i>=0)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">কাজ (Work) কী?</h2>
+            <div class="slide-content">
+                <img src="42.png" alt="Pushing a box">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> কোনো বস্তুর উপর বল (<i class="math-var">F</i>) প্রয়োগে যদি বস্তুটি বলের দিকে <i class="math-var">s</i> দূরত্ব অতিক্রম করে, তবে বল এবং সরণের গুণফলকে কাজ বলে।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">W</i> = <i class="math-var">F</i><i class="math-var">s</i></li>
+                    <li class="reveal-item"><strong>একক:</strong> জুল (J)</li>
+                    <li class="reveal-item"><strong>ঋণাত্মক কাজ:</strong> যদি বলের উল্টো দিকে সরণ হয় (যেমন ঘর্ষণ বল), তখন কাজ ঋণাত্মক (<i>W</i> = -<i>Fs</i>) হয়।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১ (কাজ)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১. 10N বল প্রয়োগে একটি বস্তুর সরণ না হলে কৃতকাজ কত?</h3>
+                <p class="quiz-option reveal-item">(ক) 10 J</p>
+                <p class="quiz-option reveal-item">(খ) 1 J</p>
+                <p class="quiz-option reveal-item">(গ) 0 J</p>
+                <p class="quiz-option reveal-item">(ঘ) 0.1 J</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১</h2>
+            <div class="slide-content">
+                <h3>১. 10N বল প্রয়োগে একটি বস্তুর সরণ না হলে কৃতকাজ কত?</h3>
+                <p class="quiz-option">(ক) 10 J</p>
+                <p class="quiz-option">(খ) 1 J</p>
+                <p class="quiz-option correct-answer">(গ) 0 J</p>
+                <p class="quiz-option">(ঘ) 0.1 J</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> কাজ <i>W</i> = <i>Fs</i>। এখানে সরণ <i>s</i> = 0, তাই কাজ <i>W</i> = 10N × 0m = 0 J।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ২ (কাজ)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২. কাজের মাত্রা কোনটি?</h3>
+                <p class="quiz-option reveal-item">(ক) <i class="math-var">MLT</i><sup class="math-sup">-1</sup></p>
+                <p class="quiz-option reveal-item">(খ) <i class="math-var">MLT</i><sup class="math-sup">-2</sup></p>
+                <p class="quiz-option reveal-item">(গ) <i class="math-var">ML</i><sup class="math-sup">2</sup><i class="math-var">T</i><sup class="math-sup">-2</sup></p>
+                <p class="quiz-option reveal-item">(ঘ) <i class="math-var">ML</i><sup class="math-sup">2</sup><i class="math-var">T</i><sup class="math-sup">-3</sup></p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ২</h2>
+            <div class="slide-content">
+                <h3>২. কাজের মাত্রা কোনটি?</h3>
+                <p class="quiz-option">(ক) <i class="math-var">MLT</i><sup class="math-sup">-1</sup></p>
+                <p class="quiz-option">(খ) <i class="math-var">MLT</i><sup class="math-sup">-2</sup></p>
+                <p class="quiz-option correct-answer">(গ) <i class="math-var">ML</i><sup class="math-sup">2</sup><i class="math-var">T</i><sup class="math-sup">-2</sup></p>
+                <p class="quiz-option">(ঘ) <i class="math-var">ML</i><sup class="math-sup">2</sup><i class="math-var">T</i><sup class="math-sup">-3</sup></p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> কাজ = বল × সরণ। বলের মাত্রা $MLT^{-2}$ এবং সরণের মাত্রা $L$। সুতরাং কাজের মাত্রা $(MLT^{-2}) \times (L) = ML^2T^{-2}$।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ১</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">সাকিব একটি 50 kg ভরের বস্তুকে 100 N বল প্রয়োগ করে 5m সরালো।</p>
+                <h3 class="reveal-item">(গ) সাকিব মোট কত কাজ করেছে?</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                বল (<i class="math-var">F</i>) = 100 N<br>
+                সরণ (<i class="math-var">s</i>) = 5 m<br>
+                (বস্তুর ভর 50 kg এখানে অপ্রাসঙ্গিক)</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong><br>
+                কাজ (<i class="math-var">W</i>) = <i class="math-var">F</i> × <i class="math-var">s</i></p>
+                
+                <p class="reveal-item"><strong>হিসাব:</strong><br>
+                <i class="math-var">W</i> = 100 N × 5 m = 500 J</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> 500 জুল।</h3>
+            </div>
+        </div>
+
+        <div class="slide simulation-slide">
+            <h2 class="slide-title">সিমুলেশন: কাজ ও বল</h2>
+            <div class="slide-content">
+                <p class="reveal-item">বল প্রয়োগ করে দেখি কখন কাজ হয় আর কখন হয় না!</p>
+                <br>
+                <a class="reveal-item" href="https://phet.colorado.edu/sims/html/forces-and-motion-basics/latest/forces-and-motion-basics_bn.html" target="_blank">PhET: Forces and Motion (Bangla)</a>
+            </div>
+        </div>
+
+        <div class="slide hook-slide">
+            <h2 class="slide-title">---- কী?</h2>
+            <div class="slide-content">
+                <p class="reveal-item">তোমার ফোন কেন চার্জ করতে হয়? 🔋</p>
+                <p class="reveal-item">গাড়ি চালাতে কেন তেল লাগে? 🚗</p>
+                <p class="reveal-item">দৌড়ানোর পর তুমি কেন ক্লান্ত হয়ে যাও? 🏃</p>
+                <p class="reveal-item">এক কথায় উত্তর: <strong>শক্তি (Energy)</strong></p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">"শক্তি" কেন শিখব?</h2>
+            <div class="slide-content">
+                <img src="43.png" alt="Charging battery">
+                <ul>
+                    <li class="reveal-item">শক্তি হলো এই মহাবিশ্বের "টাকা"। এটা ছাড়া কিছুই করা যায় না।</li>
+                    <li class="reveal-item"><strong>উপমা:</strong> যদি 'কাজ' (Work) হয় কোনো কিছু *কেনা*, ২. কাজের মাত্রা কোনটি?
+                    (ক) MLT-তবে 'শক্তি' (Energy) হলো তোমার পকেটের *টাকা* যা দিয়ে তুমি ওটা কিনবে।</li>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> কাজ করার সামর্থ্যকেই শক্তি বলে।</li>
+                    <li class="reveal-item">কাজ ও শক্তির একক একই: <strong>জুল (J)</strong>।</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <h2 class="slide-title">শক্তি: গতিশক্তি</h2>
+            <div class="slide-content">
+                <img src="44.jpg" alt="Roller coaster">
+                <h3>গতিশক্তি (Kinetic Energy)</h3>
+                <ul>
+                    <li class="reveal-item"><strong>উপমা:</strong> এটা হলো "চলতি" শক্তি। কোনো জিনিস নড়াচড়া করলেই তার এই শক্তি থাকে। যেমন: চলন্ত বাস, ছোড়া ঢিল।</li>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> কোনো বস্তু তার গতির জন্য যে শক্তি লাভ করে।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">T</i> = <sup>1</sup>/<sub>2</sub><i class="math-var">mv</i><sup class="math-sup">2</sup></li>
+                    <li class="reveal-item"><strong>গুরুত্বপূর্ণ:</strong> বেগ (<i class="math-var">v</i>) যদি ২ গুণ বাড়ে, গতিশক্তি <i class="math-var">v</i><sup class="math-sup">2</sup> বা ৪ গুণ বেড়ে যায়!</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">শক্তি: বিভব শক্তি</h2>
+            <div class="slide-content">
+                <img src="45.jpg" alt="Water dam">
+                <h3>বিভব শক্তি (Potential Energy)</h3>
+                <ul>
+                    <li class="reveal-item"><strong>উপমা:</strong> এটা হলো " জমানো" বা "স্টোর করা" শক্তি। এটা কাজ করার জন্য প্রস্তুত হয়ে আছে।</li>
+                    <li class="reveal-item"><strong>উদাহরণ ১ (অবস্থান):</strong> একটি পাথরকে মাটির <i class="math-var">h</i> উচ্চতায় তুললে তাতে শক্তি জমা হয়।<br>
+                        <strong>সূত্র:</strong> <i class="math-var">V</i> = <i class="math-var">mgh</i></li>
+                    <li class="reveal-item"><strong>উদাহরণ ২ (অবস্থা):</strong> একটি স্প্রিংকে সংকুচিত করলে তাতে শক্তি জমা হয়।<br>
+                        <strong>সূত্র:</strong> <i class="math-var">V</i> = <sup>1</sup>/<sub>2</sub><i class="math-var">kx</i><sup class="math-sup">2</sup></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৩ (শক্তি)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩. কোনো বস্তুর বেগ দ্বিগুণ করলে তার গতিশক্তি কতগুণ বাড়বে?</h3>
+                <p class="quiz-option reveal-item">(ক) ২ গুণ</p>
+                <p class="quiz-option reveal-item">(খ) ৪ গুণ</p>
+                <p class="quiz-option reveal-item">(গ) ৮ গুণ</p>
+                <p class="quiz-option reveal-item">(ঘ) ১/২ গুণ</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৩</h2>
+            <div class="slide-content">
+                <h3>৩. কোনো বস্তুর বেগ দ্বিগুণ করলে তার গতিশক্তি কতগুণ বাড়বে?</h3>
+                <p class="quiz-option">(ক) ২ গুণ</p>
+                <p class="quiz-option correct-answer">(খ) ৪ গুণ</p>
+                <p class="quiz-option">(গ) ৮ গুণ</p>
+                <p class="quiz-option">(ঘ) ১/২ গুণ</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> গতিশক্তি <i class="math-var">T</i> ∝ <i class="math-var">v</i><sup class="math-sup">2</sup>। বেগ (<i class="math-var">v</i>) ২ গুণ হলে, গতিশক্তি (২)<sup class="math-sup">2</sup> = ৪ গুণ বাড়বে।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ২</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">10 kg ভরের একটি স্থির বস্তুর উপর বল প্রয়োগ করায় তার গতিশক্তি 2000 J হলো।</p>
+                <h3 class="reveal-item">(গ) বস্তুটির শেষ বেগ কত?</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                ভর (<i class="math-var">m</i>) = 10 kg<br>
+                গতিশক্তি (<i class="math-var">T</i>) = 2000 J</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong><br>
+                <i class="math-var">T</i> = <sup>1</sup>/<sub>2</sub><i class="math-var">mv</i><sup class="math-sup">2</sup></p>
+                
+                <p class="reveal-item"><strong>হিসাব:</strong><br>
+                2000 = <sup>1</sup>/<sub>2</sub> × 10 × <i class="math-var">v</i><sup class="math-sup">2</sup><br>
+                2000 = 5 × <i class="math-var">v</i><sup class="math-sup">2</sup><br>
+                <i class="math-var">v</i><sup class="math-sup">2</sup> = 2000 / 5 = 400<br>
+                <i class="math-var">v</i> = √400 = 20 m/s</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> 20 m/s।</h3>
+            </div>
+        </div>
+
+        <div class="slide simulation-slide">
+            <h2 class="slide-title">সিমুলেশন: শক্তির রূপান্তর</h2>
+            <div class="slide-content">
+                <p class="reveal-item">দেখো কিভাবে একটা স্কেটবোর্ডার-এর বিভব শক্তি গতিশক্তিতে রূপান্তরিত হয়!</p>
+                <br>
+                <a class="reveal-item" href="https://phet.colorado.edu/sims/html/energy-skate-park-basics/latest/energy-skate-park-basics_bn.html" target="_blank">PhET: Energy Skate Park (Bangla)</a>
+            </div>
+        </div>
+        
+        <div class="slide hook-slide">
+            <h2 class="slide-title">ক্ষমতা (Power) কী?</h2>
+            <div class="slide-content">
+                <p class="reveal-item">তোমাকে আর তোমার বন্ধুকে ১০০টি ইট ৫ তলায় তুলতে বলা হলো।</p>
+                <p class="reveal-item">তুমি কাজটা করলে ২ ঘণ্টায়, আর তোমার বন্ধু করলো ৫ ঘণ্টায়।</p>
+                <p class="reveal-item">দু'জনেই কিন্তু <strong>একই কাজ</strong> (<i class="math-var">W</i>) করেছ! 😮</p>
+                <p class="reveal-item">তাহলে তফাৎটা কোথায়? ... তফাৎটা হলো <strong>ক্ষমতায়</strong>!</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ক্ষমতা (Power)</h2>
+            <div class="slide-content">
+                <img src="46.jpg" alt="Running up stairs">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> ক্ষমতা হলো কাজ করার হার (অর্থাৎ কে কত দ্রুত কাজ করতে পারে)।</li>
+                    <li class="reveal-item"><strong>উপমা:</strong> 'কাজ' যদি হয় ১০০টি ইট উপরে তোলা, 'ক্ষমতা' হলো প্রতি মিনিটে বা প্রতি সেকেন্ডে তুমি কয়টি ইট তুলছ।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">P</i> = <i class="math-var">W</i> / <i class="math-var">t</i> (ক্ষমতা = কাজ / সময়)</li>
+                    <li class="reveal-item"><strong>একক:</strong> ওয়াট (W)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৪ (ক্ষমতা)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৪. ক্ষমতার একক কোনটি?</h3>
+                <p class="quiz-option reveal-item">(ক) জুল</p>
+                <p class="quiz-option reveal-item">(খ) ওয়াট</p>
+                <p class="quiz-option reveal-item">(গ) নিউটন</p>
+                <p class="quiz-option reveal-item">(ঘ) প্যাসকেল</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৪</h2>
+            <div class="slide-content">
+                <h3>৪. ক্ষমতার একক কোনটি?</h3>
+                <p class="quiz-option">(ক) জুল</p>
+                <p class="quiz-option correct-answer">(খ) ওয়াট</p>
+                <p class="quiz-option">(গ) নিউটন</p>
+                <p class="quiz-option">(ঘ) প্যাসকেল</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> ক্ষমতার একক ওয়াট (W)। জুল হলো কাজ/শক্তির একক, নিউটন হলো বলের একক।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৩</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">একজন 60kg ভরের লোক 20s এ 10m উঁচু ছাদে উঠলো।</p>
+                <h3 class="reveal-item">(গ) লোকটির ক্ষমতা কত? (ধরো, <i class="math-var">g</i> = 9.8 m/s<sup class="math-sup">2</sup>)</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৩</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                ভর (<i class="math-var">m</i>) = 60 kg<br>
+                সময় (<i class="math-var">t</i>) = 20 s<br>
+                উচ্চতা (<i class="math-var">h</i>) = 10 m<br>
+                অভিকর্ষজ ত্বরণ (<i class="math-var">g</i>) = 9.8 m/s<sup class="math-sup">2</sup></p>
+                
+                <p class="reveal-item"><strong>১ম ধাপ: কাজ (W) বের করা</strong><br>
+                কাজ (<i class="math-var">W</i>) = বিভব শক্তি = <i class="math-var">mgh</i><br>
+                <i class="math-var">W</i> = 60 × 9.8 × 10 = 5880 J</p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: ক্ষমতা (P) বের করা</strong><br>
+                ক্ষমতা (<i class="math-var">P</i>) = <i class="math-var">W</i> / <i class="math-var">t</i><br>
+                <i class="math-var">P</i> = 5880 J / 20 s = 294 W</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> 294 ওয়াট।</h3>
+            </div>
+        </div>
+
+        <div class="slide thank-you-slide">
+            <h1 class="slide-title">ধন্যবাদ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">প্রশ্নোত্তর পর্ব</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter" id="slideCounter"></div>
+
+    <div class="nav-buttons">
+        <button id="prevBtn">পূর্ববর্তী</button>
+        <button id="nextBtn">পরবর্তী</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slideCounter');
+        let revealIndex = 0;
+
+        function showSlide(index) {
+            // Ensure index is within bounds
+            if (index >= totalSlides) {
+                index = 0;
+            } else if (index < 0) {
+                index = totalSlides - 1;
+            }
+            currentSlide = index;
+
+            // Remove 'active' class from all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Add 'active' class to the current slide
+            const activeSlide = slides[currentSlide];
+            activeSlide.classList.add('active');
+
+            // Reset reveal items for the new slide
+            revealIndex = 0;
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            revealItems.forEach(item => item.classList.remove('is-visible'));
+
+            // Update slide counter
+            slideCounter.textContent = `স্লাইড ${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function revealNext() {
+            const activeSlide = slides[currentSlide];
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            
+            if (revealIndex < revealItems.length) {
+                revealItems[revealIndex].classList.add('is-visible');
+                revealIndex++;
+                return true; // An item was revealed
+            }
+            return false; // No items left to reveal
+        }
+
+        function handleNext() {
+            if (!revealNext()) {
+                // If no items were revealed (or no items to reveal), go to next slide
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function handlePrev() {
+            showSlide(currentSlide - 1);
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', handleNext);
+        document.getElementById('prevBtn').addEventListener('click', handlePrev);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === ' ') {
+                handleNext();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                handlePrev();
+            }
+        });
+
+        // Initial call to show the first slide
+        showSlide(0);
+    </script>
+
+</body>
+</html>

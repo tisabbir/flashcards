@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কাজ, ক্ষমতা ও শক্তি</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-KiWOvVjnN8qwFseDJVROkIgCLbPoQwuBXW/rTNDp1Bjo7gsGZlqK9QpkDOvQjS4E" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoI8CMh9nmYNcIuH0H+TAWqiYAPxOsB_iHIoDkI6LKVOVIFeASTGMlCjI/tbvPK" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaD5e1l+3fYmLSAbPAy
+OfHjNscH/NKOeTNPB" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #1E1E1E;
+            box-sizing: border-box;
+            padding: 50px 80px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border-left: 10px solid #03DAC6; /* Accent color */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-title {
+            font-size: 3.2em;
+            color: #03DAC6; /* Accent color */
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+
+        .slide-content {
+            font-size: 1.6em;
+            color: #CFD8DC;
+        }
+        
+        .slide-content h3 {
+            color: #BB86FC; /* Secondary accent */
+            font-size: 1.5em;
+        }
+
+        .slide-content ul {
+            list-style-type: square;
+            padding-left: 40px;
+        }
+
+        .slide-content li {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        /* Special slide types */
+        .title-slide, .thank-you-slide {
+            background: linear-gradient(135deg, #2C3E50, #1a2a3a);
+            color: white;
+            align-items: center;
+            text-align: center;
+            border-left: 10px solid #BB86FC;
+        }
+        
+        .title-slide .slide-title, .thank-you-slide .slide-title {
+            font-size: 4.5em;
+            color: white;
+            border-bottom: none;
+        }
+        
+        .title-slide .slide-content, .thank-you-slide .slide-content {
+            font-size: 1.8em;
+            color: #ddd;
+        }
+
+        .hook-slide {
+            align-items: center;
+            text-align: center;
+            background-color: #333;
+            border-left: 10px solid #FBC02D;
+        }
+        .hook-slide .slide-title {
+            font-size: 2.8em;
+            color: #FBC02D;
+        }
+        .hook-slide .slide-content {
+            font-size: 1.8em;
+        }
+
+        .quiz-slide {
+            border-left: 10px solid #E91E63;
+        }
+        .quiz-slide .slide-title {
+            color: #E91E63;
+        }
+        .quiz-slide .quiz-option {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .quiz-slide .quiz-cq {
+            font-size: 1.2em;
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #E91E63;
+        }
+
+        .simulation-slide {
+            border-left: 10px solid #4CAF50;
+        }
+        .simulation-slide .slide-title {
+            color: #4CAF50;
+        }
+        .simulation-slide a {
+            font-size: 1.2em;
+            color: #81C784;
+            text-decoration: none;
+            background: #2a2a2a;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .simulation-slide a:hover {
+            background: #333;
+        }
+
+
+        /* Navigation */
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .nav-buttons button {
+            font-size: 1em;
+            padding: 10px 20px;
+            margin-left: 10px;
+            background-color: #03DAC6;
+            color: #121212;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .nav-buttons button:hover {
+            background-color: #018786;
+            transform: scale(1.05);
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 40px;
+            left: 30px;
+            font-size: 1.2em;
+            color: #888;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        <div class="slide title-slide active">
+            <h1 class="slide-title">কাজ, ক্ষমতা ও শক্তি</h1>
+            <div class="slide-content">
+                <p>অধ্যায় ৪</p>
+                <p>[আপনার নাম/প্রতিষ্ঠানের নাম এখানে যোগ করুন]</p>
+            </div>
+        </div>
+
+        <div class="slide hook-slide">
+            <h2 class="slide-title">একটা প্রশ্ন...</h2>
+            <div class="slide-content">
+                <p>তুমি যদি একটা দেয়ালকে সারাদিন ধরে ধাক্কা দাও, তুমি কি ক্লান্ত হবে?</p>
+                <p>...অবশ্যই!</p>
+                <p>কিন্তু ফিজিক্সের ভাষায়, তুমি কতটুকু 'কাজ' করেছ জানো?</p>
+                <p>...শূন্য (০)! 😮</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">"কাজ" কেন শিখব?</h2>
+            <div class="slide-content">
+                <ul>
+                    <li>ফিজিক্সের "কাজ" আর everyday "কাজ" এক জিনিস নয়।</li>
+                    <li>এই কনসেপ্টটা বুঝলে তুমি বলতে পারবে একটা ইঞ্জিন কত শক্তিশালী, বা একটা রকেটকে চাঁদে পাঠাতে আসলে কী পরিমাণ "ধাক্কা" দরকার।</li>
+                    <li><strong>অ্যানালজি:</strong> ফিজিক্সের 'কাজ' হলো শক্তি খরচ করার রসিদ। যদি কোনো জিনিস না নড়ে (সরণ $s=0$ হয়), তাহলে কোনো শক্তি খরচ হয়নি, তাই রসিদও শূন্য (কাজ $W=0$)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">কাজ (Work) কী?</h2>
+            <div class="slide-content">
+                <ul>
+                    [cite_start]<li><strong>সংজ্ঞা:</strong> কোনো বস্তুর উপর বল ($F$) প্রয়োগে যদি বস্তুটি বলের দিকে $s$ দূরত্ব অতিক্রম করে, তবে বল এবং সরণের গুণফলকে কাজ বলে। [cite: 30]</li>
+                    <li><strong>সূত্র:</strong> $W = Fs$</li>
+                    [cite_start]<li><strong>একক:</strong> জুল (J) [cite: 32]</li>
+                    [cite_start]<li><strong>ঋণাত্মক কাজ:</strong> যদি বলের উল্টো দিকে সরণ হয় (যেমন ঘর্ষণ বল), তখন কাজ ঋণাত্মক ($W = -Fs$) হয়। [cite: 54]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ টাইম: কাজ</h2>
+            <div class="slide-content">
+                <h3>MCQ</h3>
+                <p class="quiz-option">১. 10N বল প্রয়োগে একটি বস্তুর সরণ না হলে কৃতকাজ কত?</p>
+                <p class="quiz-option">(ক) 10 J &nbsp;&nbsp; (খ) 1 J &nbsp;&nbsp; (গ) 0 J &nbsp;&nbsp; (ঘ) 0.1 J</p>
+                <p class="quiz-option">২. [cite_start]কাজের মাত্রা কোনটি? [cite: 32]</p>
+                <p class="quiz-option">(ক) $MLT^{-1}$ &nbsp;&nbsp; (খ) $MLT^{-2}$ &nbsp;&nbsp; (গ) $ML^2T^{-2}$ &nbsp;&nbsp; (ঘ) $ML^2T^{-3}$</p>
+                
+                <h3>CQ (সৃজনশীল প্রশ্ন)</h3>
+                <p class="quiz-cq">সাকিব একটি 50 kg ভরের বস্তুকে 100 N বল প্রয়োগ করে 5m সরালো।<br/>
+                (গ) [cite_start]সাকিব মোট কত কাজ করেছে? [cite: 31]</p>
+            </div>
+        </div>
+
+        <div class="slide simulation-slide">
+            <h2 class="slide-title">সিমুলেশন: কাজ ও বল</h2>
+            <div class="slide-content">
+                <p>নিজের হাতে বল প্রয়োগ করে দেখো কখন কাজ হয় আর কখন হয় না!</p>
+                <br>
+                <a href="https://phet.colorado.edu/sims/html/forces-and-motion-basics/latest/forces-and-motion-basics_bn.html" target="_blank">PhET: Forces and Motion (Bangla)</a>
+            </div>
+        </div>
+
+        <div class="slide hook-slide">
+            <h2 class="slide-title">শক্তি কী?</h2>
+            <div class="slide-content">
+                <p>তোমার ফোন কেন চার্জ করতে হয়? 🔋</p>
+                <p>গাড়ি চালাতে কেন তেল লাগে? 🚗</p>
+                <p>দৌড়ানোর পর তুমি কেন ক্লান্ত হয়ে যাও? 🏃</p>
+                <p>এক কথায় উত্তর: <strong>শক্তি (Energy)</strong></p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">"শক্তি" কেন শিখব?</h2>
+            <div class="slide-content">
+                <ul>
+                    <li>শক্তি হলো এই মহাবিশ্বের "টাকা"। এটা ছাড়া কিছুই করা যায় না।</li>
+                    <li><strong>অ্যানালজি:</strong> যদি 'কাজ' (Work) হয় কোনো কিছু *কেনা*, তবে 'শক্তি' (Energy) হলো তোমার পকেটের *টাকা* যা দিয়ে তুমি ওটা কিনবে।</li>
+                    [cite_start]<li><strong>সংজ্ঞা:</strong> কাজ করার সামর্থ্যকেই শক্তি বলে। [cite: 71]</li>
+                    [cite_start]<li>কাজ ও শক্তির একক একই: **জুল (J)**। [cite: 82]</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <h2 class="slide-title">শক্তির প্রকারভেদ: গতিশক্তি</h2>
+            <div class="slide-content">
+                <h3>গতিশক্তি (Kinetic Energy)</h3>
+                <ul>
+                    <li><strong>অ্যানালজি:</strong> এটা হলো "চলতি" শক্তি। কোনো জিনিস নড়াচড়া করলেই তার এই শক্তি থাকে। [cite_start]যেমন: চলন্ত বাস, ছোড়া ঢিল। [cite: 113, 118]</li>
+                    <li><strong>সংজ্ঞা:</strong> কোনো বস্তু তার গতির জন্য যে শক্তি লাভ করে।</li>
+                    [cite_start]<li><strong>সূত্র:</strong> $T = \frac{1}{2}mv^2$ [cite: 131]</li>
+                    <li>খেয়াল করো: বেগ ($v$) যদি ২ গুণ বাড়ে, গতিশক্তি $v^2$ বা ৪ গুণ বেড়ে যায়! [cite_start]এজন্যই দ্রুত গতির গাড়ির অ্যাক্সিডেন্ট বেশি ভয়াবহ হয়। [cite: 119]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">শক্তির প্রকারভেদ: বিভব শক্তি</h2>
+            <div class="slide-content">
+                <h3>বিভব শক্তি (Potential Energy)</h3>
+                <ul>
+                    <li><strong>অ্যানালজি:</strong> এটা হলো " জমানো" বা "স্টোর করা" শক্তি। [cite_start]এটা কাজ করার জন্য প্রস্তুত হয়ে আছে। [cite: 175]</li>
+                    [cite_start]<li><strong>উদাহরণ ১ (অবস্থান):</strong> একটি পাথরকে মাটির $h$ উচ্চতায় তুললে তাতে শক্তি জমা হয়। [cite: 198]
+                        [cite_start]<strong>সূত্র:</strong> $V = mgh$ [cite: 206]</li>
+                    [cite_start]<li><strong>উদাহরণ ২ (অবস্থা):</strong> একটি স্প্রিংকে সংকুচিত করলে তাতে শক্তি জমা হয়। [cite: 172]
+                        [cite_start]<strong>সূত্র:</strong> $V = \frac{1}{2}kx^2$ [cite: 181]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ টাইম: শক্তি</h2>
+            <div class="slide-content">
+                <h3>MCQ</h3>
+                <p class="quiz-option">১. কোনো বস্তুর বেগ দ্বিগুণ করলে তার গতিশক্তি কতগুণ বাড়বে?</p>
+                <p class="quiz-option">(ক) ২ গুণ &nbsp;&nbsp; (খ) ৪ গুণ &nbsp;&nbsp; (গ) ৮ গুণ &nbsp;&nbsp; (ঘ) $\frac{1}{2}$ গুণ</p>
+                <p class="quiz-option">২. 5kg ভরের বস্তুকে 10m উঁচুতে তুললে বিভব শক্তি কত? ($g=9.8$ m/s²)</p>
+                <p class="quiz-option">(ক) 49 J &nbsp;&nbsp; (খ) 50 J &nbsp;&nbsp; (গ) 490 J &nbsp;&nbsp; (ঘ) 98 J</p>
+                
+                <h3>CQ (সৃজনশীল প্রশ্ন)</h3>
+                <p class="quiz-cq">10 kg ভরের একটি স্থির বস্তুর উপর বল প্রয়োগ করায় তার গতিশক্তি 2000 J হলো।<br/>
+                (গ) [cite_start]বস্তুটির শেষ বেগ কত? [cite: 153, 157]</p>
+            </div>
+        </div>
+
+        <div class="slide simulation-slide">
+            <h2 class="slide-title">সিমুলেশন: শক্তির রূপান্তর</h2>
+            <div class="slide-content">
+                <p>দেখো কিভাবে একটা স্কেটবোর্ডার-এর বিভব শক্তি গতিশক্তিতে রূপান্তরিত হয়!</p>
+                <br>
+                <a href="https://phet.colorado.edu/sims/html/energy-skate-park-basics/latest/energy-skate-park-basics_bn.html" target="_blank">PhET: Energy Skate Park (Bangla)</a>
+            </div>
+        </div>
+        
+        <div class="slide hook-slide">
+            <h2 class="slide-title">ক্ষমতা (Power) কী?</h2>
+            <div class="slide-content">
+                <p>তোমাকে আর তোমার বন্ধুকে ১০০টি ইট ৫ তলায় তুলতে বলা হলো।</p>
+                <p>তুমি কাজটা করলে ২ ঘণ্টায়, আর তোমার বন্ধু করলো ৫ ঘণ্টায়।</p>
+                <p>দু'জনেই কিন্তু *একই কাজ* ($W$) করেছ! 😮</p>
+                <p>তাহলে তফাৎটা কোথায়? ... তফাৎটা হলো **ক্ষমতায়**!</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ক্ষমতা (Power)</h2>
+            <div class="slide-content">
+                <ul>
+                    [cite_start]<li><strong>সংজ্ঞা:</strong> ক্ষমতা হলো কাজ করার হার (অর্থাৎ কে কত দ্রুত কাজ করতে পারে)। [cite: 486]</li>
+                    <li><strong>অ্যানালজি:</strong> 'কাজ' যদি হয় ১০০টি ইট উপরে তোলা, 'ক্ষমতা' হলো প্রতি মিনিটে বা প্রতি সেকেন্ডে তুমি কয়টি ইট তুলছ।</li>
+                    [cite_start]<li><strong>সূত্র:</strong> $P = \frac{W}{t}$ (ক্ষমতা = কাজ / সময়) [cite: 488]</li>
+                    [cite_start]<li><strong>একক:</strong> ওয়াট (W) [cite: 493]</li>
+                    [cite_start]<li>(100W-এর একটি বাতি মানে এটি প্রতি সেকেন্ডে 100 জুল শক্তি খরচ করে)। [cite: 496]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ টাইম: ক্ষমতা</h2>
+            <div class="slide-content">
+                <h3>MCQ</h3>
+                <p class="quiz-option">১. [cite_start]ক্ষমতার একক কোনটি? [cite: 493]</p>
+                <p class="quiz-option">(ক) জুল &nbsp;&nbsp; (খ) ওয়াট &nbsp;&nbsp; (গ) নিউটন &nbsp;&nbsp; (ঘ) প্যাসকেল</p>
+                <p class="quiz-option">২. [cite_start]10s এ 500J কাজ করলে ক্ষমতা কত? [cite: 488]</p>
+                <p class="quiz-option">(ক) 5000 W &nbsp;&nbsp; (খ) 50 W &nbsp;&nbsp; (গ) 5 W &nbsp;&nbsp; (ঘ) 0.5 W</p>
+                
+                <h3>CQ (সৃজনশীল প্রশ্ন)</h3>
+                <p class="quiz-cq">একজন 60kg ভরের লোক 20s এ 10m উঁচু ছাদে উঠলো।<br/>
+                (গ) লোকটির ক্ষমতা কত? ( $g=9.8$ m/s² )</p>
+            </div>
+        </div>
+
+        <div class="slide thank-you-slide">
+            <h1 class="slide-title">ধন্যবাদ</h1>
+            <div class="slide-content">
+                <p>প্রশ্নোত্তর পর্ব</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter" id="slideCounter"></div>
+
+    <div class="nav-buttons">
+        <button id="prevBtn">পূর্ববর্তী</button>
+        <button id="nextBtn">পরবর্তী</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slideCounter');
+
+        function showSlide(index) {
+            // Ensure index is within bounds
+            if (index >= totalSlides) {
+                index = 0;
+            } else if (index < 0) {
+                index = totalSlides - 1;
+            }
+            currentSlide = index;
+
+            // Remove 'active' class from all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Add 'active' class to the current slide
+            slides[currentSlide].classList.add('active');
+
+            // Update slide counter
+            slideCounter.textContent = `স্লাইড ${currentSlide + 1} / ${totalSlides}`;
+            
+            // Re-render math in the new active slide if necessary
+            if (window.renderMathInElement) {
+                renderMathInElement(slides[currentSlide]);
+            }
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            showSlide(currentSlide + 1);
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            showSlide(currentSlide - 1);
+        });
+
+        // Initial call to show the first slide
+        showSlide(0);
+    </script>
+
+</body>
+</html>

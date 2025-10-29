@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কাজ, ক্ষমতা ও শক্তি</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            box-sizing: border-box;
+            padding: 50px 80px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-title {
+            font-size: 3.5em;
+            color: #333;
+            margin-bottom: 40px;
+            border-bottom: 4px solid #0078D4;
+            padding-bottom: 10px;
+        }
+
+        .slide-content {
+            font-size: 1.5em;
+            color: #444;
+        }
+
+        .slide-content ul {
+            list-style-type: disc;
+            padding-left: 40px;
+        }
+
+        .slide-content li {
+            margin-bottom: 15px;
+        }
+        
+        .slide-content code {
+            font-family: 'Consolas', monospace;
+            background-color: #eee;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+        
+        .title-slide {
+            background: linear-gradient(135deg, #0078D4, #004A8C);
+            color: white;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .title-slide .slide-title {
+            font-size: 4.5em;
+            color: white;
+            border-bottom: none;
+        }
+        
+        .title-slide .slide-content {
+            font-size: 1.8em;
+            color: #ddd;
+        }
+
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .nav-buttons button {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            margin-left: 10px;
+            background-color: #0078D4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .nav-buttons button:hover {
+            background-color: #005A9E;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            font-size: 1.2em;
+            color: #555;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        <div class="slide title-slide active">
+            <h1 class="slide-title">কাজ, ক্ষমতা ও শক্তি</h1>
+            <div class="slide-content">
+                <p>অধ্যায় ৪</p>
+                <p>[আপনার নাম/প্রতিষ্ঠানের নাম এখানে যোগ করুন]</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ভূমিকা ও শিখনফল</h2>
+            <div class="slide-content">
+                <strong>ভূমিকা:</strong>
+                <ul>
+                    <li>এই অধ্যায়ে আমরা পদার্থবিজ্ঞানের ভাষায় 'কাজ' কী তা জানব।</li>
+                    <li>কাজ, শক্তি (গতিশক্তি ও স্থিতিশক্তি) এবং তাদের রূপান্তর নিয়ে আলোচনা করা হবে।</li>
+                    <li>শক্তি কীভাবে মানবসভ্যতার বিকাশে ভূমিকা রাখে তা পর্যালোচনা করা হবে।</li>
+                </ul>
+                <strong>শিখনফল:</strong>
+                <ul>
+                    <li>কাজ, ক্ষমতা ও শক্তি ব্যাখ্যা করতে পারব।</li>
+                    <li>গতিশক্তি ও বিভব শক্তির সম্পর্ক বুঝতে পারব।</li>
+                    <li>শক্তির নিত্যতা এবং ভর-শক্তির সম্পর্ক ব্যাখ্যা করতে পারব।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">কাজ (Work)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li><strong>সংজ্ঞা:</strong> কোনো বস্তুর উপর বল ($F$) প্রয়োগে যদি বস্তুটি বলের দিকে $s$ দূরত্ব অতিক্রম করে, তবে কৃত 'কাজ' ($W$) হয়।</li>
+                    <li><strong>সূত্র:</strong> <code>W = Fs</code></li>
+                    <li><strong>একক:</strong> জুল (J)</li>
+                    <li><strong>মাত্রা:</strong> <code>[W] = ML²T⁻²</code></li>
+                    <li><strong>ঋণাত্মক কাজ:</strong> যদি সরণ ($s$) প্রযুক্ত বলের ($F$) বিপরীত দিকে হয়, তবে কাজ ঋণাত্মক হয় (<code>W = -Fs</code>)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">শক্তি (Energy)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li><strong>সংজ্ঞা:</strong> শক্তি হলো কাজ করার সামর্থ্য।</li>
+                    <li><strong>কাজ-শক্তি সম্পর্ক:</strong>
+                        <ul>
+                            <li><strong>ধনাত্মক কাজ:</strong> বস্তুকে শক্তি দেওয়া হয়।</li>
+                            <li><strong>ঋণাত্মক কাজ:</strong> বস্তু থেকে শক্তি সরিয়ে নেওয়া হয়।</li>
+                        </ul>
+                    </li>
+                    <li><strong>প্রকৃতি:</strong> শক্তি একটি স্কেলার রাশি।</li>
+                    <li><strong>একক ও মাত্রা:</strong> কাজের অনুরূপ (একক: জুল)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">শক্তির বিভিন্ন রূপ</h2>
+            <div class="slide-content">
+                <p>যেকোনো শক্তিই এক রূপ থেকে অন্য রূপে রূপান্তরিত হতে পারে।</p>
+                <h3>যান্ত্রিক শক্তি</h3>
+                <p>বস্তুর অবস্থান, আকার বা গতির কারণে যে শক্তি পাওয়া যায়। এর দুটি প্রধান রূপ রয়েছে:</p>
+                <ol>
+                    <li><strong>গতিশক্তি (Kinetic Energy):</strong> গতির জন্য প্রাপ্ত শক্তি।</li>
+                    <li><strong>বিভব শক্তি (Potential Energy):</strong> অবস্থান বা অবস্থার জন্য সঞ্চিত শক্তি।</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">গতিশক্তি (Kinetic Energy)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li><strong>সংজ্ঞা:</strong> কোনো বস্তু তার গতির জন্য যে শক্তি লাভ করে।</li>
+                    <li><strong>সূত্র:</strong> $m$ ভরের বস্তু $v$ বেগে চললে গতিশক্তি:
+                        $$T = \frac{1}{2}mv^2$$
+                    </li>
+                    <li><strong>কাজ-গতিশক্তি উপপাদ্য:</strong> কোনো বস্তুর উপর কৃতকাজ ($W$) তার গতিশক্তির পরিবর্তনের সমান।
+                        <p>(শেষ গতিশক্তি = আদি গতিশক্তি + কৃতকাজ)</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">বিভব শক্তি (Potential Energy)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li><strong>সংজ্ঞা:</strong> বস্তুর অবস্থান বা অবস্থার পরিবর্তনের জন্য যে শক্তি সঞ্চিত থাকে।</li>
+                    <li><strong>উদাহরণ:</strong>
+                        <ul>
+                            <li><strong>স্প্রিংয়ের বিভব শক্তি:</strong> $V = \frac{1}{2}kx^2$ (যেখানে $k$ হলো স্প্রিং ধ্রুবক)</li>
+                            <li><strong>মহাকর্ষীয় বিভব শক্তি:</strong> $V = mgh$</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">শক্তির উৎস (Sources of Energy)</h2>
+            <div class="slide-content">
+                <p>শক্তির উৎস প্রধানত দুই প্রকার:</p>
+                <p><strong>১. অনবায়নযোগ্য শক্তি (Non-Renewable)</strong></p>
+                <ul>
+                    <li>যে শক্তি ব্যবহার করলে একসময় শেষ হয়ে যায়।</li>
+                    <li><strong>উদাহরণ:</strong> জীবাশ্ম জ্বালানি (তেল, গ্যাস, কয়লা), নিউক্লিয়ার শক্তি (ইউরেনিয়াম)।</li>
+                </ul>
+                <p><strong>২. নবায়নযোগ্য শক্তি (Renewable)</strong></p>
+                <ul>
+                    <li>যে শক্তি ব্যবহারের ফলেও ফুরিয়ে যায় না বা পুনরায় নবায়ন করা যায়।</li>
+                    <li><strong>উদাহরণ:</strong> জলবিদ্যুৎ, বায়োমাস, সৌরশক্তি, বায়ুশক্তি, ভূতাপীয় শক্তি।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">শক্তি ও পরিবেশ</h2>
+            <div class="slide-content">
+                <ul>
+                    <li><strong>জীবাশ্ম জ্বালানি:</strong> পোড়ালে $CO_2$ নির্গত হয়, যা একটি গ্রিনহাউস গ্যাস। এর ফলে <strong>বৈশ্বিক উষ্ণতা</strong> (Global Warming) দেখা দেয়।</li>
+                    <li><strong>নিউক্লিয়ার শক্তি:</strong> $CO_2$ নির্গত করে না, কিন্তু এর <strong>তেজস্ক্রিয় বর্জ্য</strong> পরিবেশের জন্য অত্যন্ত ঝুঁকিপূর্ণ।</li>
+                    <li><strong>জলবিদ্যুৎ:</strong> নদীতে বাঁধ দেওয়ার ফলে পরিবেশের ক্ষতি হতে পারে (বিস্তীর্ণ অঞ্চল প্লাবিত হওয়া, ভাটিতে খরা)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">শক্তির নিত্যতা ও রূপান্তর</h2>
+            <div class="slide-content">
+                <p><strong>শক্তির নিত্যতা (Conservation of Energy)</strong></p>
+                <ul>
+                    <li>শক্তির কোনো সৃষ্টি বা বিনাশ নেই।</li>
+                    <li>শক্তি কেবল এক রূপ থেকে অন্য রূপে পরিবর্তিত হয়।</li>
+                    <li>মহাবিশ্বের মোট শক্তির পরিমাণ নির্দিষ্ট ও অপরিবর্তনীয়।</li>
+                </ul>
+                <p><strong>শক্তির রূপান্তর (Conversion of Energy)</strong></p>
+                <ul>
+                    <li>শক্তি এক রূপ থেকে অন্য রূপে যেতে পারে (যেমন: জেনারেটর: যান্ত্রিক $\rightarrow$ তড়িৎ)।</li>
+                    <li><strong>শক্তির অপচয়:</strong> রূপান্তরের সময় কিছু শক্তি (সাধারণত তাপ) নষ্ট হয়, যা আমরা ব্যবহার করতে পারি না।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ভর ও শক্তির সম্পর্ক</h2>
+            <div class="slide-content">
+                <ul>
+                    <li><strong>আইনস্টাইনের সূত্র:</strong> বিজ্ঞানী আইনস্টাইন দেখিয়েছেন যে, ভর ও শক্তি পরস্পর সমতুল্য।</li>
+                    <li><strong>সূত্র:</strong> <code>E = mc²</code>
+                        <br>( $E$ = শক্তি, $m$ = ভর, $c$ = আলোর বেগ )
+                    </li>
+                    <li><strong>প্রয়োগ:</strong> নিউক্লিয়ার বিক্রিয়ায় (ফিশন) ভর শক্তিতে রূপান্তরিত হয়।</li>
+                    <li><strong>চেইন রি-অ্যাকশন:</strong> এই প্রক্রিয়ায় একটি বিক্রিয়া থেকে সৃষ্ট নিউট্রন পরবর্তী বিক্রিয়া ঘটায়।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ক্ষমতা (Power)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li><strong>সংজ্ঞা:</strong> ক্ষমতা হলো <strong>কাজ করার হার</strong>।</li>
+                    <li>বিকল্পভাবে, ক্ষমতাকে শক্তি রূপান্তরের হারও বলা যায়।</li>
+                    <li><strong>সূত্র:</strong> <code>P = W / t</code> (ক্ষমতা = কাজ / সময়)</li>
+                    <li><strong>একক:</strong> ওয়াট (Watt)
+                        <ul>
+                            <li>$1$ ওয়াট = $1$ জুল/সেকেন্ড</li>
+                        </ul>
+                    </li>
+                    <li><strong>মাত্রা:</strong> <code>[P] = ML²T⁻³</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">কর্মদক্ষতা (Efficiency)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li><strong>সংজ্ঞা:</strong> কোনো যন্ত্র মোট প্রদত্ত শক্তির কতটুকু কার্যকর কাজে বা শক্তিতে রূপান্তর করতে পারে, তার পরিমাপ।</li>
+                    <li><strong>ধারণা:</strong> শক্তির অপচয়ের কারণে (যেমন ঘর্ষণ) কোনো যন্ত্রের কর্মদক্ষতা ১০০% হয় না।</li>
+                    <li><strong>সূত্র:</strong>
+                        <p><code>কর্মদক্ষতা = (লভ্য কার্যকর শক্তি / মোট প্রদত্ত শক্তি) × ১০০%</code></p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">সারসংক্ষেপ</h2>
+            <div class="slide-content">
+                <ul>
+                    <li><strong>কাজ:</strong> <code>W = Fs</code></li>
+                    <li><strong>শক্তি:</strong> কাজ করার সামর্থ্য (একক: জুল)।</li>
+                    <li><strong>গতিশক্তি:</strong> $T = \frac{1}{2}mv^2$</li>
+                    <li><strong>বিভব শক্তি:</strong> $V = mgh$</li>
+                    <li><strong>শক্তির নিত্যতা:</strong> শক্তির সৃষ্টি বা বিনাশ নেই।</li>
+                    <li><strong>ভর-শক্তি:</strong> <code>E = mc²</code></li>
+                    <li><strong>ক্ষমতা:</strong> <code>P = W/t</code> (একক: ওয়াট)।</li>
+                    <li><strong>কর্মদক্ষতা:</strong> $\frac{\text{কাজের পরিমাণ}}{\text{প্রদত্ত শক্তি}} \times 100\%$</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide title-slide">
+            <h1 class="slide-title">ধন্যবাদ</h1>
+            <div class="slide-content">
+                <p>প্রশ্নোত্তর পর্ব</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="slide-counter" id="slideCounter"></div>
+
+    <div class="nav-buttons">
+        <button id="prevBtn">পূর্ববর্তী</button>
+        <button id="nextBtn">পরবর্তী</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slideCounter');
+
+        function showSlide(index) {
+            // Ensure index is within bounds
+            if (index >= totalSlides) {
+                index = 0;
+            } else if (index < 0) {
+                index = totalSlides - 1;
+            }
+            currentSlide = index;
+
+            // Remove 'active' class from all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Add 'active' class to the current slide
+            slides[currentSlide].classList.add('active');
+
+            // Update slide counter
+            slideCounter.textContent = `স্লাইড ${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            showSlide(currentSlide + 1);
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            showSlide(currentSlide - 1);
+        });
+
+        // Initial call to show the first slide
+        showSlide(0);
+    </script>
+
+</body>
+</html>
