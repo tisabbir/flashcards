@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বস্তুর ওপর তাপের প্রভাব</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #1E1E1E;
+            box-sizing: border-box;
+            padding: 50px 80px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border-left: 10px solid #03DAC6; /* Accent color */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-title {
+            font-size: 3.2em;
+            color: #03DAC6; /* Accent color */
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+
+        .slide-content {
+            font-size: 1.6em;
+            color: #CFD8DC;
+        }
+        
+        .slide-content h3 {
+            color: #BB86FC; /* Secondary accent */
+            font-size: 1.5em;
+        }
+
+        .slide-content ul {
+            list-style-type: square;
+            padding-left: 40px;
+        }
+
+        .slide-content li, .slide-content p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        /* HTML Math Styling */
+        i.math-var { font-style: italic; }
+        sup.math-sup { font-size: 0.75em; vertical-align: super; }
+        sub.math-sub { font-size: 0.75em; vertical-align: sub; }
+
+        /* Image Styling */
+        .slide-content img {
+            max-width: 45%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+            float: right;
+            margin-left: 20px;
+        }
+        
+        /* Reveal items */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal-item.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* Special slide types */
+        .title-slide, .thank-you-slide {
+            background: linear-gradient(135deg, #2C3E50, #1a2a3a);
+            color: white;
+            align-items: center;
+            text-align: center;
+            border-left: 10px solid #BB86FC;
+        }
+        .title-slide .slide-title, .thank-you-slide .slide-title { font-size: 4.5em; color: white; border-bottom: none; }
+        .title-slide .slide-content, .thank-you-slide .slide-content { font-size: 1.8em; color: #ddd; }
+
+        .hook-slide {
+            align-items: center;
+            text-align: center;
+            background-color: #333;
+            border-left: 10px solid #FBC02D;
+        }
+        .hook-slide .slide-title { font-size: 2.8em; color: #FBC02D; }
+        .hook-slide .slide-content { font-size: 1.8em; }
+
+        .quiz-slide { border-left: 10px solid #E91E63; }
+        .quiz-slide .slide-title { color: #E91E63; }
+        .quiz-slide .quiz-option { font-size: 1.2em; margin: 10px 0; }
+        .quiz-slide .quiz-cq { font-size: 1.2em; background: #2a2a2a; padding: 15px; border-radius: 8px; border-left: 4px solid #E91E63; }
+        
+        .answer-slide { border-left: 10px solid #4CAF50; }
+        .answer-slide .slide-title { color: #4CAF50; }
+        .answer-slide .correct-answer {
+            background-color: #388E3C;
+            color: #FFFFFF;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1.2em;
+        }
+
+        .simulation-slide { border-left: 10px solid #2196F3; }
+        .simulation-slide .slide-title { color: #2196F3; }
+        .simulation-slide a { font-size: 1.2em; color: #90CAF9; text-decoration: none; background: #2a2a2a; padding: 10px 15px; border-radius: 5px; transition: background 0.3s; }
+        .simulation-slide a:hover { background: #333; }
+        
+        .video-slide { border-left: 10px solid #FF5722; }
+        .video-slide .slide-title { color: #FF5722; }
+        .video-slide iframe {
+            width: 70vw;
+            height: 40vw;
+            max-height: 450px;
+            border: none;
+            border-radius: 8px;
+        }
+
+        /* Navigation */
+        .nav-buttons { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+        .nav-buttons button { font-size: 1em; padding: 10px 20px; margin-left: 10px; background-color: #03DAC6; color: #121212; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        .nav-buttons button:hover { background-color: #018786; transform: scale(1.05); }
+        /* kj */
+        .slide-jump {
+            position: fixed;
+            bottom: 35px;
+            left: 150px; /* Adjust position as needed */
+            z-index: 1000;
+        }
+        .slide-jump input {
+            width: 80px;
+            padding: 8px 10px;
+            font-size: 1em;
+            background-color: #333;
+            color: #E0E0E0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            text-align: center;
+        }
+        /* Hide number input arrows */
+        .slide-jump input::-webkit-outer-spin-button,
+        .slide-jump input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        .slide-jump input[type=number] {
+          -moz-appearance: textfield; /* Firefox */
+        }
+        /* kj */
+        .slide-counter { position: fixed; bottom: 40px; left: 30px; font-size: 1.2em; color: #888; z-index: 1000; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <div class="slide title-slide active">
+            <h1 class="slide-title">বস্তুর ওপর তাপের প্রভাব</h1>
+            <div class="slide-content">
+                <p class="reveal-item">অধ্যায় ৬</p>
+                <p class="reveal-item">পদার্থবিজ্ঞান</p>
+            </div>
+        </div>
+
+        <div class="slide hook-slide">
+            <h2 class="slide-title">একটা প্রশ্ন...</h2>
+            <div class="slide-content">
+                <p class="reveal-item">গরম স্যুপে একটি ধাতব চামচ আর একটি কাঠের চামচ ডোবালে, কোনটি আগে গরম হয়?</p>
+                <p class="reveal-item">...এবং কেন?</p>
+                <p class="reveal-item">এর উত্তরগুলোই আজকের আলোচনার বিষয়!</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তাপ (Heat) </h2>
+            <div class="slide-content">
+                <ul>
+                    [cite_start]<li class="reveal-item"><strong>সংজ্ঞা:</strong> তাপ এক প্রকার শক্তি যা আমাদের ঠান্ডা বা গরমের অনুভূতি জাগায়। [cite: 24]</li>
+                    [cite_start]<li class="reveal-item"><strong>প্রবাহ:</strong> তাপ সর্বদা উষ্ণতর বস্তু থেকে শীতলতর বস্তুর দিকে প্রবাহিত হয়। [cite: 25, 26]</li>
+                    <li class="reveal-item"><strong>একক:</strong>
+                        <ul>
+                            [cite_start]<li>SI একক: জুল (J) [cite: 27]</li>
+                            <li>অন্যান্য একক: ক্যালরি (Cal)</li>
+                        </ul>
+                    </li>
+                    [cite_start]<li class="reveal-item"><strong>রূপান্তর:</strong> 1 Cal = 4.2 J (প্রায়) [cite: 30]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তাপমাত্রা (Temperature)</h2>
+            <div class="slide-content">
+                <ul>
+                    [cite_start]<li class="reveal-item"><strong>সংজ্ঞা:</strong> তাপমাত্রা হলো বস্তুর এমন এক তাপীয় অবস্থা যা নির্ধারণ করে বস্তুটি অন্য বস্তুর সংস্পর্শে এলে তাপ দেবে নাকি নেবে। [cite: 33, 35, 37]</li>
+                    [cite_start]<li class="reveal-item">এটি বস্তুর মধ্যে তাপীয় সাম্যাবস্থা সৃষ্টি করে। [cite: 34]</li>
+                    [cite_start]<li class="reveal-item"><strong>SI একক:</strong> কেলভিন (K) [cite: 36]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">কেলভিন ও ত্রৈধ বিন্দু</h2>
+            <div class="slide-content">
+                <ul>
+                    [cite_start]<li class="reveal-item"><strong>ত্রৈধ বিন্দু (Triple Point):</strong> যে নির্দিষ্ট তাপমাত্রা ও চাপে পানি তিনটি অবস্থাতেই (বরফ, পানি ও জলীয় বাষ্প) একসাথে থাকে। [cite: 42]</li>
+                    [cite_start]<li class="reveal-item">এই ত্রৈধ বিন্দুর তাপমাত্রা হলো 273.16 K (প্রায় 273 K)। [cite: 43]</li>
+                    [cite_start]<li class="reveal-item"><strong>এক কেলভিন (1 K):</strong> পানির ত্রৈধ বিন্দুর তাপমাত্রার <sup>1</sup>/<sub>273.16</sub> ভাগকে 1 K বলে। [cite: 39, 40, 41]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তাপমাত্রিক ধর্ম</h2>
+            <div class="slide-content">
+                <ul>
+                    [cite_start]<li class="reveal-item"><strong>তাপমাত্রিক পদার্থ:</strong> যে সকল পদার্থের ধর্ম ব্যবহার করে তাপমাত্রা পরিমাপ করা হয়। [cite: 46]</li>
+                    [cite_start]<li class="reveal-item"><strong>তাপমাত্রিক ধর্ম:</strong> পদার্থের যে ধর্ম ব্যবহার করে তাপমাত্রা পরিমাপ করা যায়। [cite: 45]</li>
+                    <li class="reveal-item"><strong>উদাহরণ:</strong>
+                        <ul>
+                            [cite_start]<li>পদার্থের আয়তন [cite: 53]</li>
+                            [cite_start]<li>পদার্থের চাপ [cite: 55]</li>
+                            <li>পদার্থের রোধ (PDF এ নেই কিন্তু একটি সাধারণ উদাহরণ)</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১ (একক)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১। [cite_start]S.I পদ্ধতিতে তাপমাত্রার একক কোনটি? [cite: 1411]</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) সেন্টিগ্রেড</p>
+                    [cite_start]<p class="quiz-option">(খ) কেলভিন [cite: 1414]</p>
+                    <p class="quiz-option">(গ) জুল</p>
+                    <p class="quiz-option">(ঘ) ক্যালরি</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১</h2>
+            <div class="slide-content">
+                <h3>১। [cite_start]S.I পদ্ধতিতে তাপমাত্রার একক কোনটি? [cite: 1411]</h3>
+                <p class="quiz-option">(ক) সেন্টিগ্রেড</p>
+                [cite_start]<p class="quiz-option correct-answer">(খ) কেলভিন [cite: 1414]</p>
+                <p class="quiz-option">(গ) জুল</p>
+                <p class="quiz-option">(ঘ) ক্যালরি</p>
+                [cite_start]<p class="reveal-item"><strong>ব্যাখ্যা:</strong> তাপমাত্রার SI একক হলো কেলভিন (K)। [cite: 36]</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তাপমাত্রা পরিমাপের স্কেল</h2>
+            <div class="slide-content">
+                [cite_start]<p class="reveal-item">প্রচলিত তিনটি স্কেল হলো: [cite: 57]</p>
+                <ul class="reveal-item">
+                    [cite_start]<li>সেলসিয়াস (&deg;C) [cite: 60]</li>
+                    [cite_start]<li>ফারেনহাইট (&deg;F) [cite: 61]</li>
+                    [cite_start]<li>কেলভিন (K) [cite: 62]</li>
+                </ul>
+                [cite_start]<p class="reveal-item"><strong>স্থিরাঙ্কসমূহ:</strong> [cite: 63]</p>
+                <ul>
+                    [cite_start]<li><strong>নিম্নস্থিরাঙ্ক (বরফ বিন্দু):</strong> প্রমাণ চাপে বিশুদ্ধ বরফ যে তাপমাত্রায় গলে। [cite: 64, 65] (C: 0&deg;, F: 32&deg;, K: 273)</li>
+                    <li><strong>ঊর্ধ্বস্থিরাঙ্ক (বাষ্প বিন্দু):</strong> (C: 100&deg;, F: 212&deg;, K: 373)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">স্কেলসমূহের সম্পর্ক</h2>
+            <div class="slide-content">
+                <p class="reveal-item">যেকোনো স্কেলে পাঠ = (পাঠ - নিম্নস্থিরাঙ্ক) / (ঊর্ধ্বস্থিরাঙ্ক - নিম্নস্থিরাঙ্ক)</p>
+                [cite_start]<p class="reveal-item"><strong>সাধারণ সূত্র:</strong> [cite: 67, 68]</p>
+                <i class="math-var"><sup>C</sup></i>/<sub>100</sub> = <sup>(<i class="math-var">F</i> - 32)</sup>/<sub>180</sub> = <sup>(<i class="math-var">K</i> - 273)</sup>/<sub>100</sub>
+                
+                [cite_start]<p class="reveal-item"><strong>মূল সূত্র (সরলীকৃত):</strong> [cite: 69]</p>
+                <h3><sup><i class="math-var">C</i></sup>/<sub>5</sub> = <sup>(<i class="math-var">F</i> - 32)</sup>/<sub>9</sub> = <sup>(<i class="math-var">K</i> - 273)</sup>/<sub>5</sub></h3>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ২ (স্কেল)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২। [cite_start]কত তাপমাত্রায় সেলসিয়াস ও ফারেনহাইট স্কেলে একই পাঠ পাওয়া যাবে? [cite: 1282, 1285]</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 40&deg;C</p>
+                    <p class="quiz-option">(খ) 40 K</p>
+                    [cite_start]<p class="quiz-option">(গ) -40&deg;C [cite: 1288]</p>
+                    <p class="quiz-option">(ঘ) 32&deg;C</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ২</h2>
+            <div class="slide-content">
+                <h3>২। [cite_start]কত তাপমাত্রায় সেলসিয়াস ও ফারেনহাইট স্কেলে একই পাঠ পাওয়া যাবে? [cite: 1282, 1285]</h3>
+                <p class="quiz-option">(ক) 40&deg;C</p>
+                <p class="quiz-option">(খ) 40 K</p>
+                [cite_start]<p class="quiz-option correct-answer">(গ) -40&deg;C [cite: 1288]</p>
+                <p class="quiz-option">(ঘ) 32&deg;C</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> <sup><i class="math-var">C</i></sup>/<sub>5</sub> = <sup>(<i class="math-var">F</i> - 32)</sup>/<sub>9</sub> সূত্রে C = F = x ধরে সমাধান করলে x = -40 পাওয়া যায়।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৩ (স্কেল)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩। [cite_start]একজন সুস্থ মানুষের দেহের তাপমাত্রা 36.89&deg;C হলে ফারেনহাইট স্কেলে তার পাঠ কত হবে? [cite: 1717, 1718]</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 332.01 &deg;F</p>
+                    [cite_start]<p class="quiz-option">(খ) 98.4 &deg;F [cite: 1720]</p>
+                    <p class="quiz-option">(গ) 66.4 &deg;F</p>
+                    <p class="quiz-option">(ঘ) 20.49 &deg;F</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৩</h2>
+            <div class="slide-content">
+                <h3>৩। [cite_start]একজন সুস্থ মানুষের দেহের তাপমাত্রা 36.89&deg;C হলে ফারেনহাইট স্কেলে তার পাঠ কত হবে? [cite: 1717, 1718]</h3>
+                <p class="quiz-option">(ক) 332.01 &deg;F</p>
+                [cite_start]<p class="quiz-option correct-answer">(খ) 98.4 &deg;F [cite: 1720]</p>
+                <p class="quiz-option">(গ) 66.4 &deg;F</p>
+                <p class="quiz-option">(ঘ) 20.49 &deg;F</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> <i class="math-var">F</i> = (<sup>9<i class="math-var">C</i></sup>/<sub>5</sub>) + 32 = (<sup>9 &times; 36.89</sup>/<sub>5</sub>) + 32 &approx; [cite_start]98.4 &deg;F। [cite: 79]</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ১</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">কোন তাপমাত্রায় সেলসিয়াস ও ফারেনহাইট স্কেলের পাঠের পার্থক্য 50&deg; [cite_start]হয়? [cite: 476]</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ১</h2>
+            <div class="slide-content">
+                [cite_start]<p class="reveal-item">ধরি, সেলসিয়াস পাঠ = <i class="math-var">x</i>, ফারেনহাইট পাঠ = <i class="math-var">x</i> + 50 [cite: 479, 481]</p>
+                [cite_start]<p class="reveal-item">আমরা জানি, <sup><i class="math-var">C</i></sup>/<sub>5</sub> = <sup>(<i class="math-var">F</i> - 32)</sup>/<sub>9</sub> [cite: 74]</p>
+                [cite_start]<p class="reveal-item"><sup><i class="math-var">x</i></sup>/<sub>5</sub> = <sup>(<i class="math-var">x</i> + 50 - 32)</sup>/<sub>9</sub> = <sup>(<i class="math-var">x</i> + 18)</sup>/<sub>9</sub> [cite: 486]</p>
+                [cite_start]<p class="reveal-item">9<i class="math-var">x</i> = 5<i class="math-var">x</i> + 90 [cite: 487]</p>
+                <p class="reveal-item">4<i class="math-var">x</i> = 90 &rArr; [cite_start]<i class="math-var">x</i> = 22.5 [cite: 489, 490]</p>
+                [cite_start]<p class="reveal-item">সুতরাং, 22.5&deg;C এবং (22.5+50) = 72.5&deg;F। [cite: 491, 492]</p>
+                [cite_start]<p class="reveal-item">(এটি <i class="math-var">x</i> - 50 ধরেও করা যায়, যা -102.5&deg;C এবং -152.5&deg;F দেয়) [cite: 497, 502, 503, 504]</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">পদার্থের তাপীয় প্রসারণ</h2>
+            <div class="slide-content">
+                <ul>
+                    [cite_start]<li class="reveal-item">তাপ প্রয়োগে পদার্থের প্রসারণ ঘটে। [cite: 99]</li>
+                    [cite_start]<li class="reveal-item"><strong>কঠিন পদার্থের প্রসারণ ৩ প্রকার:</strong> [cite: 101]
+                        <ol>
+                            [cite_start]<li>দৈর্ঘ্য প্রসারণ [cite: 102]</li>
+                            [cite_start]<li>ক্ষেত্র প্রসারণ [cite: 103]</li>
+                            [cite_start]<li>আয়তন প্রসারণ [cite: 104]</li>
+                        </ol>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">দৈর্ঘ্য প্রসারণ সহগ (&alpha;)</h2>
+            <div class="slide-content">
+                <ul>
+                    [cite_start]<li class="reveal-item"><strong>সংজ্ঞা:</strong> 1m দৈর্ঘ্যের কোনো দন্ডের তাপমাত্রা 1K বৃদ্ধি করলে যতটুকু দৈর্ঘ্য বৃদ্ধি পায়, তাকে ঐ উপাদানের দৈর্ঘ্য প্রসারণ সহগ (<i class="math-var">&alpha;</i>) বলে। [cite: 143]</li>
+                    [cite_start]<li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">&alpha;</i> = <sup>(<i class="math-var">l</i><sub class="math-sub">2</sub> - <i class="math-var">l</i><sub class="math-sub">1</sub>)</sup> / <sub><i class="math-var">l</i><sub class="math-sub">1</sub>(<i class="math-var">&theta;</i><sub class="math-sub">2</sub> - <i class="math-var">&theta;</i><sub class="math-sub">1</sub>)</sub> [cite: 116]</li>
+                    [cite_start]<li class="reveal-item"><strong>একক:</strong> K<sup class="math-sup">-1</sup> [cite: 144]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ক্ষেত্র ও আয়তন প্রসারণ সহগ</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>ক্ষেত্র প্রসারণ সহগ (<i class="math-var">&beta;</i>):</strong> 1m&sup2; [cite_start]ক্ষেত্রফলের পাতের তাপমাত্রা 1K বৃদ্ধি করলে যতটুকু ক্ষেত্রফল বৃদ্ধি পায়। [cite: 188]
+                        [cite_start]<br><strong>সূত্র:</strong> <i class="math-var">&beta;</i> = <sup>(<i class="math-var">A</i><sub class="math-sub">2</sub> - <i class="math-var">A</i><sub class="math-sub">1</sub>)</sup> / <sub><i class="math-var">A</i><sub class="math-sub">1</sub>(<i class="math-var">&theta;</i><sub class="math-sub">2</sub> - <i class="math-var">&theta;</i><sub class="math-sub">1</sub>)</sub> [cite: 164]</li>
+                    <li class="reveal-item"><strong>আয়তন প্রসারণ সহগ (<i class="math-var">&gamma;</i>):</strong> 1m&sup3; [cite_start]আয়তনের বস্তুর তাপমাত্রা 1K বৃদ্ধি করলে যতটুকু আয়তন বৃদ্ধি পায়। [cite: 224, 225]
+                        [cite_start]<br><strong>সূত্র:</strong> <i class="math-var">&gamma;</i> = <sup>(<i class="math-var">V</i><sub class="math-sub">2</sub> - <i class="math-var">V</i><sub class="math-sub">1</sub>)</sup> / <sub><i class="math-var">V</i><sub class="math-sub">1</sub>(<i class="math-var">&theta;</i><sub class="math-sub">2</sub> - <i class="math-var">&theta;</i><sub class="math-sub">1</sub>)</sub> [cite: 203]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">সহগসমূহের সম্পর্ক</h2>
+            <div class="slide-content">
+                [cite_start]<p class="reveal-item">দৈর্ঘ্য, ক্ষেত্রফল ও আয়তন প্রসারণ সহগের মধ্যে সম্পর্ক হলো: [cite: 386]</p>
+                <h3 class="reveal-item"><i class="math-var">&alpha;</i> = <sup><i class="math-var">&beta;</i></sup>/<sub>2</sub> = <sup><i class="math-var">&gamma;</i></sup>/<sub>3</sub></h3>
+                <p class="reveal-item">বা,</p>
+                [cite_start]<h3 class="reveal-item">6<i class="math-var">&alpha;</i> = 3<i class="math-var">&beta;</i> = 2<i class="math-var">&gamma;</i> [cite: 1773, 1777]</h3>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৪ (প্রসারণ)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৪। [cite_start]নিচের কোন সম্পর্কটি সঠিক? [cite: 1765, 1768]</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) &gamma; = 2&beta; = 3&alpha;</p>
+                    <p class="quiz-option">(খ) 2&gamma; = 2&beta; = 6&alpha;</p>
+                    <p class="quiz-option">(গ) 3&gamma; = 2&beta; = 6&alpha;</p>
+                    <p class="quiz-option">(ঘ) 2&gamma; = 3&beta; [cite_start]= 6&alpha; [cite: 1777]</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৪</h2>
+            <div class="slide-content">
+                <h3>৪। [cite_start]নিচের কোন সম্পর্কটি সঠিক? [cite: 1765, 1768]</h3>
+                <p class="quiz-option">(ক) &gamma; = 2&beta; = 3&alpha;</p>
+                <p class="quiz-option">(খ) 2&gamma; = 2&beta; = 6&alpha;</p>
+                <p class="quiz-option">(গ) 3&gamma; = 2&beta; = 6&alpha;</p>
+                <p class="quiz-option correct-answer">(ঘ) 2&gamma; = 3&beta; [cite_start]= 6&alpha; [cite: 1777]</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> আমরা জানি, &beta; = 2&alpha; এবং &gamma; = 3&alpha;। এই সম্পর্কগুলোকে ৬ দিয়ে গুণ করলে 6&alpha; = 3&beta; = 2&gamma; [cite_start]পাওয়া যায়। [cite: 1773, 1777]</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ২</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">15&deg;C তাপমাত্রায় একটি রেল লাইনের 30 মিটার দৈর্ঘ্য বিশিষ্ট একাধিক ইস্পাতের পাত রয়েছে। দুটি পাতের মধ্যে 1.5 cm এর একটি ফাঁদ বিদ্যমান। কত তাপমাত্রায় পাতদ্বয়ের মধ্যবর্তী ফাঁদ পূর্ণ হবে? [cite_start][ইস্পাতের $\alpha = 11 \times 10^{-6}$ &deg;C<sup class="math-sup">-1</sup>] [cite: 507, 508, 509]</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                [cite_start]আদি দৈর্ঘ্য, <i class="math-var">l</i><sub class="math-sub">1</sub> = 30 m [cite: 511]<br>
+                [cite_start]দৈর্ঘ্য বৃদ্ধি (ফাঁক), &Delta;<i class="math-var">l</i> = 1.5 cm = 0.015 m [cite: 511]<br>
+                [cite_start]আদি তাপমাত্রা, <i class="math-var">T</i><sub class="math-sub">1</sub> = 15&deg;C [cite: 511]<br>
+                &alpha; = 11 &times; [cite_start]10<sup class="math-sup">-6</sup> &deg;C<sup class="math-sup">-1</sup> [cite: 509]</p>
+                
+                [cite_start]<p class="reveal-item"><strong>আমরা জানি,</strong> <i class="math-var">&alpha;</i> = <sup>&Delta;<i class="math-var">l</i></sup> / <sub><i class="math-var">l</i><sub class="math-sub">1</sub>(&Delta;<i class="math-var">T</i>)</sub> [cite: 517]</p>
+                <p class="reveal-item">&Delta;<i class="math-var">T</i> = <sup>&Delta;<i class="math-var">l</i></sup> / <sub>(<i class="math-var">l</i><sub class="math-sub">1</sub> &times; <i class="math-var">&alpha;</i>)</sub> = <sup>0.015</sup> / <sub>(30 &times; 11 &times; 10<sup class="math-sup">-6</sup>)</sub> = 45.45&deg;C</p>
+                [cite_start]<p class="reveal-item"><strong>চূড়ান্ত তাপমাত্রা, <i class="math-var">T</i><sub class="math-sub">2</sub> = <i class="math-var">T</i><sub class="math-sub">1</sub> + &Delta;<i class="math-var">T</i></strong> [cite: 518]<br>
+                [cite_start]<i class="math-var">T</i><sub class="math-sub">2</sub> = 15 + 45.45 = 60.45&deg;C [cite: 519]</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তরল পদার্থের প্রসারণ</h2>
+            <div class="slide-content">
+                <ul>
+                    [cite_start]<li class="reveal-item">তরল পদার্থের নির্দিষ্ট দৈর্ঘ্য বা ক্ষেত্রফল নেই, শুধু আয়তন আছে। [cite: 244]</li>
+                    <li class="reveal-item">তরলকে পাত্রে রেখে তাপ দিতে হয়, তাই পাত্রও প্রসারিত হয়।</li>
+                    [cite_start]<li class="reveal-item"><strong>আপাত প্রসারণ (<i class="math-var">V</i><sub class="math-sub">a</sub>):</strong> পাত্রের প্রসারণ বিবেচনায় না এনে তরলের যে প্রসারণ পাওয়া যায়। [cite: 255, 256]</li>
+                    [cite_start]<li class="reveal-item"><strong>প্রকৃত প্রসারণ (<i class="math-var">V</i><sub class="math-sub">r</sub>):</strong> পাত্রের প্রসারণ সম্ভব না হলে তরলের যে প্রসারণ হত। [cite: 252]</li>
+                    <li class="reveal-item"><strong>সম্পর্ক:</strong> প্রকৃত প্রসারণ = আপাত প্রসারণ + পাত্রের প্রসারণ<br>
+                    [cite_start]<i class="math-var">V</i><sub class="math-sub">r</sub> = <i class="math-var">V</i><sub class="math-sub">a</sub> + <i class="math-var">V</i><sub class="math-sub">g</sub> [cite: 258, 259]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">গ্যাসীয় পদার্থের প্রসারণ</h2>
+            <div class="slide-content">
+                <ul>
+                    [cite_start]<li class="reveal-item">গ্যাসের নির্দিষ্ট আকার বা আয়তন নেই। [cite: 266]</li>
+                    [cite_start]<li class="reveal-item">গ্যাসের আয়তন প্রসারণ মাপার সময় এর <strong>চাপ স্থির</strong> রাখতে হয়। [cite: 268]</li>
+                    [cite_start]<li class="reveal-item"><strong>আদর্শ গ্যাস সূত্র:</strong> <i class="math-var">PV</i> = <i class="math-var">nRT</i> [cite: 274]</li>
+                    [cite_start]<li class="reveal-item">গ্যাসের আয়তন প্রসারণ সহগ (<i class="math-var">&beta;</i><sub class="math-sub">P</sub>) ধ্রুব নয়, এটি তার কেলভিন তাপমাত্রার ব্যস্তানুপাতিক। [cite: 300]</li>
+                    [cite_start]<li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">&beta;</i><sub class="math-sub">P</sub> = <sup>1</sup>/<sub><i class="math-var">T</i><sub class="math-sub">1</sub></sub> [cite: 300]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৫ (প্রসারণ)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৫। [cite_start]তাপপ্রয়োগে কোন ধরনের পদার্থের প্রসারণ সবচেয়ে বেশি? [cite: 1760, 1761]</h3>
+                <div class="reveal-item">
+                    [cite_start]<p class="quiz-option">(ক) কঠিন [cite: 1762]</p>
+                    [cite_start]<p class="quiz-option">(খ) তরল [cite: 1764]</p>
+                    [cite_start]<p class="quiz-option">(গ) গ্যাসীয় [cite: 1766]</p>
+                    [cite_start]<p class="quiz-option">(ঘ) কঠিন ও তরল [cite: 1767]</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৫</h2>
+            <div class="slide-content">
+                <h3>৫। [cite_start]তাপপ্রয়োগে কোন ধরনের পদার্থের প্রসারণ সবচেয়ে বেশি? [cite: 1760, 1761]</h3>
+                [cite_start]<p class="quiz-option">(ক) কঠিন [cite: 1762]</p>
+                [cite_start]<p class="quiz-option">(খ) তরল [cite: 1764]</p>
+                [cite_start]<p class="quiz-option correct-answer">(গ) গ্যাসীয় [cite: 1766]</p>
+                [cite_start]<p class="quiz-option">(ঘ) কঠিন ও তরল [cite: 1767]</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> কঠিন পদার্থের চেয়ে তরলের প্রসারণ বেশি, এবং তরলের চেয়ে গ্যাসীয় পদার্থের প্রসারণ সবচেয়ে বেশি।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তাপ ধারণ ক্ষমতা (C)</h2>
+            <div class="slide-content">
+                <ul>
+                    [cite_start]<li class="reveal-item"><strong>সংজ্ঞা:</strong> কোনো বস্তুর তাপমাত্রা 1 একক (1K বা 1&deg;C) বাড়াতে যে পরিমাণ তাপের প্রয়োজন, তাকে ঐ বস্তুর তাপ ধারণ ক্ষমতা বলে। [cite: 302]</li>
+                    [cite_start]<li class="reveal-item">এটি বস্তুর <strong>উপাদান ও ভরের</strong> উপর নির্ভর করে। [cite: 303]</li>
+                    [cite_start]<li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">C</i> = <sup><i class="math-var">Q</i></sup>/<sub>&Delta;<i class="math-var">&theta;</i></sub> [cite: 310]</li>
+                    [cite_start]<li class="reveal-item"><strong>একক:</strong> J K<sup class="math-sup">-1</sup> [cite: 309]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">আপেক্ষিক তাপ (S)</h2>
+            <div class="slide-content">
+                <ul>
+                    [cite_start]<li class="reveal-item"><strong>সংজ্ঞা:</strong> 1 Kg ভরের কোনো পদার্থের তাপমাত্রা 1K বাড়াতে যে পরিমাণ তাপের প্রয়োজন হয়, তাকে ঐ পদার্থের উপাদানের আপেক্ষিক তাপ বলে। [cite: 317, 1016, 1017]</li>
+                    [cite_start]<li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">S</i> = <sup><i class="math-var">Q</i></sup> / <sub>(<i class="math-var">m</i>&Delta;<i class="math-var">&theta;</i>)</sub> [cite: 321, 2045]</li>
+                    [cite_start]<li class="reveal-item"><strong>প্রয়োজনীয় তাপ:</strong> <i class="math-var">Q</i> = <i class="math-var">mS</i>&Delta;<i class="math-var">&theta;</i> [cite: 324]</li>
+                    [cite_start]<li class="reveal-item"><strong>একক:</strong> J Kg<sup class="math-sup">-1</sup> K<sup class="math-sup">-1</sup> [cite: 322]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তাপ ধারণ ক্ষমতা ও আপেক্ষিক তাপ</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>সম্পর্ক:</strong></p>
+                [cite_start]<p class="reveal-item">আপেক্ষিক তাপ = <sup>তাপ ধারণ ক্ষমতা</sup> / <sub>ভর</sub> [cite: 333, 334]</p>
+                <h3 class="reveal-item"><i class="math-var">S</i> = <sup><i class="math-var">C</i></sup>/<sub><i class="math-var">m</i></sub> &nbsp; বা &nbsp; <i class="math-var">C</i> = <i class="math-var">mS</i></h3>
+                [cite_start]<p class="reveal-item"><strong>কিছু মান (J Kg<sup class="math-sup">-1</sup> K<sup class="math-sup">-1</sup>):</strong> [cite: 335]</p>
+                <ul>
+                    [cite_start]<li>পানি: 4200 [cite: 335, 1342]</li>
+                    [cite_start]<li>বরফ: 2100 [cite: 335, 2030]</li>
+                    [cite_start]<li>জলীয় বাষ্প: 2000 [cite: 335, 1365]</li>
+                    [cite_start]<li>তামা: 400 [cite: 335]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৬ (আপেক্ষিক তাপ)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৬। [cite_start]4 kg ভরের কোনো বস্তুর তাপধারণ ক্ষমতা 2000 J K<sup class="math-sup">-1</sup> হলে আপেক্ষিক তাপ কত? [cite: 1948, 1949]</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 8000 J kg<sup class="math-sup">-1</sup> K<sup class="math-sup">-1</sup></p>
+                    [cite_start]<p class="quiz-option">(খ) 500 J kg<sup class="math-sup">-1</sup> K<sup class="math-sup">-1</sup> [cite: 1952]</p>
+                    <p class="quiz-option">(গ) 2000 J kg<sup class="math-sup">-1</sup> K<sup class="math-sup">-1</sup></p>
+                    <p class="quiz-option">(ঘ) 0.002 J kg<sup class="math-sup">-1</sup> K<sup class="math-sup">-1</sup></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৬</h2>
+            <div class="slide-content">
+                <h3>৬। [cite_start]4 kg ভরের কোনো বস্তুর তাপধারণ ক্ষমতা 2000 J K<sup class="math-sup">-1</sup> হলে আপেক্ষিক তাপ কত? [cite: 1948, 1949]</h3>
+                <p class="quiz-option">(ক) 8000 J kg<sup class="math-sup">-1</sup> K<sup class="math-sup">-1</sup></p>
+                [cite_start]<p class="quiz-option correct-answer">(খ) 500 J kg<sup class="math-sup">-1</sup> K<sup class="math-sup">-1</sup> [cite: 1952]</p>
+                <p class="quiz-option">(গ) 2000 J kg<sup class="math-sup">-1</sup> K<sup class="math-sup">-1</sup></p>
+                <p class="quiz-option">(ঘ) 0.002 J kg<sup class="math-sup">-1</sup> K<sup class="math-sup">-1</sup></p>
+                [cite_start]<p class="reveal-item"><strong>ব্যাখ্যা:</strong> আপেক্ষিক তাপ (S) = তাপ ধারণ ক্ষমতা (C) / ভর (m) = 2000 / 4 = 500 J kg<sup class="math-sup">-1</sup> K<sup class="math-sup">-1</sup>। [cite: 1953, 1954, 1956]</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৭ (আপেক্ষিক তাপ)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৭। [cite_start]10 g পানির তাপমাত্রা 10K বাড়াতে কত তাপের প্রয়োজন? [cite: 2072, 2073]</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 4.2 &times; 10<sup class="math-sup">4</sup> J</p>
+                    <p class="quiz-option">(খ) 4.2 &times; 10<sup class="math-sup">3</sup> J</p>
+                    <p class="quiz-option">(গ) 4.2 &times; [cite_start]10<sup class="math-sup">2</sup> J [cite: 2075]</p>
+                    <p class="quiz-option">(ঘ) 4.2 &times; 10<sup class="math-sup">5</sup> J</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৭</h2>
+            <div class="slide-content">
+                <h3>৭। [cite_start]10 g পানির তাপমাত্রা 10K বাড়াতে কত তাপের প্রয়োজন? [cite: 2072, 2073]</h3>
+                <p class="quiz-option">(ক) 4.2 &times; 10<sup class="math-sup">4</sup> J</p>
+                <p class="quiz-option">(খ) 4.2 &times; 10<sup class="math-sup">3</sup> J</p>
+                <p class="quiz-option correct-answer">(গ) 4.2 &times; [cite_start]10<sup class="math-sup">2</sup> J [cite: 2075]</p>
+                <p class="quiz-option">(ঘ) 4.2 &times; 10<sup class="math-sup">5</sup> J</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> m = 10 g = 0.01 kg, S = 4200 Jkg<sup class="math-sup">-1</sup>K<sup class="math-sup">-1</sup>, &Delta;&theta; = 10 K।<br>
+                Q = mS&Delta;&theta; = 0.01 &times; 4200 &times; 10 = 420 J = 4.2 &times; [cite_start]10<sup class="math-sup">2</sup> J। [cite: 324]</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">পদার্থের অবস্থার পরিবর্তন</h2>
+            <div class="slide-content">
+                <ul>
+                    [cite_start]<li class="reveal-item"><strong>গলন (Melting):</strong> নির্দিষ্ট তাপমাত্রায় (গলনাঙ্ক) কঠিন পদার্থ গলে তরলে পরিণত হওয়া। [cite: 343, 344]</li>
+                    [cite_start]<li class="reveal-item"><strong>বাষ্পীভবন (Vaporization):</strong> নির্দিষ্ট তাপমাত্রায় (স্ফুটনাঙ্ক) তরল পদার্থ ফুটে বাষ্পে পরিণত হওয়া। [cite: 347, 348]</li>
+                    [cite_start]<li class="reveal-item"><strong>ঘনীভবন (Condensation):</strong> বায়বীয় অবস্থা থেকে তরল অবস্থায় রূপান্তর। [cite: 351]</li>
+                    [cite_start]<li class="reveal-item"><strong>কঠিনীভবন (Solidification):</strong> তরল অবস্থা থেকে কঠিন অবস্থায় রূপান্তর। [cite: 352]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">সুপ্ততাপ (Latent Heat)</h2>
+            <div class="slide-content">
+                [cite_start]<p class="reveal-item">গলন বা বাষ্পীভবন চলার সময় তাপমাত্রা স্থির থাকে। [cite: 346, 350]</p>
+                <ul>
+                    [cite_start]<li class="reveal-item"><strong>গলনের সুপ্ততাপ:</strong> গলনাঙ্কে, কঠিন পদার্থকে পুরো তরলে রূপান্তরিত করতে যে তাপ লাগে। [cite: 345]</li>
+                    [cite_start]<li class="reveal-item"><strong>বাষ্পীভবনের সুপ্ততাপ:</strong> স্ফুটনাঙ্কে, তরল পদার্থকে পুরো গ্যাসে পরিণত করতে যে তাপ লাগে। [cite: 349]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">বাষ্পায়ন (Evaporation)</h2>
+            <div class="slide-content">
+                <ul>
+                    [cite_start]<li class="reveal-item"><strong>সংজ্ঞা:</strong> <strong>যেকোনো তাপমাত্রায়</strong> তরলের শুধুমাত্র <strong>উপরি তল</strong> থেকে ধীরে ধীরে বাষ্পে পরিণত হওয়ার প্রক্রিয়া। [cite: 353]</li>
+                    [cite_start]<li class="reveal-item"><strong>বাষ্পায়নের নির্ভরশীলতা:</strong> [cite: 356]
+                        <ul>
+                            [cite_start]<li><strong>বাতাসের প্রবাহ:</strong> প্রবাহ বেশি হলে বাষ্পায়ন বেশি হয়। [cite: 357]</li>
+                            [cite_start]<li><strong>উপরিভাগের ক্ষেত্রফল:</strong> ক্ষেত্রফল বেশি হলে বাষ্পায়ন বেশি হয়। [cite: 362]</li>
+                            [cite_start]<li><strong>তরলের প্রকৃতি:</strong> স্ফুটনাঙ্ক কম হলে বাষ্পায়ন বেশি হয়। [cite: 364]</li>
+                            [cite_start]<li><strong>বাতাসের চাপ:</strong> চাপ কম হলে বাষ্পায়ন বেশি হয়। [cite: 366]</li>
+                            [cite_start]<li><strong>বায়ুর শুষ্কতা:</strong> বাতাস শুষ্ক হলে বাষ্পায়ন বেশি হয়। [cite: 367]</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৮ (অবস্থার পরিবর্তন)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৮। [cite_start]সুপ্ততাপ পরিবর্তন ঘটায় কোনটির? [cite: 1211, 1216]</h3>
+                <div class="reveal-item">
+                    [cite_start]<p class="quiz-option">(ক) তাপমাত্রার [cite: 1212]</p>
+                    [cite_start]<p class="quiz-option">(খ) অবস্থার [cite: 1217]</p>
+                    [cite_start]<p class="quiz-option">(গ) চাপের [cite: 1218]</p>
+                    [cite_start]<p class="quiz-option">(ঘ) তাপের [cite: 1219]</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৮</h2>
+            <div class="slide-content">
+                <h3>৮। [cite_start]সুপ্ততাপ পরিবর্তন ঘটায় কোনটির? [cite: 1211, 1216]</h3>
+                [cite_start]<p class="quiz-option">(ক) তাপমাত্রার [cite: 1212]</p>
+                [cite_start]<p class="quiz-option correct-answer">(খ) অবস্থার [cite: 1217]</p>
+                [cite_start]<p class="quiz-option">(গ) চাপের [cite: 1218]</p>
+                [cite_start]<p class="quiz-option">(ঘ) তাপের [cite: 1219]</p>
+                [cite_start]<p class="reveal-item"><strong>ব্যাখ্যা:</strong> সুপ্ততাপ হলো সেই তাপ যা বস্তুর তাপমাত্রা পরিবর্তন না করে শুধু অবস্থার পরিবর্তন ঘটায় (যেমন বরফ থেকে পানি)। [cite: 345, 346, 349, 350]</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৯ (অবস্থার পরিবর্তন)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৯। [cite_start]বাষ্পায়ন পদ্ধতিতে পানি কত তাপমাত্রায় বাষ্পে পরিণত হয়? [cite: 1403, 1406]</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 70&deg;C</p>
+                    <p class="quiz-option">(খ) 100&deg;C</p>
+                    <p class="quiz-option">(গ) 120&deg;C</p>
+                    [cite_start]<p class="quiz-option">(ঘ) যেকোন তাপমাত্রায় [cite: 1410]</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৯</h2>
+            <div class="slide-content">
+                <h3>৯। [cite_start]বাষ্পায়ন পদ্ধতিতে পানি কত তাপমাত্রায় বাষ্পে পরিণত হয়? [cite: 1403, 1406]</h3>
+                <p class="quiz-option">(ক) 70&deg;C</p>
+                <p class="quiz-option">(খ) 100&deg;C</p>
+                <p class="quiz-option">(গ) 120&deg;C</p>
+                [cite_start]<p class="quiz-option correct-answer">(ঘ) যেকোন তাপমাত্রায় [cite: 1410]</p>
+                [cite_start]<p class="reveal-item"><strong>ব্যাখ্যা:</strong> স্ফুটন 100&deg;C (নির্দিষ্ট তাপমাত্রায়) ঘটে, কিন্তু বাষ্পায়ন যেকোনো তাপমাত্রায় তরলের উপরিতল থেকে ঘটতে পারে। [cite: 353]</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">গলনাঙ্ক ও স্ফুটনাঙ্কে চাপের প্রভাব</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>গলনাঙ্কের উপর:</strong>
+                        <ul>
+                            [cite_start]<li>যেসব পদার্থ গললে আয়তন কমে (যেমন বরফ), চাপ বাড়ালে তাদের <strong>গলনাঙ্ক কমে যায়</strong>। [cite: 371, 739]</li>
+                            [cite_start]<li><strong>পুনঃশিলীভবন:</strong> এই নীতির কারণেই চাপের মাধ্যমে দুই টুকরো বরফ জোড়া লেগে যায়। [cite: 373, 374]</li>
+                            [cite_start]<li>যেসব পদার্থ গললে আয়তন বাড়ে (যেমন মোম), চাপ বাড়ালে তাদের গলনাঙ্ক বেড়ে যায়। [cite: 738]</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>স্ফুটনাঙ্কের উপর:</strong>
+                        <ul>
+                            [cite_start]<li>চাপ কমলে <strong>স্ফুটনাঙ্ক কমে যায়</strong> (যেমন পাহাড়ে রান্না হতে দেরি হওয়া)। [cite: 375, 377]</li>
+                            [cite_start]<li>চাপ বাড়লে <strong>স্ফুটনাঙ্ক বেড়ে যায়</strong> (যেমন প্রেশার কুকারে রান্না)। [cite: 375]</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১০ (চাপের প্রভাব)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১০। [cite_start]দুই টুকরো বরফকে একত্রে চাপ দিলে ওদের সংযোগস্থলে গলনাঙ্ক কত? [cite: 2145, 2146]</h3>
+                <div class="reveal-item">
+                    [cite_start]<p class="quiz-option">(ক) 0&deg;C এর নিচে [cite: 2147]</p>
+                    <p class="quiz-option">(খ) 0&deg;C</p>
+                    <p class="quiz-option">(গ) 0.0078&deg;C</p>
+                    <p class="quiz-option">(ঘ) 1&deg;C</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১০</h2>
+            <div class="slide-content">
+                <h3>১০। [cite_start]দুই টুকরো বরফকে একত্রে চাপ দিলে ওদের সংযোগস্থলে গলনাঙ্ক কত? [cite: 2145, 2146]</h3>
+                [cite_start]<p class="quiz-option correct-answer">(ক) 0&deg;C এর নিচে [cite: 2147]</p>
+                <p class="quiz-option">(খ) 0&deg;C</p>
+                <p class="quiz-option">(গ) 0.0078&deg;C</p>
+                <p class="quiz-option">(ঘ) 1&deg;C</p>
+                [cite_start]<p class="reveal-item"><strong>ব্যাখ্যা:</strong> বরফের ওপর চাপ প্রয়োগ করলে এর গলনাঙ্ক 0&deg;C এর চেয়ে কমে যায়, একে পুনঃশিলীভবন বলে। [cite: 371, 374]</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ১</h2>
+            <div class="slide-content">
+                [cite_start]<p class="quiz-cq reveal-item">একজন তৃষ্ণার্ত পথিক 17&deg;C তাপমাত্রার পানি পান করার উদ্দেশে 30&deg;C তাপমাত্রার 300 g পানির মধ্যে -12&deg;C তাপমাত্রার 250 g বরফ মেশালেন। [cite: 653]</p>
+                <div class="reveal-item">
+                    [cite_start]<p>(ক) তাপমাত্রিক ধর্ম কী? [cite: 655]</p>
+                    [cite_start]<p>(খ) তাপ প্রয়োগে কঠিন বস্তুর প্রসারণ লাভের কারণ ব্যাখ্যা কর। [cite: 656]</p>
+                    [cite_start]<p>(গ) উক্ত পরিমাণ বরফ গলতে কী পরিমাণ তাপের প্রয়োজন? [cite: 657]</p>
+                    <p>(ঘ) পথিকের পক্ষে 17&deg;C তাপমাত্রার পানি পান করা সম্ভব হয়েছিল কি? [cite_start]গাণিতিকভাবে যাচাই কর। [cite: 658]</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ক ও খ)</h2>
+            <div class="slide-content">
+                [cite_start]<p class="reveal-item"><strong>(ক) তাপমাত্রিক ধর্ম:</strong> পদার্থের যে ধর্ম ব্যবহার করে তাপমাত্রা পরিমাপ করা হয়, তাকে তাপমাত্রিক ধর্ম বলে। [cite: 660, 45]</p>
+                <p class="reveal-item"><strong>(খ) ব্যাখ্যা:</strong> তাপ দিলে কঠিন বস্তুর অণুগুলোর কম্পন বৃদ্ধি পায়। অণুগুলো ভেতরের দিকে যতটা সরে আসতে পারে, বাইরের দিকে তার চেয়ে বেশি সরে যেতে পারে। [cite_start]ফলে অণুগুলোর গড় সাম্যাবস্থান বাইরের দিকে সরে যায় এবং পদার্থের প্রসারণ ঘটে। [cite: 661, 662]</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item">বরফ গলতে মোট দুটি ধাপে তাপ লাগবে:</p>
+                <p class="reveal-item"><strong>ধাপ ১: -12&deg;C বরফ &rarr; 0&deg;C বরফ</strong><br>
+                গৃহীত তাপ, <i class="math-var">Q</i><sub class="math-sub">1</sub> = <i class="math-var">mS</i><sub class="math-sub">i</sub>&Delta;<i class="math-var">&theta;</i><br>
+                <i class="math-var">Q</i><sub class="math-sub">1</sub> = 0.25 kg &times; 2100 J/kg&middot;K &times; (0 - (-12)[cite_start]) K [cite: 665, 666, 671, 674, 677]<br>
+                [cite_start]<i class="math-var">Q</i><sub class="math-sub">1</sub> = 6300 J [cite: 675]</p>
+                
+                <p class="reveal-item"><strong>ধাপ ২: 0&deg;C বরফ &rarr; 0&deg;C পানি</strong><br>
+                গৃহীত তাপ, <i class="math-var">Q</i><sub class="math-sub">2</sub> = <i class="math-var">m</i><i class="math-var">L</i><sub class="math-sub">f</sub><br>
+                <i class="math-var">Q</i><sub class="math-sub">2</sub> = 0.25 kg &times; [cite_start]336000 J/kg [cite: 679, 680, 687]<br>
+                [cite_start]<i class="math-var">Q</i><sub class="math-sub">2</sub> = 84000 J [cite: 681]</p>
+                
+                [cite_start]<p class="reveal-item"><strong>মোট প্রয়োজনীয় তাপ, Q = <i class="math-var">Q</i><sub class="math-sub">1</sub> + <i class="math-var">Q</i><sub class="math-sub">2</sub></strong> = 6300 + 84000 = 90300 J [cite: 682, 683, 684]</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>লক্ষ্য:</strong> মিশ্রণের তাপমাত্রা 17&deg;C বানানো।</p>
+                [cite_start]<p class="reveal-item"><strong>(গ) হতে,</strong> বরফ গলে 0&deg;C পানিতে আসতে তাপ লাগে = 90300 J [cite: 689]</p>
+                <p class="reveal-item"><strong>0&deg;C পানি &rarr; 17&deg;C পানি হতে তাপ লাগবে:</strong><br>
+                <i class="math-var">Q</i><sub class="math-sub">3</sub> = <i class="math-var">m</i><sub class="math-sub">i</sub><i class="math-var">S</i><sub class="math-sub">w</sub>&Delta;<i class="math-var">&theta;</i>' = 0.25 &times; 4200 &times; (17-0) [cite_start]= 17850 J [cite: 691, 692, 693]</p>
+                <p class="reveal-item"><strong>বরফের মোট গৃহীত তাপ (17&deg;C পর্যন্ত):</strong><br>
+                [cite_start]<i class="math-var">Q</i><sub class="math-sub">r</sub> = 90300 + 17850 = 108150 J [cite: 698, 699, 702]</p>
+                
+                <p class="reveal-item"><strong>30&deg;C পানি &rarr; 17&deg;C হতে তাপ বর্জন করবে:</strong><br>
+                <i class="math-var">Q</i>'' = <i class="math-var">m</i><sub class="math-sub">w</sub><i class="math-var">S</i><sub class="math-sub">w</sub>&Delta;<i class="math-var">&theta;</i>'' = 0.3 &times; 4200 &times; (30-17) [cite_start][cite: 704, 708, 711]<br>
+                [cite_start]<i class="math-var">Q</i>'' = 16380 J [cite: 706]</p>
+
+                [cite_start]<p class="reveal-item"><strong>সিদ্ধান্ত:</strong> যেহেতু বর্জিত তাপ (16380 J) প্রয়োজনীয় তাপ (108150 J) অপেক্ষা অনেক কম, তাই সমস্ত বরফ গলবে না এবং মিশ্রণের তাপমাত্রা 17&deg;C এ পৌঁছানো সম্ভব নয়। [cite: 713]</p>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ২</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">রেল লাইনের দুটি পাতের মধ্যে 2.2 cm ফাঁকা রাখা হয়েছে। একটি 90m দৈর্ঘ্যের লোহার পাত ব্যবহার হয়। কোনো একদিন ঐ স্থানের তাপমাত্রা স্বাভাবিকের চেয়ে 10&deg;C বেড়ে গেল। (লোহার $\alpha = 11.5 \times 10^{-6} K^{-1}$) [cite_start][cite: 897, 898]</p>
+                <div class="reveal-item">
+                    [cite_start]<p>(ক) ঘনীভবন কী? [cite: 899]</p>
+                    [cite_start]<p>(খ) গলনাঙ্কের উপর চাপের প্রভাব ব্যাখ্যা কর। [cite: 900]</p>
+                    [cite_start]<p>(গ) 10&deg;C বৃদ্ধিতে লোহার পাতের দৈর্ঘ্য প্রসারণ নির্ণয় কর। [cite: 901]</p>
+                    [cite_start]<p>(ঘ) তাপমাত্রা 18&deg;C বেড়ে গেলে ঐ রেল লাইনে ট্রেন নিরাপদে চলতে পারবে কি? [cite: 902]</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (ক ও খ)</h2>
+            <div class="slide-content">
+                 [cite_start]<p class="reveal-item"><strong>(ক) ঘনীভবন:</strong> উষ্ণতা হ্রাস ঘটিয়ে কোনো পদার্থের বায়বীয় অবস্থা থেকে তরল অবস্থায় রূপান্তরিত হওয়ার প্রক্রিয়াকে ঘনীভবন বলে। [cite: 904]</p>
+                 [cite_start]<p class="reveal-item"><strong>(খ) গলনাঙ্কে চাপের প্রভাব:</strong> যেসব পদার্থের গললে আয়তন হ্রাস পায় (যেমন বরফ), চাপ বাড়ালে তাদের গলনাঙ্ক কমে যায়। [cite: 908] [cite_start]আর যেসব পদার্থের গললে আয়তন বৃদ্ধি পায় (যেমন মোম), চাপ বাড়ালে তাদের গলনাঙ্ক বেড়ে যায়। [cite: 906]</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                [cite_start]আদি দৈর্ঘ্য, <i class="math-var">l</i><sub class="math-sub">1</sub> = 90 m [cite: 914]<br>
+                [cite_start]তাপমাত্রা বৃদ্ধি, &Delta;<i class="math-var">&theta;</i> = 10&deg;C = 10 K [cite: 916]<br>
+                দৈর্ঘ্য প্রসারণ সহগ, &alpha; = 11.5 &times; [cite_start]10<sup class="math-sup">-6</sup> K<sup class="math-sup">-1</sup> [cite: 917]</p>
+                
+                [cite_start]<p class="reveal-item"><strong>আমরা জানি,</strong> &Delta;<i class="math-var">l</i> = <i class="math-var">&alpha;</i> <i class="math-var">l</i><sub class="math-sub">1</sub> &Delta;<i class="math-var">&theta;</i> [cite: 920, 921]</p>
+                <p class="reveal-item">&Delta;<i class="math-var">l</i> = (11.5 &times; 10<sup class="math-sup">-6</sup>) &times; 90 &times; 10</p>
+                [cite_start]<p class="reveal-item">&Delta;<i class="math-var">l</i> = 0.01035 m [cite: 922]</p>
+                [cite_start]<h3 class="reveal-item"><strong>উত্তর:</strong> লোহার পাতের দৈর্ঘ্য প্রসারণ 0.01035 m। [cite: 924]</h3>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (ঘ)</h2>
+            <div class="slide-content">
+                [cite_start]<p class="reveal-item"><strong>যদি তাপমাত্রা 18&deg;C (18 K) বৃদ্ধি পায়:</strong> [cite: 926]</p>
+                [cite_start]<p class="reveal-item">নতুন দৈর্ঘ্য প্রসারণ, &Delta;<i class="math-var">l</i>' = <i class="math-var">&alpha;</i> <i class="math-var">l</i><sub class="math-sub">1</sub> &Delta;<i class="math-var">&theta;</i>' [cite: 929]</p>
+                <p class="reveal-item">&Delta;<i class="math-var">l</i>' = (11.5 &times; 10<sup class="math-sup">-6</sup>) &times; 90 &times; [cite_start]18 [cite: 930]</p>
+                <p class="reveal-item">&Delta;<i class="math-var">l</i>' = 0.01863 m = 1.863 cm</p>
+                
+                [cite_start]<p class="reveal-item"><strong>দেওয়া আছে,</strong> দুটি পাতের মধ্যে ফাঁকা স্থান = 2.2 cm [cite: 897]</p>
+                
+                <p class="reveal-item"><strong>সিদ্ধান্ত:</strong> যেহেতু পাতের প্রসারণ (1.863 cm) রেল লাইনের ফাঁকা স্থান (2.2 cm) থেকে কম, তাই লাইন বেঁকে যাওয়ার সম্ভাবনা নেই। [cite_start]ট্রেন নিরাপদে চলতে পারবে। [cite: 932, 933]</p>
+            </div>
+        </div>
+
+        <div class="slide thank-you-slide">
+            <h1 class="slide-title">ধন্যবাদ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">প্রশ্নোত্তর পর্ব</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter" id="slideCounter"></div>
+    <div class="slide-jump">
+        <input type="number" id="slideJumpInput" placeholder="স্লাইড #" min="1">
+    </div>
+    <div class="nav-buttons">
+        <button id="prevBtn">পূর্ববর্তী</button>
+        <button id="nextBtn">পরবর্তী</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slideCounter');
+        let revealIndex = 0;
+
+        function showSlide(index) {
+            // Ensure index is within bounds
+            if (index >= totalSlides) {
+                index = 0;
+            } else if (index < 0) {
+                index = totalSlides - 1;
+            }
+            currentSlide = index;
+
+            // Remove 'active' class from all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Add 'active' class to the current slide
+            const activeSlide = slides[currentSlide];
+            activeSlide.classList.add('active');
+
+            // Reset reveal items for the new slide
+            revealIndex = 0;
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            revealItems.forEach(item => item.classList.remove('is-visible'));
+
+            // Update slide counter
+            slideCounter.textContent = `স্লাইড ${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function revealNext() {
+            const activeSlide = slides[currentSlide];
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            
+            if (revealIndex < revealItems.length) {
+                revealItems[revealIndex].classList.add('is-visible');
+                revealIndex++;
+                return true; // An item was revealed
+            }
+            return false; // No items left to reveal
+        }
+
+        function handleNext() {
+            if (!revealNext()) {
+                // If no items were revealed (or no items to reveal), go to next slide
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function handlePrev() {
+            showSlide(currentSlide - 1);
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', handleNext);
+        document.getElementById('prevBtn').addEventListener('click', handlePrev);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (event) => {
+            if (event.target.id === 'slideJumpInput') {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent default Enter behavior
+                    const targetSlide = parseInt(slideJumpInput.value);
+                    
+                    // Validate the input number
+                    if (!isNaN(targetSlide) && targetSlide >= 1 && targetSlide <= totalSlides) {
+                        showSlide(targetSlide - 1); // Jump to the slide (0-based index)
+                    } else {
+                        // Optionally provide feedback for invalid input
+                        slideJumpInput.style.borderColor = 'red';
+                        setTimeout(() => {
+                            slideJumpInput.style.borderColor = '#555';
+                        }, 1000);
+                    }
+                    slideJumpInput.value = ''; // Clear the input box after jump
+                    slideJumpInput.blur(); // Remove focus from input box
+                }
+                return; // Don't trigger next/prev if typing in input
+            }
+
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === ' ') {
+                event.preventDefault(); // Stop space from scrolling
+                handleNext();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                handlePrev();
+            }
+        });
+
+        // Initial call to show the first slide
+        showSlide(0);
+        
+        // Slide Jump Functionality
+        const slideJumpInput = document.getElementById('slideJumpInput');
+        slideJumpInput.max = totalSlides; // Set max value dynamically
+
+        // Clear red border on focus
+        slideJumpInput.addEventListener('focus', () => {
+             slideJumpInput.style.borderColor = '#555';
+        });
+    </script>
+
+</body>
+</html>

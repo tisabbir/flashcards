@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বস্তুর ওপর তাপের প্রভাব</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #1E1E1E;
+            box-sizing: border-box;
+            padding: 50px 80px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border-left: 10px solid #03DAC6; /* Accent color */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-title {
+            font-size: 3.2em;
+            color: #03DAC6; /* Accent color */
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+
+        .slide-content {
+            font-size: 1.6em;
+            color: #CFD8DC;
+        }
+        
+        .slide-content h3 {
+            color: #BB86FC; /* Secondary accent */
+            font-size: 1.5em;
+        }
+
+        .slide-content ul {
+            list-style-type: square;
+            padding-left: 40px;
+        }
+
+        .slide-content li, .slide-content p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        /* HTML Math Styling */
+        i.math-var { font-style: italic; }
+        sup.math-sup { font-size: 0.75em; vertical-align: super; }
+        sub.math-sub { font-size: 0.75em; vertical-align: sub; }
+
+        /* Image Styling */
+        .slide-content img {
+            max-width: 45%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+            float: right;
+            margin-left: 20px;
+        }
+        
+        /* Reveal items */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal-item.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* Special slide types */
+        .title-slide, .thank-you-slide {
+            background: linear-gradient(135deg, #2C3E50, #1a2a3a);
+            color: white;
+            align-items: center;
+            text-align: center;
+            border-left: 10px solid #BB86FC;
+        }
+        .title-slide .slide-title, .thank-you-slide .slide-title { font-size: 4.5em; color: white; border-bottom: none; }
+        .title-slide .slide-content, .thank-you-slide .slide-content { font-size: 1.8em; color: #ddd; }
+
+        .hook-slide {
+            align-items: center;
+            text-align: center;
+            background-color: #333;
+            border-left: 10px solid #FBC02D;
+        }
+        .hook-slide .slide-title { font-size: 2.8em; color: #FBC02D; }
+        .hook-slide .slide-content { font-size: 1.8em; }
+
+        .quiz-slide { border-left: 10px solid #E91E63; }
+        .quiz-slide .slide-title { color: #E91E63; }
+        .quiz-slide .quiz-option { font-size: 1.2em; margin: 10px 0; }
+        .quiz-slide .quiz-cq { font-size: 1.2em; background: #2a2a2a; padding: 15px; border-radius: 8px; border-left: 4px solid #E91E63; }
+        
+        .answer-slide { border-left: 10px solid #4CAF50; }
+        .answer-slide .slide-title { color: #4CAF50; }
+        .answer-slide .correct-answer {
+            background-color: #388E3C;
+            color: #FFFFFF;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1.2em;
+        }
+
+        .simulation-slide { border-left: 10px solid #2196F3; }
+        .simulation-slide .slide-title { color: #2196F3; }
+        .simulation-slide a { font-size: 1.2em; color: #90CAF9; text-decoration: none; background: #2a2a2a; padding: 10px 15px; border-radius: 5px; transition: background 0.3s; }
+        .simulation-slide a:hover { background: #333; }
+        
+        .video-slide { border-left: 10px solid #FF5722; }
+        .video-slide .slide-title { color: #FF5722; }
+        .video-slide iframe {
+            width: 70vw;
+            height: 40vw;
+            max-height: 450px;
+            border: none;
+            border-radius: 8px;
+        }
+
+        /* Navigation */
+        .nav-buttons { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+        .nav-buttons button { font-size: 1em; padding: 10px 20px; margin-left: 10px; background-color: #03DAC6; color: #121212; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        .nav-buttons button:hover { background-color: #018786; transform: scale(1.05); }
+        /* kj */
+        .slide-jump {
+            position: fixed;
+            bottom: 35px;
+            left: 150px; /* Adjust position as needed */
+            z-index: 1000;
+        }
+        .slide-jump input {
+            width: 80px;
+            padding: 8px 10px;
+            font-size: 1em;
+            background-color: #333;
+            color: #E0E0E0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            text-align: center;
+        }
+        /* Hide number input arrows */
+        .slide-jump input::-webkit-outer-spin-button,
+        .slide-jump input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        .slide-jump input[type=number] {
+          -moz-appearance: textfield; /* Firefox */
+        }
+        /* kj */
+        .slide-counter { position: fixed; bottom: 40px; left: 30px; font-size: 1.2em; color: #888; z-index: 1000; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <div class="slide title-slide active">
+            <h1 class="slide-title">বস্তুর ওপর তাপের প্রভাব</h1>
+            <div class="slide-content">
+                <p class="reveal-item">অধ্যায় ৬</p>
+            </div>
+        </div>
+
+        <div class="slide hook-slide">
+            <h2 class="slide-title">একটা প্রশ্ন...</h2>
+            <div class="slide-content">
+                <p class="reveal-item">গরম পানিতে একটি ধাতব চামচ ও একটি কাঠের চামচ ডোবালে, কোনটি বেশি গরম অনুভূত হয়?</p>
+                <p class="reveal-item">...এবং কেন?</p>
+                <p class="reveal-item">এর উত্তরগুলোই আজকের আলোচনার বিষয়!</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তাপ (Heat) কী?</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> তাপ এক ধরনের শক্তি।</li>
+                    <li class="reveal-item"><strong>আণবিক ভিত্তি:</strong> আণবিক পর্যায়ে, তাপ হলো কোনো পদার্থের অণুগুলোর <strong>মোট বা সম্মিলিত গতিশক্তি</strong>।
+                        <ul>
+                            <li><strong>কঠিন পদার্থে:</strong> অণুগুলোর কম্পন।</li>
+                            <li><strong>তরল/গ্যাসীয় পদার্থে:</strong> অণুগুলোর ছোটাছুটি।</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>একক:</strong> জুল (J) এবং ক্যালরি (cal)।</li>
+                    <li class="reveal-item"><strong>রূপান্তর:</strong> ১ ক্যালরি = ৪.২ জুল।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তাপমাত্রা (Temperature) কী?</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> তাপমাত্রা হলো এমন একটি পরিমাপ যা তাপ প্রবাহের <strong>দিক</strong> নির্ধারণ করে।</li>
+                    <li class="reveal-item">তাপ সর্বদা <strong>উচ্চ তাপমাত্রা</strong> থেকে <strong>নিম্ন তাপমাত্রার</strong> বস্তুর দিকে প্রবাহিত হয়।</li>
+                    <li class="reveal-item"><strong>আণবিক ভিত্তি:</strong> এটি পদার্থের অণুগুলোর <strong>গড় গতিশক্তির</strong> একটি পরিমাপ।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তাপ বনাম তাপমাত্রা</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>উপমা (পানির পাত্র):</strong></p>
+                <ul>
+                    <li class="reveal-item"><strong>তাপ</strong> হলো পাত্রের <strong>মোট পানির আয়তন</strong> বা পরিমাণের মতো।</li>
+                    <li class="reveal-item"><strong>তাপমাত্রা</strong> হলো পাত্রের <strong>পানির উচ্চতা</strong> বা পৃষ্ঠদেশের উচ্চতার মতো।</li>
+                </ul>
+                <p class="reveal-item">পানি যেমন বেশি উচ্চতা থেকে কম উচ্চতায় যায়, তাপও তেমনি বেশি তাপমাত্রা থেকে কম তাপমাত্রায় যায়।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তাপমাত্রা পরিমাপ</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>তাপমাত্রিক ধর্ম:</strong> পদার্থের যে ধর্ম তাপমাত্রার সাথে সুষমভাবে পরিবর্তিত হয় (যেমন: আয়তন প্রসারণ)।</li>
+                    <li class="reveal-item"><strong>তাপমাত্রিক পদার্থ:</strong> যে পদার্থ এই ধর্ম প্রদর্শন করে (যেমন: পারদ)।</li>
+                    <li class="reveal-item"><strong>বিভিন্ন থার্মোমিটার:</strong>
+                        <ul>
+                            <li>পারদ/অ্যালকোহল থার্মোমিটার (আয়তন প্রসারণ)</li>
+                            <li>গ্যাস থার্মোমিটার (চাপ)</li>
+                            <li>রোধ থার্মোমিটার (বৈদ্যুতিক রোধ)</li>
+                            <li>থার্মোকাপল (EMF)</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তাপমাত্রার স্কেল</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সেলসিয়াস (&deg;C):</strong> হিমাঙ্ক ০&deg;C, স্ফুটনাঙ্ক ১০০&deg;C।</li>
+                    <li class="reveal-item"><strong>কেলভিন (K):</strong> SI একক। এটি <strong>পরম শূন্য</strong> (০ K = -২৭৩.১৫&deg;C) তাপমাত্রার উপর ভিত্তি করে তৈরি।</li>
+                    <li class="reveal-item"><strong>ফারেনহাইট (&deg;F):</strong> হিমাঙ্ক ৩২&deg;F, স্ফুটনাঙ্ক ২১২&deg;F।</li>
+                    <li class="reveal-item"><strong>পানির ত্রৈধ বিন্দু (Triple Point):</strong> ০.০১&deg;C বা ২৭৩.১৬ K, যেখানে বরফ, পানি ও জলীয় বাষ্প একসাথে থাকে।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">স্কেলের সম্পর্ক</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>মৌলিক সম্পর্ক:</strong><br>
+                    <sup><i class="math-var">T</i><sub class="math-sub">C</sub></sup>/<sub>100</sub> = <sup>(<i class="math-var">T</i><sub class="math-sub">K</sub> - 273.15)</sup>/<sub>100</sub> = <sup>(<i class="math-var">T</i><sub class="math-sub">F</sub> - 32)</sup>/<sub>180</sub>
+                </p>
+                <p class="reveal-item"><strong>কেলভিন ও সেলসিয়াস:</strong><br>
+                    <i class="math-var">T</i><sub class="math-sub">K</sub> = <i class="math-var">T</i><sub class="math-sub">C</sub> + 273.15
+                </p>
+                <p class="reveal-item"><strong>ফারেনহাইট ও সেলসিয়াস:</strong><br>
+                    <i class="math-var">T</i><sub class="math-sub">C</sub> = <sup>5</sup>/<sub>9</sub>(<i class="math-var">T</i><sub class="math-sub">F</sub> - 32)
+                </p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১ (স্কেল)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১. কোন তাপমাত্রায় সেলসিয়াস ও ফারেনহাইট স্কেল সমান?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) ০&deg;</p>
+                    <p class="quiz-option">(খ) ১০০&deg;</p>
+                    <p class="quiz-option">(গ) -৪০&deg;</p>
+                    <p class="quiz-option">(ঘ) ৩২&deg;</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১</h2>
+            <div class="slide-content">
+                <h3>১. কোন তাপমাত্রায় সেলসিয়াস ও ফারেনহাইট স্কেল সমান?</h3>
+                <p class="quiz-option">(ক) ০&deg;</p>
+                <p class="quiz-option">(খ) ১০০&deg;</p>
+                <p class="quiz-option correct-answer">(গ) -৪০&deg;</p>
+                <p class="quiz-option">(ঘ) ৩২&deg;</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> -৪০&deg;C তাপমাত্রাই ফারেনহাইট স্কেলে -৪০&deg;F দেখায়।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">কঠিন পদার্থের প্রসারণ</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>আণবিক কারণ:</strong> তাপ দিলে অণুগুলোর কম্পন ও গড় দূরত্ব বেড়ে যায়, ফলে পদার্থ প্রসারিত হয়।</p>
+                <ul>
+                    <li class="reveal-item"><strong>দৈর্ঘ্য প্রসারণ সহগ (<i class="math-var">&alpha;</i>):</strong><br>
+                        <i class="math-var">L</i><sub class="math-sub">2</sub> = <i class="math-var">L</i><sub class="math-sub">1</sub> + <i class="math-var">&alpha;L</i><sub class="math-sub">1</sub>(<i class="math-var">T</i><sub class="math-sub">2</sub> - <i class="math-var">T</i><sub class="math-sub">1</sub>)
+                    </li>
+                    <li class="reveal-item"><strong>ক্ষেত্র প্রসারণ সহগ (<i class="math-var">&beta;</i>):</strong><br>
+                        <i class="math-var">A</i><sub class="math-sub">2</sub> = <i class="math-var">A</i><sub class="math-sub">1</sub> + <i class="math-var">&beta;A</i><sub class="math-sub">1</sub>(<i class="math-var">T</i><sub class="math-sub">2</sub> - <i class="math-var">T</i><sub class="math-sub">1</sub>)
+                    </li>
+                    <li class="reveal-item"><strong>আয়তন প্রসারণ সহগ (<i class="math-var">&gamma;</i>):</strong><br>
+                        <i class="math-var">V</i><sub class="math-sub">2</sub> = <i class="math-var">V</i><sub class="math-sub">1</sub> + <i class="math-var">&gamma;V</i><sub class="math-sub">1</sub>(<i class="math-var">T</i><sub class="math-sub">2</sub> - <i class="math-var">T</i><sub class="math-sub">1</sub>)
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">প্রসারণ সহগের সম্পর্ক</h2>
+            <div class="slide-content">
+                <p class="reveal-item">যেহেতু <i class="math-var">&alpha;</i> (আলফা)-এর মান খুব ছোট, তাই আমরা প্রায়শই ধরে নিই:</p>
+                <ul class="reveal-item">
+                    <li><i class="math-var">&beta;</i> &approx; 2<i class="math-var">&alpha;</i></li>
+                    <li><i class="math-var">&gamma;</i> &approx; 3<i class="math-var">&alpha;</i></li>
+                </ul>
+                <p class="reveal-item"><strong>বাস্তব উদাহরণ:</strong>
+                    <ul>
+                        <li>রেললাইনে ফাঁক রাখা হয় প্রসারণের জন্য।</li>
+                        <li>দাঁতের ফিলিংয়ের প্রসারণ সহগ দাঁতের সমান হতে হয়।</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তরল ও গ্যাসের প্রসারণ</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">তরল পদার্থের প্রসারণ</h3>
+                <ul>
+                    <li class="reveal-item">তরলকে পাত্রে রেখে তাপ দিতে হয়, তাই পাত্রও প্রসারিত হয়।</li>
+                    <li class="reveal-item"><strong>আপাত প্রসারণ:</strong> পাত্রের প্রসারণ বাদ দিয়ে যে প্রসারণ দেখা যায়।</li>
+                    <li class="reveal-item"><strong>প্রকৃত প্রসারণ:</strong> তরলের সত্যিকারের প্রসারণ।</li>
+                    <li class="reveal-item">প্রকৃত প্রসারণ = আপাত প্রসারণ + পাত্রের প্রসারণ</li>
+                </ul>
+                <h3 class="reveal-item">গ্যাসের প্রসারণ</h3>
+                <ul>
+                    <li class="reveal-item">চাপ স্থির রেখে গ্যাসের প্রসারণ মাপা হয়।</li>
+                    <li class="reveal-item">গ্যাসের প্রসারণ সহগ ধ্রুব নয়, এটি তাপমাত্রার ব্যস্তানুপাতিক (<i class="math-var">&beta;</i><sub class="math-sub">p</sub> = <sup>1</sup>/<sub><i class="math-var">T</i><sub class="math-sub">1</sub></sub>)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">অবস্থার পরিবর্তন ও সুপ্ততাপ</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>গলনাঙ্ক:</strong> যে তাপমাত্রায় কঠিন তরলে পরিণত হয়।</li>
+                    <li class="reveal-item"><strong>স্ফুটনাঙ্ক:</strong> যে তাপমাত্রায় তরল গ্যাসে পরিণত হয়।</li>
+                    <li class="reveal-item"><strong>সুপ্ততাপ (Latent Heat):</strong> যে তাপ বস্তুর অবস্থার পরিবর্তন ঘটায় কিন্তু তাপমাত্রা বাড়ায় না।</li>
+                    <li class="reveal-item"><strong>গলনের সুপ্ততাপ:</strong> কঠিনকে তরলে পরিণত করার জন্য প্রয়োজনীয় তাপ।</li>
+                    <li class="reveal-item"><strong>বাষ্পীভবনের সুপ্ততাপ:</strong> তরলকে গ্যাসে পরিণত করার জন্য প্রয়োজনীয় তাপ।</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <h2 class="slide-title">বাষ্পায়ন (Evaporation)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> স্ফুটনাঙ্কের নিচে <strong>যেকোনো তাপমাত্রায়</strong> তরলের পৃষ্ঠতল থেকে বাষ্পে পরিণত হওয়া।</li>
+                    <li class="reveal-item">বাষ্পায়ন শীতলতার সৃষ্টি করে (যেমন: ঘাম শুকিয়ে গেলে ঠান্ডা লাগে)।</li>
+                    <li class="reveal-item"><strong>বাষ্পায়নের নিয়ামকসমূহ:</strong>
+                        <ul>
+                            <li>বায়ু প্রবাহ, উপরিভাগের ক্ষেত্রফল</li>
+                            <li>তরলের প্রকৃতি, বায়ুর চাপ</li>
+                            <li>উষ্ণতা, বায়ুর শুষ্কতা</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">অবস্থার পরিবর্তনে চাপের প্রভাব</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>গলনাঙ্ক:</strong> চাপ বাড়ালে বরফের গলনাঙ্ক <strong>কমে যায়</strong>।</li>
+                    <li class="reveal-item"><strong>স্ফুটনাঙ্ক:</strong>
+                        <ul>
+                            <li>চাপ <strong>বাড়ালে</strong> স্ফুটনাঙ্ক <strong>বাড়ে</strong> (প্রেশার কুকারের নীতি)।</li>
+                            <li>চাপ <strong>কমালে</strong> স্ফুটনাঙ্ক <strong>কমে</strong> (পাহাড়ে রান্না হতে দেরি হয়)।</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ২ (চাপের প্রভাব)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২. প্রেশার কুকারে রান্না তাড়াতাড়ি হয় কেন?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) চাপ কম থাকে</p>
+                    <p class="quiz-option">(খ) স্ফুটনাঙ্ক কমে যায়</p>
+                    <p class="quiz-option">(গ) স্ফুটনাঙ্ক বেড়ে যায়</p>
+                    <p class="quiz-option">(ঘ) তাপ দ্রুত সঞ্চালিত হয়</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ২</h2>
+            <div class="slide-content">
+                <h3>২. প্রেশার কুকারে রান্না তাড়াতাড়ি হয় কেন?</h3>
+                <p class="quiz-option">(ক) চাপ কম থাকে</p>
+                <p class="quiz-option">(খ) স্ফুটনাঙ্ক কমে যায়</p>
+                <p class="quiz-option correct-answer">(গ) স্ফুটনাঙ্ক বেড়ে যায়</p>
+                <p class="quiz-option">(ঘ) তাপ দ্রুত সঞ্চালিত হয়</p>
+                <p class="reveal-item"><strong>ব্যাখ্যা:</strong> প্রেশার কুকার বাষ্পকে আটকে রেখে চাপ বাড়ায়। উচ্চ চাপে পানির স্ফুটনাঙ্ক ১০০&deg;C এর বেশি হয়, ফলে উচ্চ তাপমাত্রায় রান্না দ্রুত সম্পন্ন হয়।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">আপেক্ষিক তাপ (Specific Heat, s)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> <strong>১ কেজি</strong> ভরের কোনো বস্তুর তাপমাত্রা <strong>১ কেলভিন</strong> (বা ১&deg;C) বাড়াতে যে তাপের প্রয়োজন হয়।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">Q</i> = <i class="math-var">ms</i>(<i class="math-var">T</i><sub class="math-sub">2</sub> - <i class="math-var">T</i><sub class="math-sub">1</sub>)</li>
+                    <li class="reveal-item"><strong>একক:</strong> J kg<sup class="math-sup">-1</sup> K<sup class="math-sup">-1</sup></li>
+                    <li class="reveal-item">পানির আপেক্ষিক তাপ অনেক বেশি (৪২০০ J kg<sup class="math-sup">-1</sup> K<sup class="math-sup">-1</sup>), তাই পানি ধীরে গরম হয় ও ধীরে ঠান্ডা হয়।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তাপ ধারণক্ষমতা (Heat Capacity, C)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> <strong>কোনো বস্তুর</strong> (যেকোনো ভরের) তাপমাত্রা <strong>১ কেলভিন</strong> বাড়াতে যে তাপের প্রয়োজন হয়।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">C</i> = <i class="math-var">ms</i> (বস্তুর ভর &times; আপেক্ষিক তাপ)</li>
+                    <li class="reveal-item"><strong>একক:</strong> J K<sup class="math-sup">-1</sup></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ক্যালোরিমিতির মূলনীতি</h2>
+            <div class="slide-content">
+                <p class="reveal-item">ভিন্ন তাপমাত্রার দুটি বস্তুকে মেশালে, তাপীয় ভারসাম্যে না আসা পর্যন্ত তাপের আদান-প্রদান চলে।</p>
+                <p class="reveal-item">যদি সিস্টেম থেকে তাপ বাইরে না যায় বা বাইরে থেকে তাপ না আসে, তবে:</p>
+                <h3 class="reveal-item">গরম বস্তু কর্তৃক বর্জিত তাপ = শীতল বস্তু কর্তৃক গৃহীত তাপ</h3>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত)</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">১ কেজি ভরের কোনো বস্তুর তাপমাত্রা ১ কেলভিন বাড়াতে ৪২০০ জুল তাপ লাগে।</p>
+                <h3 class="reveal-item">(ক) বস্তুটির আপেক্ষিক তাপ কত?</h3>
+                <h3 class="reveal-item">(খ) বস্তুটির তাপ ধারণক্ষমতা কত?</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                ভর (<i class="math-var">m</i>) = 1 kg<br>
+                তাপমাত্রা বৃদ্ধি (&Delta;<i class="math-var">T</i>) = 1 K<br>
+                গৃহীত তাপ (<i class="math-var">Q</i>) = 4200 J</p>
+                
+                <p class="reveal-item"><strong>(ক) আপেক্ষিক তাপ (s):</strong><br>
+                <i class="math-var">s</i> = <sup><i class="math-var">Q</i></sup> / <sub>(<i class="math-var">m</i>&Delta;<i class="math-var">T</i>)</sub> = <sup>4200</sup> / <sub>(1 &times; 1)</sub> = 4200 J kg<sup class="math-sup">-1</sup> K<sup class="math-sup">-1</sup></p>
+
+                <p class="reveal-item"><strong>(খ) তাপ ধারণক্ষমতা (C):</strong><br>
+                <i class="math-var">C</i> = <i class="math-var">ms</i> = 1 kg &times; 4200 J kg<sup class="math-sup">-1</sup> K<sup class="math-sup">-1</sup> = 4200 J K<sup class="math-sup">-1</sup></p>
+            </div>
+        </div>
+
+        <div class="slide thank-you-slide">
+            <h1 class="slide-title">ধন্যবাদ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">প্রশ্নোত্তর পর্ব</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter" id="slideCounter"></div>
+    <div class="slide-jump">
+        <input type="number" id="slideJumpInput" placeholder="স্লাইড #" min="1">
+    </div>
+    <div class="nav-buttons">
+        <button id="prevBtn">পূর্ববর্তী</button>
+        <button id="nextBtn">পরবর্তী</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slideCounter');
+        let revealIndex = 0;
+
+        function showSlide(index) {
+            // Ensure index is within bounds
+            if (index >= totalSlides) {
+                index = 0;
+            } else if (index < 0) {
+                index = totalSlides - 1;
+            }
+            currentSlide = index;
+
+            // Remove 'active' class from all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Add 'active' class to the current slide
+            const activeSlide = slides[currentSlide];
+            activeSlide.classList.add('active');
+
+            // Reset reveal items for the new slide
+            revealIndex = 0;
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            revealItems.forEach(item => item.classList.remove('is-visible'));
+
+            // Update slide counter
+            slideCounter.textContent = `স্লাইড ${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function revealNext() {
+            const activeSlide = slides[currentSlide];
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            
+            if (revealIndex < revealItems.length) {
+                revealItems[revealIndex].classList.add('is-visible');
+                revealIndex++;
+                return true; // An item was revealed
+            }
+            return false; // No items left to reveal
+        }
+
+        function handleNext() {
+            if (!revealNext()) {
+                // If no items were revealed (or no items to reveal), go to next slide
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function handlePrev() {
+            showSlide(currentSlide - 1);
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', handleNext);
+        document.getElementById('prevBtn').addEventListener('click', handlePrev);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === ' ') {
+                event.preventDefault(); // Stop space from scrolling
+                handleNext();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                handlePrev();
+            }
+        });
+
+        // Initial call to show the first slide
+        showSlide(0);
+        
+        // Slide Jump Functionality
+        const slideJumpInput = document.getElementById('slideJumpInput');
+        slideJumpInput.max = totalSlides; // Set max value dynamically
+
+        slideJumpInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent default Enter behavior
+                const targetSlide = parseInt(slideJumpInput.value);
+                
+                // Validate the input number
+                if (!isNaN(targetSlide) && targetSlide >= 1 && targetSlide <= totalSlides) {
+                    showSlide(targetSlide - 1); // Jump to the slide (0-based index)
+                } else {
+                    // Optionally provide feedback for invalid input
+                    slideJumpInput.style.borderColor = 'red';
+                    setTimeout(() => {
+                        slideJumpInput.style.borderColor = '#555';
+                    }, 1000);
+                }
+                slideJumpInput.value = ''; // Clear the input box after jump
+                slideJumpInput.blur(); // Remove focus from input box
+            }
+        });
+
+        // Clear red border on focus
+        slideJumpInput.addEventListener('focus', () => {
+             slideJumpInput.style.borderColor = '#555';
+        });
+    </script>
+
+</body>
+</html>

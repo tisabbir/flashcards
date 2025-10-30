@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>গতি</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #1E1E1E;
+            box-sizing: border-box;
+            padding: 50px 80px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border-left: 10px solid #03DAC6; /* Accent color */
+            overflow-y: auto; /* Add scroll for overflow content */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-title {
+            font-size: 3.0em; /* Slightly smaller to fit more content */
+            color: #03DAC6; /* Accent color */
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+        }
+
+        .slide-content {
+            font-size: 1.4em; /* Slightly smaller */
+            color: #CFD8DC;
+        }
+        
+        .slide-content h3 {
+            color: #BB86FC; /* Secondary accent */
+            font-size: 1.4em;
+        }
+
+        .slide-content ul {
+            list-style-type: square;
+            padding-left: 40px;
+        }
+
+        .slide-content li, .slide-content p {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        /* HTML Math Styling */
+        i.math-var { font-style: italic; }
+        sup.math-sup { font-size: 0.75em; vertical-align: super; }
+        sub.math-sub { font-size: 0.75em; vertical-align: sub; }
+
+        /* Image Styling */
+        .slide-content img {
+            max-width: 40%; /* Adjusted */
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+            float: right;
+            margin-left: 20px;
+        }
+        
+        /* Reveal items */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal-item.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* Special slide types */
+        .title-slide, .thank-you-slide {
+            background: linear-gradient(135deg, #2C3E50, #1a2a3a);
+            color: white;
+            align-items: center;
+            text-align: center;
+            border-left: 10px solid #BB86FC;
+        }
+        .title-slide .slide-title, .thank-you-slide .slide-title { font-size: 4.5em; color: white; border-bottom: none; }
+        .title-slide .slide-content, .thank-you-slide .slide-content { font-size: 1.8em; color: #ddd; }
+
+        .hook-slide {
+            align-items: center;
+            text-align: center;
+            background-color: #333;
+            border-left: 10px solid #FBC02D;
+        }
+        .hook-slide .slide-title { font-size: 2.8em; color: #FBC02D; }
+        .hook-slide .slide-content { font-size: 1.8em; }
+
+        .quiz-slide { border-left: 10px solid #E91E63; }
+        .quiz-slide .slide-title { color: #E91E63; }
+        .quiz-slide .quiz-option { font-size: 1.1em; margin: 8px 0; } /* Adjusted */
+        .quiz-slide .quiz-cq { font-size: 1.1em; background: #2a2a2a; padding: 15px; border-radius: 8px; border-left: 4px solid #E91E63; }
+        
+        .answer-slide { border-left: 10px solid #4CAF50; }
+        .answer-slide .slide-title { color: #4CAF50; }
+        .answer-slide .correct-answer {
+            background-color: #388E3C;
+            color: #FFFFFF;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+        .answer-slide .explanation {
+            font-size: 0.9em;
+            background: #2a2a2a;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        /* Navigation */
+        .nav-buttons { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+        .nav-buttons button { font-size: 1em; padding: 10px 20px; margin-left: 10px; background-color: #03DAC6; color: #121212; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        .nav-buttons button:hover { background-color: #018786; transform: scale(1.05); }
+        /* kj */
+        .slide-jump {
+            position: fixed;
+            bottom: 35px;
+            left: 150px; /* Adjust position as needed */
+            z-index: 1000;
+        }
+        .slide-jump input {
+            width: 80px;
+            padding: 8px 10px;
+            font-size: 1em;
+            background-color: #333;
+            color: #E0E0E0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            text-align: center;
+        }
+        /* Hide number input arrows */
+        .slide-jump input::-webkit-outer-spin-button,
+        .slide-jump input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        .slide-jump input[type=number] {
+          -moz-appearance: textfield; /* Firefox */
+        }
+        /* kj */
+        .slide-counter { position: fixed; bottom: 40px; left: 30px; font-size: 1.2em; color: #888; z-index: 1000; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <div class="slide title-slide active">
+            <h1 class="slide-title">গতি</h1>
+            <div class="slide-content">
+                <p class="reveal-item">অধ্যায় ২</p>
+                <p class="reveal-item">পদার্থবিজ্ঞান</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">আজকের মূল বিষয়</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">স্থিতি ও গতি (প্রসঙ্গ কাঠামো, আপেক্ষিক গতি)</li>
+                    <li class="reveal-item">বিভিন্ন প্রকার গতি (রৈখিক, ঘূর্ণন, চলন, পর্যায়বৃত্ত)</li>
+                    <li class="reveal-item">স্কেলার ও ভেক্টর রাশি</li>
+                    <li class="reveal-item">গতি সম্পর্কিত রাশি (সরণ, দ্রুতি, বেগ, ত্বরণ, মন্দন)</li>
+                    <li class="reveal-item">পড়ন্ত বস্তুর সূত্রাবলি ও অভিকর্ষজ ত্বরণ</li>
+                    <li class="reveal-item">গতির সমীকরণ ও গাণিতিক বিশ্লেষণ</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide hook-slide">
+            <h2 class="slide-title">একটা প্রশ্ন...</h2>
+            <div class="slide-content">
+                <p class="reveal-item">তুমি যখন একটি চলন্ত ট্রেনে তোমার বন্ধুর পাশে বসে থাকো, তখন তুমি কি স্থির না গতিশীল?</p>
+                <p class="reveal-item">...তোমার বন্ধুর সাপেক্ষে তুমি **স্থির**।</p>
+                <p class="reveal-item">...কিন্তু প্লাটফর্মে দাঁড়ানো লোকের সাপেক্ষে তুমি **গতিশীল**।</p>
+                <p class="reveal-item">এর উত্তর বোঝার জন্য আমাদের "প্রসঙ্গ কাঠামো" জানতে হবে।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">প্রসঙ্গ কাঠামো (Reference Frame)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> যে বস্তু বা পরিপার্শ্বের সাথে তুলনা করে আমরা অন্য বস্তুর অবস্থান, স্থিতি বা গতি নির্ণয় করি, তাকে প্রসঙ্গ কাঠামো বলে।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">স্থিতি ও গতি</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>স্থিতি (Rest):</strong> সময়ের সাথে পরিপার্শ্বের সাপেক্ষে (অর্থাৎ প্রসঙ্গ কাঠামোর সাপেক্ষে) যখন কোনো বস্তুর অবস্থানের পরিবর্তন ঘটে না, তখন তাকে স্থিতিশীল বস্তু বলে। এই অবস্থাকে স্থিতি বলে।</li>
+                    <li class="reveal-item"><strong>গতি (Motion):</strong> সময়ের সাথে পরিপার্শ্বের সাপেক্ষে যখন কোনো বস্তুর অবস্থানের পরিবর্তন ঘটে, তখন তাকে গতিশীল বস্তু বলে। এই অবস্থান পরিবর্তনের ঘটনাকে গতি বলে।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">আপেক্ষিকতা (Relativity)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">ট্রেনে বসে থাকা দুই বন্ধু একে অপরের সাপেক্ষে স্থির, কিন্তু মাঠের কৃষকের সাপেক্ষে তারা গতিশীল।</li>
+                    <li class="reveal-item">এর অর্থ হলো, গতি বা স্থিতি কোনোটিই পরম নয়, এটি নির্ভর করে পর্যবেক্ষক (প্রসঙ্গ কাঠামো) কে।</li>
+                    <li class="reveal-item"><strong>মূল কথা:</strong> মহাবিশ্বের সকল স্থিতিই আপেক্ষিক, সকল গতিই আপেক্ষিক।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১। চলন্ত ট্রেনে দুই বন্ধু যদি মুখোমুখি বসে থাকে, তবে একজনের সাপেক্ষে অন্যজনের অবস্থানকে কী বলে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) আপেক্ষিক স্থিতি</p>
+                    <p class="quiz-option">(খ) আপেক্ষিক গতি</p>
+                    <p class="quiz-option">(গ) পরম স্থিতি</p>
+                    <p class="quiz-option">(ঘ) পরম গতি</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১</h2>
+            <div class="slide-content">
+                <h3>১। চলন্ত ট্রেনে দুই বন্ধু যদি মুখোমুখি বসে থাকে, তবে একজনের সাপেক্ষে অন্যজনের অবস্থানকে কী বলে?</h3>
+                <p class="quiz-option correct-answer">(ক) আপেক্ষিক স্থিতি</p>
+                <p class="quiz-option">(খ) আপেক্ষিক গতি</p>
+                <p class="quiz-option">(গ) পরম স্থিতি</p>
+                <p class="quiz-option">(ঘ) পরম গতি</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> যেহেতু একজন বন্ধুর সাপেক্ষে অন্য বন্ধুর অবস্থানের কোনো পরিবর্তন হচ্ছে না, তাই এটি স্থিতি। কিন্তু এই স্থিতিটি একটি গতিশীল প্রসঙ্গ কাঠামোর (ট্রেন) সাপেক্ষে, তাই এটি আপেক্ষিক স্থিতি।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">বিভিন্ন প্রকার গতি</h2>
+            <div class="slide-content">
+                <p class="reveal-item">আমাদের চারপাশের গতিকে বিভিন্ন ভাগে ভাগ করা যায়:</p>
+                <ul>
+                    <li class="reveal-item">রৈখিক গতি (Linear Motion)</li>
+                    <li class="reveal-item">ঘূর্ণন গতি (Rotational Motion)</li>
+                    <li class="reveal-item">চলন গতি (Translational Motion)</li>
+                    <li class="reveal-item">পর্যায়বৃত্ত গতি (Periodic Motion)</li>
+                    <li class="reveal-item">স্পন্দন গতি (Oscillatory Motion)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">রৈখিক ও ঘূর্ণন গতি</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>রৈখিক গতি:</strong> কোনো বস্তুর গতি যদি একটি সরলরেখার উপর সীমাবদ্ধ থাকে, তাকে রৈখিক গতি বলে। (যেমন: সোজা লাইনে ট্রেনের গতি)।</li>
+                    <li class="reveal-item"><strong>ঘূর্ণন গতি:</strong> যখন কোনো বস্তু কোনো নির্দিষ্ট বিন্দু বা রেখাকে কেন্দ্র করে ঘোরে, তখন তার গতিকে ঘূর্ণন গতি বলে। (যেমন: বৈদ্যুতিক পাখার গতি, ঘড়ির কাঁটার গতি)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">চলন ও পর্যায়বৃত্ত গতি</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>চলন গতি:</strong> কোনো বস্তু যদি এমনভাবে চলে যে তার সকল কণা একই সময়ে একই দিকে সমান দূরত্ব অতিক্রম করে, তাকে চলন গতি বলে। (যেমন: না ঘুরিয়ে টেবিলের ওপর দিয়ে বই টানা)।</li>
+                    <li class="reveal-item"><strong>পর্যায়বৃত্ত গতি:</strong> কোনো গতিশীল বস্তু যদি এর গতিপথে কোনো নির্দিষ্ট বিন্দুকে নির্দিষ্ট সময় পর পর একই দিক থেকে অতিক্রম করে, তাকে পর্যায়বৃত্ত গতি বলে। (যেমন: সূর্যের চারদিকে পৃথিবীর গতি)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">বিশেষ প্রকার গতি</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>ঘুর্ণন গতি কি পর্যায়বৃত্ত গতি?</strong><br>
+                    হ্যাঁ, ঘূর্ণন গতি একটি বিশেষ ধরনের পর্যায়বৃত্ত গতি। কারণ ঘড়ির কাঁটা বা পাখা একটি নির্দিষ্ট সময় পর পর একই বিন্দুতে ফিরে আসে।</li>
+                    <li class="reveal-item"><strong>স্পন্দন গতি (Oscillatory Motion):</strong> এটিও এক বিশেষ ধরনের পর্যায়বৃত্ত গতি। কোনো বস্তু যদি পর্যায়কালের অর্ধেক সময় কোনো নির্দিষ্ট দিকে এবং বাকি অর্ধেক সময় তার বিপরীত দিকে চলে, তবে সেই গতিকে স্পন্দন গতি বলে। (যেমন: সরল দোলকের গতি)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ২</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২। ঘড়ির কাঁটার গতি হচ্ছে-</h3>
+                <p class="reveal-item">i. ঘূর্ণন গতি<br>
+                   ii. চলন গতি<br>
+                   iii. পর্যায়বৃত্ত গতি</p>
+                <h3 class="reveal-item">নিচের কোনটি সঠিক?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) i ও ii</p>
+                    <p class="quiz-option">(খ) i ও iii</p>
+                    <p class="quiz-option">(গ) ii ও iii</p>
+                    <p class="quiz-option">(ঘ) i, ii ও iii</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ২</h2>
+            <div class="slide-content">
+                <h3>২। ঘড়ির কাঁটার গতি হচ্ছে-</h3>
+                <p class="reveal-item">i. ঘূর্ণন গতি (সঠিক)<br>
+                   ii. চলন গতি (ভুল)<br>
+                   iii. পর্যায়বৃত্ত গতি (সঠিক)</p>
+                <p class="quiz-option">(ক) i ও ii</p>
+                <p class="quiz-option correct-answer">(খ) i ও iii</p>
+                <p class="quiz-option">(গ) ii ও iii</p>
+                <p class="quiz-option">(ঘ) i, ii ও iii</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> ঘড়ির কাঁটা একটি বিন্দুকে কেন্দ্র করে ঘোরে (ঘূর্ণন গতি) এবং নির্দিষ্ট সময় পর পর একই জায়গায় ফিরে আসে (পর্যায়বৃত্ত গতি)।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৩</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩। একটি বাক্সকে ধাক্কা দিলে এটি না উল্টিয়ে যে গতি লাভ করে তা-</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) স্পন্দন গতি</p>
+                    <p class="quiz-option">(খ) চলন গতি</p>
+                    <p class="quiz-option">(গ) পর্যায় গতি</p>
+                    <p class="quiz-option">(ঘ) ঘূর্ণন গতি</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৩</h2>
+            <div class="slide-content">
+                <h3>৩। একটি বাক্সকে ধাক্কা দিলে এটি না উল্টিয়ে যে গতি লাভ করে তা-</h3>
+                <p class="quiz-option">(ক) স্পন্দন গতি</p>
+                <p class="quiz-option correct-answer">(খ) চলন গতি</p>
+                <p class="quiz-option">(গ) পর্যায় গতি</p>
+                <p class="quiz-option">(ঘ) ঘূর্ণন গতি</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> বাক্সকে না ঘুরিয়ে ধাক্কা দিলে এর সকল কণা একই সময়ে একই দিকে সমান দূরত্ব অতিক্রম করে, যা চলন গতির সংজ্ঞা।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">স্কেলার ও ভেক্টর রাশি</h2>
+            <div class="slide-content">
+                <p class="reveal-item">ভৌত জগতে যা কিছু পরিমাপ করা যায়, তাকে রাশি বলে। রাশি দুই প্রকার:</p>
+                <ul>
+                    <li class="reveal-item"><strong>স্কেলার রাশি (অদিক রাশি):</strong> যে সকল ভৌত রাশিকে শুধু মান দিয়ে সম্পূর্ণরূপে প্রকাশ করা যায়, দিক নির্দেশের প্রয়োজন হয় না।<br>
+                    <strong>উদাহরণ:</strong> দূরত্ব, দ্রুতি, সময়, শক্তি, তাপমাত্রা।</li>
+                    <li class="reveal-item"><strong>ভেক্টর রাশি (দিক রাশি):</strong> যে সকল ভৌত রাশিকে সম্পূর্ণরূপে প্রকাশ করার জন্য মান ও দিক উভয়েরই প্রয়োজন হয়।<br>
+                    <strong>উদাহরণ:</strong> সরণ, বেগ, ত্বরণ, বল, তড়িৎ প্রাবল্য।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৪</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৪। নিচের কোনটি স্কেলার রাশি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) তড়িৎ তীব্রতা</p>
+                    <p class="quiz-option">(খ) ওজন</p>
+                    <p class="quiz-option">(গ) তাপমাত্রা</p>
+                    <p class="quiz-option">(ঘ) মন্দন</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৪</h2>
+            <div class="slide-content">
+                <h3>৪। নিচের কোনটি স্কেলার রাশি?</h3>
+                <p class="quiz-option">(ক) তড়িৎ তীব্রতা (ভেক্টর)</p>
+                <p class="quiz-option">(খ) ওজন (ভেক্টর, এক প্রকার বল)</p>
+                <p class="quiz-option correct-answer">(গ) তাপমাত্রা</p>
+                <p class="quiz-option">(ঘ) মন্দন (ভেক্টর, এটি ঋণাত্মক ত্বরণ)</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">দূরত্ব বনাম সরণ</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>দূরত্ব (Distance):</strong> বস্তুর অতিক্রান্ত পথের মোট দৈর্ঘ্য। এটি একটি **স্কেলার** রাশি।</li>
+                    <li class="reveal-item"><strong>সরণ (Displacement):</strong> বস্তুর আদি অবস্থান ও শেষ অবস্থানের মধ্যবর্তী নূন্যতম (সরলরৈখিক) দূরত্ব। এটি একটি **ভেক্টর** রাশি, এর দিক হলো আদি অবস্থান থেকে শেষ অবস্থানের দিকে।</li>
+                    <li class="reveal-item"><strong>উদাহরণ:</strong> 4m ব্যাসার্ধের বৃত্তাকার পথে 1 বার ঘুরে আসলে অতিক্রান্ত দূরত্ব হয় পরিধির সমান (2&pi;r &approx; 25.13 m), কিন্তু সরণ হয় **শূন্য (0)**, কারণ আদি ও শেষ অবস্থান একই।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৫</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৫। একটি বস্তু একটি স্থান থেকে 4m সোজা পূর্বদিকে গিয়ে সেখান থেকে সোজা উত্তর দিকে 3m অতিক্রম করল। বস্তুটির দূরত্ব ও সরণের পার্থক্য কত মিটার?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 7</p>
+                    <p class="quiz-option">(খ) 5</p>
+                    <p class="quiz-option">(গ) 2</p>
+                    <p class="quiz-option">(ঘ) 1</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৫</h2>
+            <div class="slide-content">
+                <h3>৫। একটি বস্তু একটি স্থান থেকে 4m সোজা পূর্বদিকে গিয়ে সেখান থেকে সোজা উত্তর দিকে 3m অতিক্রম করল। বস্তুটির দূরত্ব ও সরণের পার্থক্য কত মিটার?</h3>
+                <p class="quiz-option">(ক) 7</p>
+                <p class="quiz-option">(খ) 5</p>
+                <p class="quiz-option correct-answer">(গ) 2</p>
+                <p class="quiz-option">(ঘ) 1</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong><br>
+                অতিক্রান্ত দূরত্ব = (4 + 3) m = 7 m।<br>
+                সরণ = আদি ও শেষ বিন্দুর সরলরৈখিক দূরত্ব (পিথাগোরাসের উপপাদ্য অনুযায়ী)<br>
+                সরণ = &radic;(4&sup2; + 3&sup2;) = &radic;(16 + 9) = &radic;25 = 5 m।<br>
+                পার্থক্য = (7 - 5) m = 2 m।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">দ্রুতি (Speed)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> সময়ের সাথে কোনো বস্তুর অবস্থানের পরিবর্তনের হারকে (বা একক সময়ে অতিক্রান্ত দূরত্বকে) দ্রুতি বলে।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> দ্রুতি (<i class="math-var">v</i>) = <sup>অতিক্রান্ত দূরত্ব (<i class="math-var">d</i>)</sup> / <sub>সময় (<i class="math-var">t</i>)</sub></li>
+                    <li class="reveal-item">এটি একটি **স্কেলার** রাশি।</li>
+                    <li class="reveal-item"><strong>একক:</strong> $ms^{-1}$ &nbsp;&nbsp;&nbsp; <strong>মাত্রা:</strong> $LT^{-1}$</li>
+                    <li class="reveal-item"><strong>গড় দ্রুতি:</strong> <sup>মোট অতিক্রান্ত দূরত্ব</sup> / <sub>মোট সময়</sub>।</li>
+                    <li class="reveal-item"><strong>তাৎক্ষণিক দ্রুতি:</strong> অতি অল্প সময়ে (তাৎক্ষণিক) অতিক্রান্ত দূরত্বকে সময় দিয়ে ভাগ করলে পাওয়া যায়।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">বেগ (Velocity)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> সময়ের সাথে কোনো বস্তুর **সরণের হারকে** বেগ বলে। (অর্থাৎ, নির্দিষ্ট দিকে দ্রুতিই হলো বেগ)।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> বেগ (<i class="math-var">v</i>) = <sup>সরণ (<i class="math-var">s</i>)</sup> / <sub>সময় (<i class="math-var">t</i>)</sub></li>
+                    <li class="reveal-item">এটি একটি **ভেক্টর** রাশি।</li>
+                    <li class="reveal-item"><strong>একক:</strong> $ms^{-1}$ &nbsp;&nbsp;&nbsp; <strong>মাত্রা:</strong> $LT^{-1}$</li>
+                    <li class="reveal-item"><strong>সুষম বেগ (সমবেগ):</strong> যদি বেগের মান ও দিক উভয়ই অপরিবর্তিত থাকে (যেমন: 0&deg;C তাপমাত্রায় শব্দের বেগ)।</li>
+                    <li class="reveal-item"><strong>অসম বেগ:</strong> যদি বেগের মান বা দিক বা উভয়ই পরিবর্তিত হয়।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৬</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৬। নিচের কোন রাশিগুলোর একক অভিন্ন?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) দ্রুতি, সরণ</p>
+                    <p class="quiz-option">(খ) সরণ, ত্বরণ</p>
+                    <p class="quiz-option">(গ) দ্রুতি, বেগ</p>
+                    <p class="quiz-option">(ঘ) দ্রুতি, ত্বরণ</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৬</h2>
+            <div class="slide-content">
+                <h3>৬। নিচের কোন রাশিগুলোর একক অভিন্ন?</h3>
+                <p class="quiz-option">(ক) দ্রুতি ($ms^{-1}$), সরণ (m)</p>
+                <p class="quiz-option">(খ) সরণ (m), ত্বরণ ($ms^{-2}$)</p>
+                <p class="quiz-option correct-answer">(গ) দ্রুতি ($ms^{-1}$), বেগ ($ms^{-1}$)</p>
+                <p class="quiz-option">(ঘ) দ্রুতি ($ms^{-1}$), ত্বরণ ($ms^{-2}$)</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (অনুশীলনী)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">(ক) বেগ কাকে বলে?</h3>
+                <p class="quiz-cq reveal-item">(খ) বস্তুর গড়বেগ শূণ্য হলেও গড় দ্রুতি শূণ্য হয় না কেন - ব্যাখ্যা কর।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (অনুশীলনী)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) বেগ:</strong> সময়ের সাথে কোনো বস্তুর সরণের হারকে বেগ বলে।</p>
+                <p class="reveal-item"><strong>(খ) ব্যাখ্যা:</strong> কোনো বস্তু একটি বিন্দু থেকে যাত্রা শুরু করে আবার যদি সেই বিন্দুতে ফিরে আসে, তার মোট সরণ শূন্য হয়।<br>
+                গড়বেগ = (মোট সরণ / সময়) = (0 / সময়) = 0।<br>
+                কিন্তু বস্তুটি একটি নির্দিষ্ট পথ (দূরত্ব) অতিক্রম করেছে, যা শূন্য নয়।<br>
+                গড় দ্রুতি = (মোট দূরত্ব / সময়)। যেহেতু মোট দূরত্ব শূন্য নয়, তাই গড় দ্রুতিও শূন্য হয় না।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ত্বরণ (Acceleration)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> সময়ের সাথে বস্তুর বেগ **বৃদ্ধির** হারকে ত্বরণ বলে।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> ত্বরণ (<i class="math-var">a</i>) = <sup>(শেষবেগ (<i class="math-var">v</i>) - আদিবেগ (<i class="math-var">u</i>))</sup> / <sub>সময় (<i class="math-var">t</i>)</sub><br>
+                    <h3 class="reveal-item"><i class="math-var">a</i> = <sup>(<i class="math-var">v</i> - <i class="math-var">u</i>)</sup> / <sub><i class="math-var">t</i></sub></h3></li>
+                    <li class="reveal-item">এটি একটি **ভেক্টর** রাশি।</li>
+                    <li class="reveal-item"><strong>একক:</strong> $ms^{-2}$ &nbsp;&nbsp;&nbsp; <strong>মাত্রা:</strong> $LT^{-2}$</li>
+                    <li class="reveal-item"><strong>ধনাত্মক ত্বরণ:</strong> বেগ বৃদ্ধি পেলে (v &gt; u), ত্বরণ ধনাত্মক হয়।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">মন্দন (Deceleration)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> সময়ের সাথে বস্তুর বেগ **হ্রাস** পাওয়ার হারকে মন্দন বলে।</li>
+                    <li class="reveal-item">মন্দন হলো **ঋণাত্মক ত্বরণ** (v &lt; u)।</li>
+                    <li class="reveal-item"><strong>সুষম ত্বরণ:</strong> বেগ যদি নির্দিষ্ট দিকে একই হারে বাড়তে থাকে (যেমন: পড়ন্ত বস্তুর ত্বরণ)।</li>
+                    <li class="reveal-item"><strong>অসম ত্বরণ:</strong> বেগ বৃদ্ধির হার সমান না হলে (যেমন: বাসের ত্বরণ)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৭</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৭। একটি গাড়ির বেগ $30 ms^{-1}$ থেকে সুষমভাবে হ্রাস পেয়ে 5s পরে $10 ms^{-1}$ হয়। গাড়িটির ত্বরণ কত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) -8 $ms^{-2}$</p>
+                    <p class="quiz-option">(খ) 8 $ms^{-2}$</p>
+                    <p class="quiz-option">(গ) -4 $ms^{-2}$</p>
+                    <p class="quiz-option">(ঘ) 4 $ms^{-2}$</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৭</h2>
+            <div class="slide-content">
+                <h3>৭। একটি গাড়ির বেগ $30 ms^{-1}$ থেকে সুষমভাবে হ্রাস পেয়ে 5s পরে $10 ms^{-1}$ হয়। গাড়িটির ত্বরণ কত?</h3>
+                <p class="quiz-option">(ক) -8 $ms^{-2}$</p>
+                <p class="quiz-option">(খ) 8 $ms^{-2}$</p>
+                <p class="quiz-option correct-answer">(গ) -4 $ms^{-2}$</p>
+                <p class="quiz-option">(ঘ) 4 $ms^{-2}$</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> u = 30, v = 10, t = 5।<br>
+                a = (v - u) / t = (10 - 30) / 5 = -20 / 5 = -4 $ms^{-2}$। (এটি 4 $ms^{-2}$ মন্দন)।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (অনুশীলনী)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">(ক) ত্বরণ কাকে বলে?</h3>
+                <p class="quiz-cq reveal-item">(খ) সমবেগে চলমান বস্তুর ত্বরণ শূণ্য কেন?</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (অনুশীলনী)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) ত্বরণ:</strong> সময়ের সাথে বস্তুর অসমবেগ বৃদ্ধির হারকে ত্বরণ বলে।</p>
+                <p class="reveal-item"><strong>(খ) ব্যাখ্যা:</strong> ত্বরণের সংজ্ঞা হলো $a = (v-u)/t$ (বেগের পরিবর্তন / সময়)। সমবেগের ক্ষেত্রে, বস্তুর বেগের কোনো পরিবর্তন হয় না, অর্থাৎ আদিবেগ (u) এবং শেষবেগ (v) সমান (v = u)। ফলে বেগের পরিবর্তন (v - u) = 0। তাই ত্বরণ, a = 0 / t = 0। এ কারণেই সমবেগে চলমান বস্তুর ত্বরণ শূন্য হয়।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">অভিকর্ষজ ত্বরণ (g)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>অভিকর্ষ:</strong> কোনো বস্তুর উপর পৃথিবীর আকর্ষণকে অভিকর্ষ বলে।</li>
+                    <li class="reveal-item"><strong>অভিকর্ষজ ত্বরণ (g):</strong> অভিকর্ষ বলের প্রভাবে ভূ-পৃষ্ঠে মুক্তভাবে পড়ন্ত কোনো বস্তুর বেগ বৃদ্ধির হারকে অভিকর্ষজ ত্বরণ বলে।</li>
+                    <li class="reveal-item"><strong>রাশিমালা:</strong> $g = GM/R^2$ (এখানে g বস্তুর ভরের উপর নির্ভরশীল নয়)।</li>
+                    <li class="reveal-item"><strong>মানের পরিবর্তন:</strong>
+                        <ul>
+                            <li>মেরু অঞ্চলে R (ব্যাসার্ধ) কম, তাই g-এর মান সবচেয়ে বেশি।</li>
+                            <li>বিষুবীয় অঞ্চলে R বেশি, তাই g-এর মান কম।</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>আদর্শ মান:</strong> $45^{\circ}$ অক্ষাংশে সমুদ্র সমতলে g-এর আদর্শ মান $9.80665 ms^{-2}$ (হিসাবের জন্য $9.8 ms^{-2}$ ধরা হয়)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">পড়ন্ত বস্তুর সূত্রাবলি</h2>
+            <div class="slide-content">
+                <p class="reveal-item">বিজ্ঞানী গ্যালিলিও বিনা বাধায় (অর্থাৎ বায়ুশূন্য স্থানে) পড়ন্ত বস্তুর জন্য ৩টি সূত্র প্রদান করেন:</p>
+                <ul>
+                    <li class="reveal-item"><strong>প্রথম সূত্র:</strong> স্থির অবস্থান ও একই উচ্চতা থেকে বিনা বাঁধায় পড়ন্ত সকল বস্তু সমান সময়ে সমান পথ অতিক্রম করে।</li>
+                    <li class="reveal-item"><strong>দ্বিতীয় সূত্র:</strong> স্থির অবস্থান থেকে বিনা বাঁধায় পড়ন্ত বস্তুর নির্দিষ্ট সময়ে প্রাপ্ত বেগ (<i class="math-var">v</i>) ঐ সময়ের সমানুপাতিক। (অর্থাৎ, <i class="math-var">v</i> &prop; <i class="math-var">t</i>)।</li>
+                    <li class="reveal-item"><strong>তৃতীয় সূত্র:</strong> স্থির অবস্থান থেকে বিনা বাঁধায় পড়ন্ত বস্তু নির্দিষ্ট সময়ে যে দূরত্ব (<i class="math-var">h</i>) অতিক্রম করে, তা ঐ সময়ের বর্গের (<i class="math-var">t</i>&sup2;) সমানুপাতিক। (অর্থাৎ, <i class="math-var">h</i> &prop; <i class="math-var">t</i>&sup2;)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৮</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৮। মুক্তভাবে পড়ন্ত সকল বস্তু-</h3>
+                <p class="reveal-item">i. সমান সময়ে সমান পথ অতিক্রম করে<br>
+                   ii. ভিন্ন ভিন্ন সময়ে ভূ-পৃষ্ঠে পৌঁছে<br>
+                   iii. এর অতিক্রান্ত দূরত্ব সময়ের বর্গের সমানুপাতিক</p>
+                <h3 class="reveal-item">নিচের কোনটি সঠিক?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) i ও ii</p>
+                    <p class="quiz-option">(খ) i ও iii</p>
+                    <p class="quiz-option">(গ) ii ও iii</p>
+                    <p class="quiz-option">(ঘ) i, ii ও iii</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৮</h2>
+            <div class="slide-content">
+                <h3>৮। মুক্তভাবে পড়ন্ত সকল বস্তু-</h3>
+                <p class="reveal-item">i. সমান সময়ে সমান পথ অতিক্রম করে (সঠিক - ১ম সূত্র)<br>
+                   ii. ভিন্ন ভিন্ন সময়ে ভূ-পৃষ্ঠে পৌঁছে (ভুল - ১ম সূত্র মতে একই সময়ে পৌঁছায়)<br>
+                   iii. এর অতিক্রান্ত দূরত্ব সময়ের বর্গের সমানুপাতিক (সঠিক - ৩য় সূত্র)</p>
+                <p class="quiz-option">(ক) i ও ii</p>
+                <p class="quiz-option correct-answer">(খ) i ও iii</p>
+                <p class="quiz-option">(গ) ii ও iii</p>
+                <p class="quiz-option">(ঘ) i, ii ও iii</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৯</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৯। নিচের কোন লেখচিত্রটি মুক্তভাবে পড়ন্ত বস্তুর (বেগ-সময়) লেখচিত্র?</h3>
+                                <div class="reveal-item">
+                    <p class="quiz-option">(ক) A</p>
+                    <p class="quiz-option">(খ) B</p>
+                    <p class="quiz-option">(গ) C</p>
+                    <p class="quiz-option">(ঘ) D</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৯</h2>
+            <div class="slide-content">
+                <h3>৯। নিচের কোন লেখচিত্রটি মুক্তভাবে পড়ন্ত বস্তুর (বেগ-সময়) লেখচিত্র?</h3>
+                <p class="quiz-option">(ক) A (সমবেগ)</p>
+                <p class="quiz-option">(খ) B (সমমন্দন)</p>
+                <p class="quiz-option correct-answer">(গ) C (সুষম ত্বরণ)</p>
+                <p class="quiz-option">(ঘ) D (স্থিতি)</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> মুক্তভাবে পড়ন্ত বস্তু স্থির অবস্থান (u=0) থেকে সুষম ত্বরণে (g) চলে। এর বেগ সময়ের সমানুপাতিক ($v \propto t$)। তাই বেগ-সময় লেখচিত্রটি মূলবিন্দুগামী সরলরেখা হবে।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">গতির সমীকরণ (সুষম ত্বরণ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item">বস্তু সুষম ত্বরণে (<i class="math-var">a</i>) চললে:</p>
+                <ul class="reveal-item">
+                    <li><i class="math-var">v</i> = <i class="math-var">u</i> + <i class="math-var">at</i></li>
+                    <li><i class="math-var">s</i> = <i class="math-var">ut</i> + <sup>1</sup>/<sub>2</sub><i class="math-var">a</i><i class="math-var">t</i>&sup2;</li>
+                    <li><i class="math-var">v</i>&sup2; = <i class="math-var">u</i>&sup2; + 2<i class="math-var">a</i><i class="math-var">s</i></li>
+                    <li><i class="math-var">s</i> = (<sup>(<i class="math-var">u</i> + <i class="math-var">v</i>)</sup> / <sub>2</sub>) &times; <i class="math-var">t</i></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">পড়ন্ত বস্তুর সমীকরণ</h2>
+            <div class="slide-content">
+                <p class="reveal-item">মুক্তভাবে পড়ন্ত বস্তুর ক্ষেত্রে (a = +g):</p>
+                <ul class="reveal-item">
+                    <li><i class="math-var">v</i> = <i class="math-var">u</i> + <i class="math-var">gt</i></li>
+                    <li><i class="math-var">h</i> = <i class="math-var">ut</i> + <sup>1</sup>/<sub>2</sub><i class="math-var">g</i><i class="math-var">t</i>&sup2;</li>
+                    <li><i class="math-var">v</i>&sup2; = <i class="math-var">u</i>&sup2; + 2<i class="math-var">g</i><i class="math-var">h</i></li>
+                </ul>
+                <p class="reveal-item">খাড়া উপরের দিকে নিক্ষিপ্ত বস্তুর ক্ষেত্রে (a = -g):</p>
+                <ul class="reveal-item">
+                    <li><i class="math-var">v</i> = <i class="math-var">u</i> - <i class="math-var">gt</i></li>
+                    <li><i class="math-var">h</i> = <i class="math-var">ut</i> - <sup>1</sup>/<sub>2</sub><i class="math-var">g</i><i class="math-var">t</i>&sup2;</li>
+                    <li><i class="math-var">v</i>&sup2; = <i class="math-var">u</i>&sup2; - 2<i class="math-var">g</i><i class="math-var">h</i></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৭</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">একটি ট্রেনের বেগ $5 ms^{-1}$ থেকে সুষমভাবে বৃদ্ধি পেয়ে 10 s পরে $40 ms^{-1}$ হয়। ট্রেনটির ত্বরণ বের কর।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৭</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                আদি বেগ, <i class="math-var">u</i> = 5 $ms^{-1}$<br>
+                শেষ বেগ, <i class="math-var">v</i> = 40 $ms^{-1}$<br>
+                সময়, <i class="math-var">t</i> = 10 s</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong> <i class="math-var">a</i> = <sup>(<i class="math-var">v</i> - <i class="math-var">u</i>)</sup> / <sub><i class="math-var">t</i></sub></p>
+                <p class="reveal-item"><i class="math-var">a</i> = <sup>(40 - 5)</sup> / <sub>10</sub> = <sup>35</sup> / <sub>10</sub></p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> ত্বরণ, <i class="math-var">a</i> = 3.5 $ms^{-2}$।</h3>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৮</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">$108 kmh^{-1}$ বেগে চলন্ত একটি ট্রাক 50 m দূরে একটি ভ্যানকে দেখে ব্রেক চেপে দিল। এতে ট্রাকটি ভ্যানের সামনে এসে থেমে গেল। ট্রাকটি কত ত্বরণে এসে থেমেছিল?</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৮</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                আদিবেগ, <i class="math-var">u</i> = 108 $kmh^{-1}$ = <sup>(108 &times; 1000)</sup> / <sub>3600</sub> $ms^{-1}$ = 30 $ms^{-1}$<br>
+                অতিক্রান্ত দূরত্ব, <i class="math-var">s</i> = 50 m<br>
+                শেষ বেগ (থেমে গেল), <i class="math-var">v</i> = 0 $ms^{-1}$</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong> <i class="math-var">v</i>&sup2; = <i class="math-var">u</i>&sup2; + 2<i class="math-var">a</i><i class="math-var">s</i></p>
+                <p class="reveal-item">0&sup2; = (30)&sup2; + 2 &times; <i class="math-var">a</i> &times; 50</p>
+                <p class="reveal-item">0 = 900 + 100<i class="math-var">a</i></p>
+                <p class="reveal-item">100<i class="math-var">a</i> = -900</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> ত্বরণ, <i class="math-var">a</i> = -9 $ms^{-2}$ (অর্থাৎ মন্দন 9 $ms^{-2}$)।</h3>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৯</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">ভূমি ত্যাগ করার পূর্বে স্থির অবস্থান হতে একটি বিমান $10 ms^{-2}$ ত্বরণে 2km ($2000m$) চলে। রানওয়ে অতিক্রম করতে বিমানটির কত সময় লাগবে?</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৯</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                আদিবেগ (স্থির), <i class="math-var">u</i> = 0 $ms^{-1}$<br>
+                ত্বরণ, <i class="math-var">a</i> = 10 $ms^{-2}$<br>
+                অতিক্রান্ত দূরত্ব, <i class="math-var">s</i> = 2000 m</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong> <i class="math-var">s</i> = <i class="math-var">ut</i> + <sup>1</sup>/<sub>2</sub><i class="math-var">a</i><i class="math-var">t</i>&sup2;</p>
+                <p class="reveal-item">2000 = (0 &times; <i class="math-var">t</i>) + <sup>1</sup>/<sub>2</sub> &times; 10 &times; <i class="math-var">t</i>&sup2;</p>
+                <p class="reveal-item">2000 = 5<i class="math-var">t</i>&sup2;</p>
+                <p class="reveal-item"><i class="math-var">t</i>&sup2; = 400 $s^2$</p>
+                <p class="reveal-item"><i class="math-var">t</i> = 20 s</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> রানওয়ে অতিক্রম করতে 20 s সময় লাগবে।</h3>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ১০</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">গভীর একটি কূপে একটি পাথর ফেলা হলো। কূপের গভীরতা 44.1 m এবং শব্দের বেগ $340 ms^{-1}$ হলে, পাথর ফেলার কতক্ষণ পর শব্দ শোনা যাবে? (g = 9.8 $ms^{-2}$)</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ১০</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>ধাপ ১: পাথর নিচে পড়তে সময় (<i class="math-var">t</i><sub class="math-sub">1</sub>)</strong><br>
+                পাথরটি স্থির অবস্থান (u=0) থেকে পড়ে।<br>
+                <i class="math-var">h</i> = <i class="math-var">ut</i><sub class="math-sub">1</sub> + <sup>1</sup>/<sub>2</sub><i class="math-var">g</i><i class="math-var">t</i><sub class="math-sub">1</sub>&sup2;<br>
+                44.1 = 0 + <sup>1</sup>/<sub>2</sub> &times; 9.8 &times; <i class="math-var">t</i><sub class="math-sub">1</sub>&sup2;<br>
+                44.1 = 4.9 <i class="math-var">t</i><sub class="math-sub">1</sub>&sup2;<br>
+                <i class="math-var">t</i><sub class="math-sub">1</sub>&sup2; = 44.1 / 4.9 = 9<br>
+                <i class="math-var">t</i><sub class="math-sub">1</sub> = 3 s</p>
+
+                <p class="reveal-item"><strong>ধাপ ২: শব্দ উপরে আসতে সময় (<i class="math-var">t</i><sub class="math-sub">2</sub>)</strong><br>
+                শব্দ সমবেগে (v = 340) চলে।<br>
+                <i class="math-var">t</i><sub class="math-sub">2</sub> = <sup>দূরত্ব</sup> / <sub>বেগ</sub> = <sup><i class="math-var">h</i></sup> / <sub><i class="math-var">v</i></sub> = <sup>44.1</sup> / <sub>340</sub> &approx; 0.13 s</p>
+                
+                <p class="reveal-item"><strong>মোট সময় (T) = <i class="math-var">t</i><sub class="math-sub">1</sub> + <i class="math-var">t</i><sub class="math-sub">2</sub></strong><br>
+                T = 3 s + 0.13 s = 3.13 s</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> 3.13 s পর শব্দ শোনা যাবে।</h3>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ১</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">একটি গাড়ি স্থিরাবস্থান হতে যাত্রা শুরু করে 6s সময় পর্যন্ত 2 $ms^{-2}$ সুষম ত্বরণে চলার পর 1 min সমদ্রুতিতে চলে।</p>
+                <div class="reveal-item">
+                    <p>(ক) মন্দন কী?</p>
+                    <p>(খ) বস্তুর ওজন পৃথিবীর বিভিন্ন স্থানে বিভিন্ন হয় কেন?</p>
+                    <p>(গ) সুষম ত্বরণে বস্তুটি কর্তৃক অতিক্রান্ত দুরত্ব নির্ণয় কর।</p>
+                    <p>(ঘ) যদি বস্তুটি উদ্দীপকের সম্পূর্ণ দুরত্ব 2 $ms^{-2}$ সুষম ত্বরণে অতিক্রম করত তবে মোট কত সময় লাগত?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ক ও খ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) মন্দন:</strong> সময়ের সাথে সাথে বস্তুর বেগ হ্রাসের হারকে মন্দন বলে। এটি ঋণাত্মক ত্বরণ।</p>
+                <p class="reveal-item"><strong>(খ) ব্যাখ্যা:</strong> বস্তুর ওজন ($W = mg$) অভিকর্ষজ ত্বরণ g-এর উপর নির্ভরশীল। $g = GM/R^2$ হওয়ায় এটি পৃথিবীর ব্যাসার্ধ R-এর উপর নির্ভর করে। পৃথিবী সম্পূর্ণ গোলাকার নয়, মেরু অঞ্চলে চাপা। তাই মেরু অঞ্চলে R কম, g বেশি, ফলে ওজন বেশি। বিষুবীয় অঞ্চলে R বেশি, g কম, ফলে ওজন কম। এ কারণেই বস্তুর ওজন বিভিন্ন স্থানে বিভিন্ন হয়।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>সুষম ত্বরণের অংশে:</strong><br>
+                দেওয়া আছে, আদিবেগ (স্থিরাবস্থান), <i class="math-var">u</i> = 0<br>
+                সময়, <i class="math-var">t</i><sub class="math-sub">1</sub> = 6 s<br>
+                ত্বরণ, <i class="math-var">a</i> = 2 $ms^{-2}$</p>
+                
+                <p class="reveal-item"><strong>অতিক্রান্ত দূরত্ব, <i class="math-var">s</i><sub class="math-sub">1</sub> = <i class="math-var">ut</i><sub class="math-sub">1</sub> + <sup>1</sup>/<sub>2</sub><i class="math-var">a</i><i class="math-var">t</i><sub class="math-sub">1</sub>&sup2;</strong><br>
+                <i class="math-var">s</i><sub class="math-sub">1</sub> = (0 &times; 6) + <sup>1</sup>/<sub>2</sub> &times; 2 &times; (6)&sup2;<br>
+                <i class="math-var">s</i><sub class="math-sub">1</sub> = 36 m</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> সুষম ত্বরণে অতিক্রান্ত দূরত্ব 36 m।</h3>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>১ম ধাপ: মোট দূরত্ব নির্ণয়</strong><br>
+                (গ) হতে, ১ম অংশের দূরত্ব, <i class="math-var">s</i><sub class="math-sub">1</sub> = 36 m।<br>
+                ৬ সেকেন্ড পর বেগ, <i class="math-var">v</i> = <i class="math-var">u</i> + <i class="math-var">at</i><sub class="math-sub">1</sub> = 0 + (2 &times; 6) = 12 $ms^{-1}$।<br>
+                গাড়িটি এই 12 $ms^{-1}$ সমদ্রুতিতে 1 min (60 s) চলে।<br>
+                ২য় অংশের দূরত্ব, <i class="math-var">s</i><sub class="math-sub">2</sub> = <i class="math-var">v</i> <i class="math-var">t</i><sub class="math-sub">2</sub> = 12 &times; 60 = 720 m।<br>
+                <strong>মোট দূরত্ব, S = <i class="math-var">s</i><sub class="math-sub">1</sub> + <i class="math-var">s</i><sub class="math-sub">2</sub> = 36 + 720 = 756 m।</strong></p>
+
+                <p class="reveal-item"><strong>২য় ধাপ: নতুন সময় নির্ণয়</strong><br>
+                যদি সম্পূর্ণ দূরত্ব (S = 756 m) 2 $ms^{-2}$ ত্বরণে (u=0) অতিক্রম করত:<br>
+                S = <i class="math-var">ut</i> + <sup>1</sup>/<sub>2</sub><i class="math-var">at</i>&sup2;<br>
+                756 = 0 + <sup>1</sup>/<sub>2</sub> &times; 2 &times; <i class="math-var">t</i>&sup2;<br>
+                <i class="math-var">t</i>&sup2; = 756<br>
+                <i class="math-var">t</i> = &radic;756 &approx; 27.5 s</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> মোট 27.5 s সময় লাগত।</h3>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ২</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">P অবস্থান থেকে একটি প্রাইভেট কার 21 $ms^{-1}$ সমবেগে এবং Q অবস্থান থেকে অপর একটি ট্রাক স্থির অবস্থান হতে 2 $ms^{-2}$ ত্বরণে একই দিকে চলছে। (P ও Q এর মধ্যবর্তী দূরত্ব 80 m)।</p>
+                <div class="reveal-item">
+                    <p>(ক) ত্বরণ কাকে বলে?</p>
+                    <p>(খ) সমবেগে চলমান বস্তুর ত্বরণ শূণ্য কেন?</p>
+                    <p>(গ) ট্রাকটির 20 তম সেকেন্ডে অতিক্রান্ত দূরত্ব নির্ণয় কর।</p>
+                    <p>(ঘ) চলার পথে প্রাইভেট কার ও ট্রাকটি পরস্পরকে কতবার অতিক্রম করবে?</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>t-তম সেকেন্ডে অতিক্রান্ত দূরত্বের সূত্র:</strong><br>
+                <i class="math-var">s</i><sub class="math-sub">t</sub> = <i class="math-var">u</i> + <sup>1</sup>/<sub>2</sub><i class="math-var">a</i>(2<i class="math-var">t</i> - 1)</p>
+                
+                <p class="reveal-item"><strong>দেওয়া আছে (ট্রাক):</strong><br>
+                আদিবেগ, <i class="math-var">u</i> = 0 (স্থির)<br>
+                ত্বরণ, <i class="math-var">a</i> = 2 $ms^{-2}$<br>
+                তম সময়, <i class="math-var">t</i> = 20</p>
+                
+                <p class="reveal-item"><strong>হিসাব:</strong><br>
+                <i class="math-var">s</i><sub class="math-sub">20th</sub> = 0 + <sup>1</sup>/<sub>2</sub> &times; 2 &times; (2 &times; 20 - 1)<br>
+                <i class="math-var">s</i><sub class="math-sub">20th</sub> = 1 &times; (40 - 1) = 39 m</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> ট্রাকটি 20 তম সেকেন্ডে 39 m দূরত্ব অতিক্রম করবে।</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item">ধরি, P অবস্থান থেকে <i class="math-var">s</i><sub class="math-sub">c</sub> দূরত্বে <i class="math-var">t</i> সময় পর তারা মিলিত হবে।</p>
+                <p class="reveal-item"><strong>প্রাইভেট কারের জন্য (সমবেগ):</strong><br>
+                <i class="math-var">s</i><sub class="math-sub">c</sub> = <i class="math-var">v</i> <i class="math-var">t</i> = 21<i class="math-var">t</i>  --- (i)</p>
+                
+                <p class="reveal-item"><strong>ট্রাকের জন্য (সুষম ত্বরণ):</strong><br>
+                ট্রাকটি P থেকে (80 + <i class="math-var">s</i><sub class="math-sub">t</sub>) দূরত্বে আছে।<br>
+                ট্রাকটির অতিক্রান্ত দূরত্ব, <i class="math-var">s</i><sub class="math-sub">t</sub> = <i class="math-var">ut</i> + <sup>1</sup>/<sub>2</sub><i class="math-var">at</i>&sup2; = 0 + <sup>1</sup>/<sub>2</sub> &times; 2 &times; <i class="math-var">t</i>&sup2; = <i class="math-var">t</i>&sup2;<br>
+                P থেকে ট্রাকের দূরত্ব = 80 + <i class="math-var">s</i><sub class="math-sub">t</sub> = 80 + <i class="math-var">t</i>&sup2; --- (ii)</p>
+                
+                <p class="reveal-item"><strong>যখন মিলিত হবে, তখন (i) = (ii):</strong><br>
+                21<i class="math-var">t</i> = 80 + <i class="math-var">t</i>&sup2;<br>
+                <i class="math-var">t</i>&sup2; - 21<i class="math-var">t</i> + 80 = 0<br>
+                <i class="math-var">t</i>&sup2; - 16<i class="math-var">t</i> - 5<i class="math-var">t</i> + 80 = 0<br>
+                (<i class="math-var">t</i> - 16)(<i class="math-var">t</i> - 5) = 0<br>
+                অতএব, <i class="math-var">t</i> = 5 s অথবা <i class="math-var">t</i> = 16 s</p>
+                
+                <h3 class="reveal-item"><strong>উত্তর:</strong> যেহেতু <i class="math-var">t</i>-এর দুটি বাস্তব মান পাওয়া গেছে, প্রাইভেট কারটি ট্রাকটিকে দুইবার (5s ও 16s পর) অতিক্রম করবে।</h3>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ৩</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">একটি বস্তু A-কে 120m উঁচু (A) থেকে ফেলে দেয়া হলো। একই সময় অপর একটি বস্তু B-কে ভূমি (B) থেকে $19.6 ms^{-1}$ বেগে খাড়া উপরের দিকে নিক্ষেপ করা হলো। (g = 9.8 $ms^{-2}$)</p>
+                <div class="reveal-item">
+                    <p>(ক) মাত্রা কাকে বলে?</p>
+                    <p>(খ) তাৎক্ষণিক দ্রুতি বলতে কী বুঝ?</p>
+                    <p>(গ) 1.8s পরে A বস্তুটির বেগ নির্ণয় কর।</p>
+                    <p>(ঘ) ভূমি ছাড়া বস্তুদ্বয় মিলিত হবে কি?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৩ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>A বস্তুর ক্ষেত্রে (পড়ন্ত):</strong><br>
+                আদিবেগ (ফেলে দেয়া হলো), <i class="math-var">u</i> = 0<br>
+                অভিকর্ষজ ত্বরণ, <i class="math-var">g</i> = 9.8 $ms^{-2}$<br>
+                সময়, <i class="math-var">t</i> = 1.8 s</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong> <i class="math-var">v</i> = <i class="math-var">u</i> + <i class="math-var">gt</i></p>
+                <p class="reveal-item"><i class="math-var">v</i> = 0 + (9.8 &times; 1.8)</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> বেগ, <i class="math-var">v</i> = 17.64 $ms^{-1}$।</h3>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৩ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item">ধরি, <i class="math-var">t</i> সময় পর বস্তুদ্বয় ভূমি থেকে <i class="math-var">h</i><sub class="math-sub">B</sub> উচ্চতায় মিলিত হবে।</p>
+                <p class="reveal-item"><strong>B বস্তুর অতিক্রান্ত উচ্চতা (নিক্ষিপ্ত):</strong><br>
+                <i class="math-var">h</i><sub class="math-sub">B</sub> = <i class="math-var">u</i><sub class="math-sub">B</sub><i class="math-var">t</i> - <sup>1</sup>/<sub>2</sub><i class="math-var">gt</i>&sup2;<br>
+                <i class="math-var">h</i><sub class="math-sub">B</sub> = 19.6<i class="math-var">t</i> - 4.9<i class="math-var">t</i>&sup2;  --- (i)</p>
+                
+                <p class="reveal-item"><strong>A বস্তুর অতিক্রান্ত দূরত্ব (পড়ন্ত):</strong><br>
+                <i class="math-var">h</i><sub class="math-sub">A</sub> = <i class="math-var">u</i><sub class="math-sub">A</sub><i class="math-var">t</i> + <sup>1</sup>/<sub>2</sub><i class="math-var">gt</i>&sup2;<br>
+                <i class="math-var">h</i><sub class="math-sub">A</sub> = 0 + 4.9<i class="math-var">t</i>&sup2; --- (ii)</p>
+                
+                <p class="reveal-item">যখন তারা মিলিত হবে, তখন তাদের অতিক্রান্ত দূরত্বের যোগফল 120 m হবে।<br>
+                <i class="math-var">h</i><sub class="math-sub">A</sub> + <i class="math-var">h</i><sub class="math-sub">B</sub> = 120<br>
+                (4.9<i class="math-var">t</i>&sup2;) + (19.6<i class="math-var">t</i> - 4.9<i class="math-var">t</i>&sup2;) = 120<br>
+                19.6<i class="math-var">t</i> = 120<br>
+                <i class="math-var">t</i> = 120 / 19.6 &approx; 6.12 s</p>
+                
+                <p class="reveal-item"><strong>যাচাই:</strong> B বস্তুর উপরে উঠতে ও নিচে নামতে মোট সময় (বিচরণকাল) লাগে:<br> T = 2u/g = (2 &times; 19.6) / 9.8 = 4 s।<br>
+                যেহেতু মিলিত হওয়ার সময় (6.12 s) B বস্তুর বিচরণকালের (4 s) চেয়ে বেশি, তার মানে B বস্তুটি 4s পর ভূমিতে ফিরে আসবে। 6.12 s পর B বস্তুটি ভূমিতেই থাকবে।</p>
+                
+                <h3 class="reveal-item"><strong>উত্তর:</strong> তারা 6.12 s পর ভূমিতে মিলিত হবে, ভূমি ছাড়া অন্য কোথাও মিলিত হবে না।</h3>
+            </div>
+        </div>
+
+        <div class="slide thank-you-slide">
+            <h1 class="slide-title">ধন্যবাদ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">প্রশ্নোত্তর পর্ব</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter" id="slideCounter"></div>
+    <div class="slide-jump">
+        <input type="number" id="slideJumpInput" placeholder="স্লাইড #" min="1">
+    </div>
+    <div class="nav-buttons">
+        <button id="prevBtn">পূর্ববর্তী</button>
+        <button id="nextBtn">পরবর্তী</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slideCounter');
+        let revealIndex = 0;
+
+        function showSlide(index) {
+            // Ensure index is within bounds
+            if (index >= totalSlides) {
+                index = 0;
+            } else if (index < 0) {
+                index = totalSlides - 1;
+            }
+            currentSlide = index;
+
+            // Remove 'active' class from all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Add 'active' class to the current slide
+            const activeSlide = slides[currentSlide];
+            activeSlide.classList.add('active');
+
+            // Reset reveal items for the new slide
+            revealIndex = 0;
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            revealItems.forEach(item => item.classList.remove('is-visible'));
+
+            // Update slide counter
+            slideCounter.textContent = `স্লাইড ${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function revealNext() {
+            const activeSlide = slides[currentSlide];
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            
+            if (revealIndex < revealItems.length) {
+                revealItems[revealIndex].classList.add('is-visible');
+                revealIndex++;
+                return true; // An item was revealed
+            }
+            return false; // No items left to reveal
+        }
+
+        function handleNext() {
+            if (!revealNext()) {
+                // If no items were revealed (or no items to reveal), go to next slide
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function handlePrev() {
+            showSlide(currentSlide - 1);
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', handleNext);
+        document.getElementById('prevBtn').addEventListener('click', handlePrev);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (event) => {
+            if (event.target.id === 'slideJumpInput') {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent default Enter behavior
+                    const targetSlide = parseInt(slideJumpInput.value);
+                    
+                    // Validate the input number
+                    if (!isNaN(targetSlide) && targetSlide >= 1 && targetSlide <= totalSlides) {
+                        showSlide(targetSlide - 1); // Jump to the slide (0-based index)
+                    } else {
+                        // Optionally provide feedback for invalid input
+                        slideJumpInput.style.borderColor = 'red';
+                        setTimeout(() => {
+                            slideJumpInput.style.borderColor = '#555';
+                        }, 1000);
+                    }
+                    slideJumpInput.value = ''; // Clear the input box after jump
+                    slideJumpInput.blur(); // Remove focus from input box
+                }
+                return; // Don't trigger next/prev if typing in input
+            }
+
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === ' ') {
+                event.preventDefault(); // Stop space from scrolling
+                handleNext();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                handlePrev();
+            }
+        });
+
+        // Initial call to show the first slide
+        showSlide(0);
+        
+        // Slide Jump Functionality
+        const slideJumpInput = document.getElementById('slideJumpInput');
+        slideJumpInput.max = totalSlides; // Set max value dynamically
+
+        // Clear red border on focus
+        slideJumpInput.addEventListener('focus', () => {
+             slideJumpInput.style.borderColor = '#555';
+        });
+    </script>
+
+</body>
+</html>
