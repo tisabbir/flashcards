@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আলোর প্রতিফলন</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #1E1E1E;
+            box-sizing: border-box;
+            padding: 50px 80px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border-left: 10px solid #03DAC6; /* Accent color */
+            overflow-y: auto; /* Add scroll for overflow content */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-title {
+            font-size: 3.0em; /* Slightly smaller to fit more content */
+            color: #03DAC6; /* Accent color */
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+        }
+
+        .slide-content {
+            font-size: 1.4em; /* Slightly smaller */
+            color: #CFD8DC;
+        }
+        
+        .slide-content h3 {
+            color: #BB86FC; /* Secondary accent */
+            font-size: 1.4em;
+        }
+
+        .slide-content ul {
+            list-style-type: square;
+            padding-left: 40px;
+        }
+
+        .slide-content li, .slide-content p {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        /* HTML Math Styling */
+        i.math-var { font-style: italic; }
+        sup.math-sup { font-size: 0.75em; vertical-align: super; }
+        sub.math-sub { font-size: 0.75em; vertical-align: sub; }
+
+        /* Image Styling */
+        .slide-content img {
+            max-width: 40%; /* Adjusted */
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+            float: right;
+            margin-left: 20px;
+        }
+        
+        /* Reveal items */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal-item.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* Special slide types */
+        .title-slide, .thank-you-slide {
+            background: linear-gradient(135deg, #2C3E50, #1a2a3a);
+            color: white;
+            align-items: center;
+            text-align: center;
+            border-left: 10px solid #BB86FC;
+        }
+        .title-slide .slide-title, .thank-you-slide .slide-title { font-size: 4.5em; color: white; border-bottom: none; }
+        .title-slide .slide-content, .thank-you-slide .slide-content { font-size: 1.8em; color: #ddd; }
+
+        .hook-slide {
+            align-items: center;
+            text-align: center;
+            background-color: #333;
+            border-left: 10px solid #FBC02D;
+        }
+        .hook-slide .slide-title { font-size: 2.8em; color: #FBC02D; }
+        .hook-slide .slide-content { font-size: 1.8em; }
+
+        .quiz-slide { border-left: 10px solid #E91E63; }
+        .quiz-slide .slide-title { color: #E91E63; }
+        .quiz-slide .quiz-option { font-size: 1.1em; margin: 8px 0; } /* Adjusted */
+        .quiz-slide .quiz-cq { font-size: 1.1em; background: #2a2a2a; padding: 15px; border-radius: 8px; border-left: 4px solid #E91E63; }
+        
+        .answer-slide { border-left: 10px solid #4CAF50; }
+        .answer-slide .slide-title { color: #4CAF50; }
+        .answer-slide .correct-answer {
+            background-color: #388E3C;
+            color: #FFFFFF;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+        .answer-slide .explanation {
+            font-size: 0.9em;
+            background: #2a2a2a;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        /* Navigation */
+        .nav-buttons { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+        .nav-buttons button { font-size: 1em; padding: 10px 20px; margin-left: 10px; background-color: #03DAC6; color: #121212; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        .nav-buttons button:hover { background-color: #018786; transform: scale(1.05); }
+        /* kj */
+        .slide-jump {
+            position: fixed;
+            bottom: 35px;
+            left: 150px; /* Adjust position as needed */
+            z-index: 1000;
+        }
+        .slide-jump input {
+            width: 80px;
+            padding: 8px 10px;
+            font-size: 1em;
+            background-color: #333;
+            color: #E0E0E0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            text-align: center;
+        }
+        /* Hide number input arrows */
+        .slide-jump input::-webkit-outer-spin-button,
+        .slide-jump input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        .slide-jump input[type=number] {
+          -moz-appearance: textfield; /* Firefox */
+        }
+        /* kj */
+        .slide-counter { position: fixed; bottom: 40px; left: 30px; font-size: 1.2em; color: #888; z-index: 1000; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <div class="slide title-slide active">
+            <h1 class="slide-title">আলোর প্রতিফলন</h1>
+            <div class="slide-content">
+                <p class="reveal-item">অধ্যায় ৮</p>
+                <p class="reveal-item">পদার্থবিজ্ঞান</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">আজকের মূল বিষয়</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">আলো ও আলোর প্রতিফলন</li>
+                    <li class="reveal-item">প্রতিফলনের প্রকারভেদ ও সূত্র</li>
+                    <li class="reveal-item">দর্পণ: সমতল ও গোলীয়</li>
+                    <li class="reveal-item">গোলীয় দর্পণের বিভিন্ন সংজ্ঞা</li>
+                    <li class="reveal-item">প্রতিবিম্ব: বাস্তব ও অবাস্তব</li>
+                    <li class="reveal-item">অবতল ও উত্তল দর্পণে প্রতিবিম্ব গঠন</li>
+                    <li class="reveal-item">দর্পণের সমীকরণ ও বিবর্ধন</li>
+                    <li class="reveal-item">দর্পণের ব্যবহার ও নিরাপদ ড্রাইভিং</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">আলো (Light)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>আলো:</strong> আলো এক প্রকার শক্তি, যা আমাদের দর্শনের অনুভূতি জোগায়।</li>
+                    <li class="reveal-item">এটি একটি **তড়িৎ চুম্বকীয় তরঙ্গ**।</li>
+                    <li class="reveal-item"><strong>শূন্য মাধ্যমে আলোর বেগ:</strong> <i class="math-var">c</i> = 3 &times; 10<sup class="math-sup">8</sup> ms<sup class="math-sup">-1</sup>।</li>
+                    <li class="reveal-item"><strong>দৃশ্যমান আলো:</strong> যে আলো বস্তুকে আলোকিত করে। তরঙ্গদৈর্ঘ্য 400 nm থেকে 700 nm।</li>
+                    <li class="reveal-item"><strong>অদৃশ্যমান আলো:</strong> যেমন- আলট্রাভায়োলেট, এক্স-রে, গামা রে।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">আলোর প্রতিফলন</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> আলোক রশ্মি এক মাধ্যম থেকে অন্য কোনো অস্বচ্ছ মাধ্যমে আপতিত হয়ে যদি কিছু আলো পূর্বের মাধ্যমে ফিরে আসে, তাকে আলোর প্রতিফলন বলে।</li>
+                    <li class="reveal-item"><strong>প্রতিফলক পৃষ্ঠ:</strong> আলোক রশ্মি যে পৃষ্ঠ হতে প্রতিফলিত হয়ে ফিরে আসে।</li>
+                    <li class="reveal-item"><strong>প্রকারভেদ (পৃষ্ঠ অনুযায়ী):</strong>
+                        <ul>
+                            <li>মসৃণ পৃষ্ঠ (যেমন আয়না)</li>
+                            <li>অমসৃণ পৃষ্ঠ (যেমন কাগজ, দেয়াল)</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">প্রতিফলনের প্রকারভেদ</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>নিয়মিত প্রতিফলন (Regular Reflection):</strong>
+                        <ul>
+                            <li>একগুচ্ছ সমান্তরাল আলোকরশ্মি মসৃণ তলে আপতিত হয়ে প্রতিফলনের পর সমান্তরাল, অভিসারী বা অপসারী রশ্মিগুচ্ছে পরিণত হয়।</li>
+                            <li>উদাহরণ: আয়না, স্থির পানি।</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>অনিয়মিত বা ব্যাপ্ত প্রতিফলন (Irregular/Diffuse):</strong>
+                        <ul>
+                            <li>সমান্তরাল আলোকরশ্মি অমসৃণ তলে আপতিত হয়ে প্রতিফলনের পর চারদিকে ছড়িয়ে পড়ে (সমান্তরাল থাকে না)।</li>
+                            <li>উদাহরণ: কাগজ, দেয়াল, কাপড়। (এর কারণেই আমরা বস্তু দেখি)।</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১। কাগজে আলোর কোন ধরনের প্রতিফলন হয়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) নিয়মিত</p>
+                    <p class="quiz-option">(খ) ব্যাপ্ত</p>
+                    <p class="quiz-option">(গ) উভয়টি</p>
+                    <p class="quiz-option">(ঘ) কোনোটিই নয়</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১</h2>
+            <div class="slide-content">
+                <h3>১। কাগজে আলোর কোন ধরনের প্রতিফলন হয়?</h3>
+                <p class="quiz-option">(ক) নিয়মিত</p>
+                <p class="quiz-option correct-answer">(খ) ব্যাপ্ত</p>
+                <p class="quiz-option">(গ) উভয়টি</p>
+                <p class="quiz-option">(ঘ) কোনোটিই নয়</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> কাগজের পৃষ্ঠ আপাতদৃষ্টিতে মসৃণ মনে হলেও এটি অমসৃণ। তাই এতে আলোর অনিয়মিত বা ব্যাপ্ত প্রতিফলন ঘটে, যার ফলে আলো চারদিকে ছড়িয়ে পড়ে এবং আমরা কাগজটি দেখতে পাই।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">প্রতিফলনের সূত্র</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>১ম সূত্র:</strong> আপতিত রশ্মি, প্রতিফলিত রশ্মি এবং আপতন বিন্দুতে প্রতিফলক পৃষ্ঠের উপর অঙ্কিত অভিলম্ব একই সমতলে থাকে।</li>
+                    <li class="reveal-item"><strong>২য় সূত্র:</strong> আপতন কোণ (Angle of Incidence) ও প্রতিফলন কোণ (Angle of Reflection) সর্বদা সমান হয়।</li>
+                </ul>
+                <h3 class="reveal-item">&angle;<i class="math-var">i</i> = &angle;<i class="math-var">r</i></h3>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ২</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২। আপতন কোণ 30&deg; হলে প্রতিফলন কোণ হবে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 60&deg;</p>
+                    <p class="quiz-option">(খ) 30&deg;</p>
+                    <p class="quiz-option">(গ) 15&deg;</p>
+                    <p class="quiz-option">(ঘ) কোনোটিই নয়</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ২</h2>
+            <div class="slide-content">
+                <h3>২। আপতন কোণ 30&deg; হলে প্রতিফলন কোণ হবে?</h3>
+                <p class="quiz-option">(ক) 60&deg;</p>
+                <p class="quiz-option correct-answer">(খ) 30&deg;</p>
+                <p class="quiz-option">(গ) 15&deg;</p>
+                <p class="quiz-option">(ঘ) কোনোটিই নয়</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> প্রতিফলনের দ্বিতীয় সূত্র অনুসারে, আপতন কোণ ও প্রতিফলন কোণ সর্বদা সমান হয়। যেহেতু আপতন কোণ = 30&deg;, তাই প্রতিফলন কোণ = 30&deg;।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">দর্পণ বা আয়না (Mirror)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> দর্পণ হলো এমন একটি মসৃণ তল যেখানে আলোর নিয়মিত প্রতিফলন ঘটে।</li>
+                    <li class="reveal-item"><strong>সিলভারিং (পারা লাগানো):</strong> দর্পণ তৈরির জন্য কাচের এক পৃষ্ঠে পারদ বা রূপার ধাতব প্রলেপ লাগানো হয়। এই প্রক্রিয়াকে সিলভারিং বলে।</li>
+                    <li class="reveal-item"><strong>প্রকারভেদ:</strong>
+                        <ol>
+                            <li>সমতল দর্পণ (Plane Mirror)</li>
+                            <li>গোলীয় দর্পণ (Spherical Mirror)</li>
+                        </ol>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">সমতল দর্পণের বৈশিষ্ট্য</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">দর্পণ থেকে লক্ষ্যবস্তু যত দূরে থাকে, প্রতিবিম্ব দর্পণের ঠিক ততটা পেছনে গঠিত হয়।</li>
+                    <li class="reveal-item">প্রতিবিম্ব সর্বদা **সোজা** ও **অবাস্তব** হয়।</li>
+                    <li class="reveal-item">প্রতিবিম্বের আকার লক্ষ্যবস্তুর আকারের সমান হয়।</li>
+                    <li class="reveal-item">প্রতিবিম্বের **পার্শ্ব পরিবর্তন** (Lateral Inversion) ঘটে (ডান-বাম উল্টে যায়)।</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৩</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩। সাধারণ আয়নায় গঠিত প্রতিবিম্বের ক্ষেত্রে কোনটি সঠিক নয়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) অবাস্তব</p>
+                    <p class="quiz-option">(খ) উল্টো</p>
+                    <p class="quiz-option">(গ) সমান দৈর্ঘ্যের</p>
+                    <p class="quiz-option">(ঘ) দর্পণের পেছনে</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৩</h2>
+            <div class="slide-content">
+                <h3>৩। সাধারণ আয়নায় গঠিত প্রতিবিম্বের ক্ষেত্রে কোনটি সঠিক নয়?</h3>
+                <p class="quiz-option">(ক) অবাস্তব (সঠিক)</p>
+                <p class="quiz-option correct-answer">(খ) উল্টো (সঠিক নয়, বিম্ব সোজা হয়)</p>
+                <p class="quiz-option">(গ) সমান দৈর্ঘ্যের (সঠিক)</p>
+                <p class="quiz-option">(ঘ) দর্পণের পেছনে (সঠিক)</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">গোলীয় দর্পণ (Spherical Mirror)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> যে দর্পণ কোনো গোলকের অংশবিশেষ এবং মসৃণ পৃষ্ঠে আলোর নিয়মিত প্রতিফলন ঘটায়, তাকে গোলীয় দর্পণ বলে।</li>
+                    <li class="reveal-item"><strong>প্রকারভেদ:</strong>
+                        <ol>
+                            <li><strong>অবতল দর্পণ (Concave):</strong> যদি গোলকের অবতল (ভেতরের) পৃষ্ঠটি প্রতিফলক হিসেবে কাজ করে।</li>
+                            <li><strong>উত্তল দর্পণ (Convex):</strong> যদি গোলকের উত্তল (বাইরের) পৃষ্ঠটি প্রতিফলক হিসেবে কাজ করে।</li>
+                        </ol>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">গোলীয় দর্পণের সংজ্ঞা (১/৩)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>মেরু (Pole, P):</strong> গোলীয় দর্পণের প্রতিফলক পৃষ্ঠের মধ্যবিন্দুকে মেরু বলে। (অবতলের ক্ষেত্রে নিম্নতম বিন্দু, উত্তলের ক্ষেত্রে উচ্চতম বিন্দু)।</li>
+                    <li class="reveal-item"><strong>বক্রতার কেন্দ্র (Center of Curvature, C):</strong> গোলীয় দর্পণটি যে গোলকের অংশ, সেই গোলকের কেন্দ্রকে বক্রতার কেন্দ্র বলে।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">গোলীয় দর্পণের সংজ্ঞা (২/৩)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>বক্রতার ব্যাসার্ধ (Radius of Curvature, r):</strong> গোলীয় দর্পণটি যে গোলকের অংশ, তার ব্যাসার্ধকে বক্রতার ব্যাসার্ধ বলে। (অর্থাৎ C থেকে P পর্যন্ত দূরত্ব)।</li>
+                    <li class="reveal-item"><strong>প্রধান অক্ষ (Principal Axis):</strong> দর্পণের মেরু (P) এবং বক্রতার কেন্দ্র (C) দিয়ে অতিক্রমকারী সরলরেখাকে প্রধান অক্ষ বলে।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">গোলীয় দর্পণের সংজ্ঞা (৩/৩)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>প্রধান ফোকাস (Principal Focus, F):</strong> প্রধান অক্ষের সমান্তরাল আলোকরশ্মি দর্পণে প্রতিফলনের পর প্রধান অক্ষের উপর যে বিন্দুতে মিলিত হয় (অবতল) বা যে বিন্দু থেকে অপসৃত হচ্ছে বলে মনে হয় (উত্তল), তাকে প্রধান ফোকাস বলে।</li>
+                    <li class="reveal-item"><strong>ফোকাস দূরত্ব (Focal length, f):</strong> মেরু (P) থেকে প্রধান ফোকাস (F) পর্যন্ত দূরত্ব।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">সম্পর্ক: f ও r</h2>
+            <div class="slide-content">
+                <p class="reveal-item">গোলীয় দর্পণের ফোকাস দূরত্ব (<i class="math-var">f</i>) তার বক্রতার ব্যাসার্ধের (<i class="math-var">r</i>) অর্ধেক।</p>
+                <h3 class="reveal-item"><i class="math-var">f</i> = <i class="math-var">r</i> / 2</h3>
+                <ul>
+                    <li class="reveal-item"><strong>অবতল দর্পণকে অভিসারী দর্পণ বলে:</strong> কারণ এটি সমান্তরাল রশ্মিকে এক বিন্দুতে মিলিত (অভিসারী) করে।</li>
+                    <li class="reveal-item"><strong>উত্তল দর্পণকে অপসারী দর্পণ বলে:</strong> কারণ এটি সমান্তরাল রশ্মিকে ছড়িয়ে দেয় (অপসারী করে)।</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৪</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৪। একটি দর্পণের বক্রতার ব্যাসার্ধ 20 সে.মি. হলে এর ফোকাস দূরত্ব কত হবে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 2 সে. মি.</p>
+                    <p class="quiz-option">(খ) 10 সে. মি.</p>
+                    <p class="quiz-option">(গ) 20 সে. মি.</p>
+                    <p class="quiz-option">(ঘ) 40 সে. মি.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৪</h2>
+            <div class="slide-content">
+                <h3>৪। একটি দর্পণের বক্রতার ব্যাসার্ধ 20 সে.মি. হলে এর ফোকাস দূরত্ব কত হবে?</h3>
+                <p class="quiz-option">(ক) 2 সে. মি.</p>
+                <p class="quiz-option correct-answer">(খ) 10 সে. মি.</p>
+                <p class="quiz-option">(গ) 20 সে. মি.</p>
+                <p class="quiz-option">(ঘ) 40 সে. মি.</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> আমরা জানি, ফোকাস দূরত্ব (<i class="math-var">f</i>) = বক্রতার ব্যাসার্ধ (<i class="math-var">r</i>) / 2।<br>
+                <i class="math-var">f</i> = 20 cm / 2 = 10 cm।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">প্রতিবিম্ব (Image)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> কোনো বিন্দু থেকে আলোকরশ্মি প্রতিফলিত বা প্রতিসরিত হয়ে যদি দ্বিতীয় কোনো বিন্দুতে মিলিত হয় (বা মিলিত হচ্ছে বলে মনে হয়), তবে ঐ দ্বিতীয় বিন্দুকে প্রথম বিন্দুর প্রতিবিম্ব বলে।</li>
+                    <li class="reveal-item"><strong>বাস্তব প্রতিবিম্ব (Real Image):</strong> রশ্মিগুচ্ছ যখন **প্রকৃতপক্ষে** মিলিত হয়।
+                        <ul>
+                            <li>বাস্তব বিম্ব সর্বদা উল্টো হয়।</li>
+                            <li>একে পর্দায় ফেলা যায়।</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>অবাস্তব প্রতিবিম্ব (Virtual Image):</strong> রশ্মিগুচ্ছ যখন কোনো বিন্দু থেকে আসছে বলে **মনে হয়**।
+                        <ul>
+                            <li>অবাস্তব বিম্ব সর্বদা সোজা হয়।</li>
+                            <li>একে পর্দায় ফেলা যায় না।</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">প্রতিবিম্ব আঁকার নিয়ম</h2>
+            <div class="slide-content">
+                <ol>
+                    <li class="reveal-item"><strong>নিয়ম ১:</strong> প্রধান অক্ষের সমান্তরাল রশ্মি প্রতিফলনের পর প্রধান ফোকাস (F) দিয়ে যায় (অবতল) বা F থেকে অপসৃত হচ্ছে বলে মনে হয় (উত্তল)।</li>
+                    <li class="reveal-item"><strong>নিয়ম ২:</strong> প্রধান ফোকাস (F) দিয়ে আপতিত রশ্মি (অবতল) বা F-এর দিকে আপতিত রশ্মি (উত্তল) প্রতিফলনের পর প্রধান অক্ষের সমান্তরাল হয়ে যায়।</li>
+                    <li class="reveal-item"><strong>নিয়ম ৩:</strong> বক্রতার কেন্দ্র (C) দিয়ে আপতিত রশ্মি প্রতিফলনের পর একই পথে ফিরে যায়।</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">অবতল দর্পণে প্রতিবিম্ব (১/২)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>বস্তু অসীমে:</strong> বিম্ব F-এ (বাস্তব, উল্টো, অত্যন্ত খর্বিত)।</li>
+                    <li class="reveal-item"><strong>বস্তু C-এর বাইরে:</strong> বিম্ব F ও C-এর মাঝে (বাস্তব, উল্টো, খর্বিত)।</li>
+                    <li class="reveal-item"><strong>বস্তু C-তে:</strong> বিম্ব C-তে (বাস্তব, উল্টো, সমান)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">অবতল দর্পণে প্রতিবিম্ব (২/২)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>বস্তু C ও F-এর মাঝে:</strong> বিম্ব C-এর বাইরে (বাস্তব, উল্টো, বিবর্ধিত)।</li>
+                    <li class="reveal-item"><strong>বস্তু F-এ:</strong> বিম্ব অসীমে (বাস্তব, উল্টো, অত্যন্ত বিবর্ধিত)।</li>
+                    <li class="reveal-item"><strong>বস্তু F ও P-এর মাঝে:</strong> বিম্ব দর্পণের পেছনে (অবাস্তব, সোজা, বিবর্ধিত)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">উত্তল দর্পণে প্রতিবিম্ব</h2>
+            <div class="slide-content">
+                <p class="reveal-item">উত্তল লেন্সে বস্তু যেখানেই থাকুক না কেন, প্রতিবিম্ব **সর্বদা**:</p>
+                <ul>
+                    <li class="reveal-item"><strong>অবাস্তব</strong></li>
+                    <li class="reveal-item"><strong>সোজা</strong></li>
+                    <li class="reveal-item"><strong>খর্বিত (বস্তুর চেয়ে ছোট)</strong></li>
+                    <li class="reveal-item"><strong>অবস্থান:</strong> মেরু (P) ও প্রধান ফোকাস (F) এর মধ্যে (দর্পণের পেছনে)।</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৫</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৫। অবতল দর্পণে অবাস্তব প্রতিবিম্ব পেতে বস্তু কোথায় রাখতে হবে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) C-তে</p>
+                    <p class="quiz-option">(খ) F ও C এর মাঝে</p>
+                    <p class="quiz-option">(গ) P ও F এর মাঝে</p>
+                    <p class="quiz-option">(ঘ) C ও অসীমের মাঝে</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৫</h2>
+            <div class="slide-content">
+                <h3>৫। অবতল দর্পণে অবাস্তব প্রতিবিম্ব পেতে বস্তু কোথায় রাখতে হবে?</h3>
+                <p class="quiz-option">(ক) C-তে (বাস্তব, সমান)</p>
+                <p class="quiz-option">(খ) F ও C এর মাঝে (বাস্তব, বিবর্ধিত)</p>
+                <p class="quiz-option correct-answer">(গ) P ও F এর মাঝে</p>
+                <p class="quiz-option">(ঘ) C ও অসীমের মাঝে (বাস্তব, খর্বিত)</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> অবতল দর্পণে বস্তু মেরু (P) ও প্রধান ফোকাসের (F) মাঝে রাখলেই কেবল সোজা, অবাস্তব ও বিবর্ধিত বিম্ব গঠিত হয়।</p>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৬</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৬। উত্তল দর্পণে গঠিত বিম্ব কিরূপ?</h3>
+                <p class="reveal-item">i. সোজা<br> ii. বিবর্ধিত<br> iii. অবাস্তব</p>
+                <h3 class="reveal-item">নিচের কোনটি সঠিক?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) i ও ii</p>
+                    <p class="quiz-option">(খ) i ও iii</p>
+                    <p class="quiz-option">(গ) ii ও iii</p>
+                    <p class="quiz-option">(ঘ) i, ii ও iii</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৬</h2>
+            <div class="slide-content">
+                <h3>৬। উত্তল দর্পণে গঠিত বিম্ব কিরূপ?</h3>
+                <p class="reveal-item">i. সোজা (সঠিক)<br> ii. বিবর্ধিত (ভুল, খর্বিত হয়)<br> iii. অবাস্তব (সঠিক)</p>
+                <p class="quiz-option">(ক) i ও ii</p>
+                <p class="quiz-option correct-answer">(খ) i ও iii</p>
+                <p class="quiz-option">(গ) ii ও iii</p>
+                <p class="quiz-option">(ঘ) i, ii ও iii</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">দর্পণের সমীকরণ ও চিহ্ন প্রথা</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>সাধারণ সূত্র:</strong></p>
+                <h3 class="reveal-item"><sup>1</sup>/<sub><i class="math-var">u</i></sub> + <sup>1</sup>/<sub><i class="math-var">v</i></sub> = <sup>1</sup>/<sub><i class="math-var">f</i></sub></h3>
+                <p class="reveal-item"><strong>চিহ্নের নিয়ম:</strong></p>
+                <ul>
+                    <li class="reveal-item"><i class="math-var">u</i> (বস্তুর দূরত্ব) সর্বদা ধনাত্মক (+)।</li>
+                    <li class="reveal-item"><i class="math-var">v</i> (বিম্বের দূরত্ব): বাস্তব বিম্বের জন্য ধনাত্মক (+), অবাস্তব বিম্বের জন্য ঋণাত্মক (-)।</li>
+                    <li class="reveal-item"><i class="math-var">f</i> (ফোকাস দূরত্ব): অবতল দর্পণের জন্য ধনাত্মক (+), উত্তল দর্পণের জন্য ঋণাত্মক (-)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">বিবর্ধন (Magnification)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> প্রতিবিম্বের দৈর্ঘ্য ও লক্ষ্যবস্তুর দৈর্ঘ্যের অনুপাতকে রৈখিক বিবর্ধন (<i class="math-var">m</i>) বলে।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">m</i> = <sup>প্রতিবিম্বের দৈর্ঘ্য (<i class="math-var">l'</i>)</sup> / <sub>লক্ষ্যবস্তুর দৈর্ঘ্য (<i class="math-var">l</i>)</sub></li>
+                    <li class="reveal-item"><strong>দূরত্বের সাথে সম্পর্ক:</strong> <i class="math-var">m</i> = - (<sup><i class="math-var">v</i></sup> / <sub><i class="math-var">u</i></sub>)</li>
+                    <li class="reveal-item"><strong>চিহ্নের নিয়ম:</strong>
+                        <ul>
+                            <li><i class="math-var">m</i> ধনাত্মক (+) হলে: বিম্ব অবাস্তব ও সোজা।</li>
+                            <li><i class="math-var">m</i> ঋণাত্মক (-) হলে: বিম্ব বাস্তব ও উল্টো।</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ১</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">15 cm ফোকাস দূরত্বের একটি অবতল দর্পণ হতে কত দূরে একটি বস্তু স্থাপন করলে বস্তুর আকারে তিনগুণ বিবর্ধিত **অবাস্তব** প্রতিবিম্ব পাওয়া যাবে?</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                অবতল দর্পণ, তাই ফোকাস দূরত্ব, <i class="math-var">f</i> = +15 cm<br>
+                অবাস্তব বিম্ব, তাই বিবর্ধন, <i class="math-var">m</i> = +3</p>
+                
+                <p class="reveal-item"><strong>বিবর্ধনের সূত্র:</strong> <i class="math-var">m</i> = -<i class="math-var">v</i> / <i class="math-var">u</i><br>
+                +3 = -<i class="math-var">v</i> / <i class="math-var">u</i> &rArr; <i class="math-var">v</i> = -3<i class="math-var">u</i></p>
+                
+                <p class="reveal-item"><strong>দর্পণের সূত্র:</strong> <sup>1</sup>/<sub><i class="math-var">u</i></sub> + <sup>1</sup>/<sub><i class="math-var">v</i></sub> = <sup>1</sup>/<sub><i class="math-var">f</i></sub><br>
+                <sup>1</sup>/<sub><i class="math-var">u</i></sub> + <sup>1</sup>/<sub>(-3<i class="math-var">u</i>)</sub> = <sup>1</sup>/<sub>15</sub><br>
+                (<sup>3 - 1</sup>)/<sub>3<i class="math-var">u</i></sub> = <sup>1</sup>/<sub>15</sub><br>
+                <sup>2</sup>/<sub>3<i class="math-var">u</i></sub> = <sup>1</sup>/<sub>15</sub><br>
+                3<i class="math-var">u</i> = 30 &rArr; <i class="math-var">u</i> = 10 cm</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> দর্পণের সামনে 10 cm দূরে।</h3>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ২</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">একটি অবতল দর্পণের বক্রতার ব্যাসার্ধ 30 cm। দর্পণ হতে 20 cm দূরে একটি বস্তু রাখা হলো। প্রতিবিম্বের অবস্থান, প্রকৃতি ও বিবর্ধন নির্ণয় কর।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                অবতল দর্পণ, বক্রতার ব্যাসার্ধ, <i class="math-var">r</i> = +30 cm<br>
+                ফোকাস দূরত্ব, <i class="math-var">f</i> = <i class="math-var">r</i> / 2 = +15 cm<br>
+                বস্তুর দূরত্ব, <i class="math-var">u</i> = 20 cm</p>
+                
+                <p class="reveal-item"><strong>১. অবস্থান (v):</strong><br>
+                <sup>1</sup>/<sub><i class="math-var">v</i></sub> = <sup>1</sup>/<sub><i class="math-var">f</i></sub> - <sup>1</sup>/<sub><i class="math-var">u</i></sub> = <sup>1</sup>/<sub>15</sub> - <sup>1</sup>/<sub>20</sub> = (<sup>4 - 3</sup>)/<sub>60</sub> = <sup>1</sup>/<sub>60</sub><br>
+                <i class="math-var">v</i> = +60 cm</p>
+                
+                <p class="reveal-item"><strong>২. বিবর্ধন (m):</strong><br>
+                <i class="math-var">m</i> = -<i class="math-var">v</i> / <i class="math-var">u</i> = -60 / 20 = -3</p>
+                
+                <h3 class="reveal-item"><strong>উত্তর:</strong><br>
+                <strong>অবস্থান:</strong> দর্পণের সামনে 60 cm দূরে (<i class="math-var">v</i> ধনাত্মক)।<br>
+                <strong>প্রকৃতি:</strong> বাস্তব ও উল্টো (<i class="math-var">m</i> ঋণাত্মক)।<br>
+                <strong>আকার:</strong> বিবর্ধিত (m &gt; 1)।</h3>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">দর্পণের ব্যবহার</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সমতল দর্পণ:</strong>
+                        <ul>
+                            <li>চেহারা দেখার আয়না।</li>
+                            <li>পেরিস্কোপ তৈরিতে।</li>
+                            <li>পাহাড়ি রাস্তার বাঁকে দুর্ঘটনা এড়াতে।</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>অবতল দর্পণ (অভিসারী):</strong>
+                        <ul>
+                            <li>দাঁতের ডাক্তার ব্যবহার করেন (বিবর্ধিত, অবাস্তব বিম্ব)।</li>
+                            <li>টর্চলাইট, সার্চলাইট বা গাড়ির হেডলাইটে (আলোকরশ্মিকে সমান্তরাল করতে)।</li>
+                            <li>সৌরচুল্লী (তাপ কেন্দ্রীভূত করতে)।</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>উত্তল দর্পণ (অপসারী):</strong>
+                        <ul>
+                            <li>গাড়িতে ভিউ মিরর (View Mirror) হিসেবে (সোজা, খর্বিত বিম্ব)।</li>
+                            <li>শপিং মলে নিরাপত্তামূলক কাজে (বিস্তৃত এলাকা দেখতে)।</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৭</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৭। দন্ত চিকিৎসায় কোন ধরনের দর্পণ ব্যবহার করা হয়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) সমতল দর্পণ</p>
+                    <p class="quiz-option">(খ) অবতল দর্পণ</p>
+                    <p class="quiz-option">(গ) উত্তল দর্পণ</p>
+                    <p class="quiz-option">(ঘ) প্রিজম</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৭</h2>
+            <div class="slide-content">
+                <h3>৭। দন্ত চিকিৎসায় কোন ধরনের দর্পণ ব্যবহার করা হয়?</h3>
+                <p class="quiz-option">(ক) সমতল দর্পণ</p>
+                <p class="quiz-option correct-answer">(খ) অবতল দর্পণ</p>
+                <p class="quiz-option">(গ) উত্তল দর্পণ</p>
+                <p class="quiz-option">(ঘ) প্রিজম</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> দাঁতের ডাক্তাররা অবতল দর্পণ ব্যবহার করেন। দাঁতকে দর্পণের ফোকাসের ভেতরে (<i class="math-var">u</i> &lt; <i class="math-var">f</i>) রাখলে সেটির একটি সোজা, অবাস্তব ও বিবর্ধিত প্রতিবিম্ব দেখা যায়, ফলে দাঁতের সমস্যা নির্ণয় সহজ হয়।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ১</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">একটি অবতল দর্পণের বক্রতার ব্যাসার্ধ 24 cm। দর্পণের মেরু থেকে 12 cm দূরত্বে একটি বস্তু স্থাপন করা হলো।</p>
+                <div class="reveal-item">
+                    <p>(ক) স্নেলের সূত্রটি লিখ।</p>
+                    <p>(খ) গাড়ির ভিউ মিরর (View Mirror) কোন ধরনের? ব্যাখ্যা কর।</p>
+                    <p>(গ) প্রতিবিম্বের দূরত্ব নির্ণয় কর।</p>
+                    <p>(ঘ) দাঁতের চিকিৎসায় দর্পণটি ব্যবহার করা যাবে কী? রশ্মিচিত্র এঁকে বিশ্লেষণ কর।</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                অবতল দর্পণ, বক্রতার ব্যাসার্ধ, <i class="math-var">r</i> = +24 cm<br>
+                ফোকাস দূরত্ব, <i class="math-var">f</i> = <i class="math-var">r</i> / 2 = +12 cm<br>
+                বস্তুর দূরত্ব, <i class="math-var">u</i> = 12 cm (অর্থাৎ বস্তুটি ফোকাসেই আছে)</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong> <sup>1</sup>/<sub><i class="math-var">u</i></sub> + <sup>1</sup>/<sub><i class="math-var">v</i></sub> = <sup>1</sup>/<sub><i class="math-var">f</i></sub><br>
+                <sup>1</sup>/<sub>12</sub> + <sup>1</sup>/<sub><i class="math-var">v</i></sub> = <sup>1</sup>/<sub>12</sub><br>
+                <sup>1</sup>/<sub><i class="math-var">v</i></sub> = <sup>1</sup>/<sub>12</sub> - <sup>1</sup>/<sub>12</sub> = 0<br>
+                <i class="math-var">v</i> = 1 / 0 = &infin; (অসীম)</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> প্রতিবিম্ব অসীমে গঠিত হবে।</h3>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item">হ্যাঁ, দর্পণটি (অবতল দর্পণ) দাঁতের চিকিৎসায় ব্যবহার করা যাবে।</p>
+                <p class="reveal-item"><strong>কারণ:</strong> দাঁতের চিকিৎসায় দাঁতের একটি সোজা ও বিবর্ধিত প্রতিবিম্ব দেখা প্রয়োজন।</p>
+                <p class="reveal-item">অবতল দর্পণে যখন বস্তুকে মেরু (P) এবং প্রধান ফোকাস (F) এর মধ্যে রাখা হয় (অর্থাৎ <i class="math-var">u</i> &lt; <i class="math-var">f</i>), তখন দর্পণটি একটি সোজা, অবাস্তব এবং বিবর্ধিত প্রতিবিম্ব গঠন করে।</p>
+                <p class="reveal-item">উদ্দীপকে ফোকাস দূরত্ব <i class="math-var">f</i> = 12 cm। দাঁতের চিকিৎসার সময় ডাক্তার দাঁতটিকে 12 cm এর কম দূরত্বে (যেমন 5 cm বা 10 cm) দর্পণের সামনে ধরবেন, ফলে তিনি দাঁতের একটি বড় ও সোজা প্রতিবিম্ব দেখতে পাবেন এবং চিকিৎসা করতে সুবিধা হবে।</p>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ২</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">একটি উত্তল লেন্সের ক্ষমতা +4D এবং লক্ষ্যবস্তু লেন্সের ফোকাস থেকে 10 cm দূরে অবস্থিত, যার বিম্ব পাশের পর্দায় গঠিত হয়। (অর্থাৎ বাস্তব বিম্ব)</p>
+                <div class="reveal-item">
+                    <p>(ক) আলোর প্রতিফলন কাকে বলে?</p>
+                    <p>(খ) অবতল দর্পণকে অভিসারী দর্পণ বলা হয় কেন?</p>
+                    <p>(গ) উদ্দীপকের প্রদত্ত লেন্স থেকে পর্দার দূরত্ব নির্ণয় কর।</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (গ) - ধাপ ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>১ম ধাপ: ফোকাস দূরত্ব (f) নির্ণয়</strong><br>
+                ক্ষমতা, P = +4 D<br>
+                <i class="math-var">f</i> = 1 / P = 1 / 4 = 0.25 m = 25 cm<br>
+                (লেন্সটি উত্তল)</p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: বস্তুর দূরত্ব (u) নির্ণয়</strong><br>
+                বস্তুটি ফোকাস থেকে 10 cm দূরে অবস্থিত (এবং পর্দায় বিম্ব গঠিত হয়, অর্থাৎ বাস্তব বিম্ব)। বাস্তব বিম্বের জন্য বস্তু অবশ্যই ফোকাসের বাইরে থাকে।<br>
+                <i class="math-var">u</i> = <i class="math-var">f</i> + 10 cm = 25 cm + 10 cm = 35 cm</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (গ) - ধাপ ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>৩য় ধাপ: পর্দার দূরত্ব (v) নির্ণয়</strong><br>
+                (লেন্সের সূত্র) <sup>1</sup>/<sub><i class="math-var">u</i></sub> + <sup>1</sup>/<sub><i class="math-var">v</i></sub> = <sup>1</sup>/<sub><i class="math-var">f</i></sub><br>
+                <sup>1</sup>/<sub>35</sub> + <sup>1</sup>/<sub><i class="math-var">v</i></sub> = <sup>1</sup>/<sub>25</sub><br>
+                <sup>1</sup>/<sub><i class="math-var">v</i></sub> = <sup>1</sup>/<sub>25</sub> - <sup>1</sup>/<sub>35</sub> = (<sup>7 - 5</sup>) / 175 = <sup>2</sup> / 175<br>
+                <i class="math-var">v</i> = 175 / 2 = 87.5 cm</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> লেন্স থেকে পর্দার দূরত্ব 87.5 cm।</h3>
+            </div>
+        </div>
+
+        <div class="slide thank-you-slide">
+            <h1 class="slide-title">ধন্যবাদ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">প্রশ্নোত্তর পর্ব</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter" id="slideCounter"></div>
+    <div class="slide-jump">
+        <input type="number" id="slideJumpInput" placeholder="স্লাইড #" min="1">
+    </div>
+    <div class="nav-buttons">
+        <button id="prevBtn">পূর্ববর্তী</button>
+        <button id="nextBtn">পরবর্তী</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slideCounter');
+        let revealIndex = 0;
+
+        function showSlide(index) {
+            // Ensure index is within bounds
+            if (index >= totalSlides) {
+                index = 0;
+            } else if (index < 0) {
+                index = totalSlides - 1;
+            }
+            currentSlide = index;
+
+            // Remove 'active' class from all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Add 'active' class to the current slide
+            const activeSlide = slides[currentSlide];
+            activeSlide.classList.add('active');
+
+            // Reset reveal items for the new slide
+            revealIndex = 0;
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            revealItems.forEach(item => item.classList.remove('is-visible'));
+
+            // Update slide counter
+            slideCounter.textContent = `স্লাইড ${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function revealNext() {
+            const activeSlide = slides[currentSlide];
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            
+            if (revealIndex < revealItems.length) {
+                revealItems[revealIndex].classList.add('is-visible');
+                revealIndex++;
+                return true; // An item was revealed
+            }
+            return false; // No items left to reveal
+        }
+
+        function handleNext() {
+            if (!revealNext()) {
+                // If no items were revealed (or no items to reveal), go to next slide
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function handlePrev() {
+            showSlide(currentSlide - 1);
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', handleNext);
+        document.getElementById('prevBtn').addEventListener('click', handlePrev);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (event) => {
+            if (event.target.id === 'slideJumpInput') {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent default Enter behavior
+                    const targetSlide = parseInt(slideJumpInput.value);
+                    
+                    // Validate the input number
+                    if (!isNaN(targetSlide) && targetSlide >= 1 && targetSlide <= totalSlides) {
+                        showSlide(targetSlide - 1); // Jump to the slide (0-based index)
+                    } else {
+                        // Optionally provide feedback for invalid input
+                        slideJumpInput.style.borderColor = 'red';
+                        setTimeout(() => {
+                            slideJumpInput.style.borderColor = '#555';
+                        }, 1000);
+                    }
+                    slideJumpInput.value = ''; // Clear the input box after jump
+                    slideJumpInput.blur(); // Remove focus from input box
+                }
+                return; // Don't trigger next/prev if typing in input
+            }
+
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === ' ') {
+                event.preventDefault(); // Stop space from scrolling
+                handleNext();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                handlePrev();
+            }
+        });
+
+        // Initial call to show the first slide
+        showSlide(0);
+        
+        // Slide Jump Functionality
+        const slideJumpInput = document.getElementById('slideJumpInput');
+        slideJumpInput.max = totalSlides; // Set max value dynamically
+
+        // Clear red border on focus
+        slideJumpInput.addEventListener('focus', () => {
+             slideJumpInput.style.borderColor = '#555';
+        });
+    </script>
+
+</body>
+</html>

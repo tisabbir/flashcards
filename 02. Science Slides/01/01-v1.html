@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ভৌত রাশি এবং পরিমাপ</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #1E1E1E;
+            box-sizing: border-box;
+            padding: 50px 80px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border-left: 10px solid #03DAC6; /* Accent color */
+            overflow-y: auto; /* Add scroll for overflow content */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-title {
+            font-size: 3.0em; /* Slightly smaller to fit more content */
+            color: #03DAC6; /* Accent color */
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+        }
+
+        .slide-content {
+            font-size: 1.4em; /* Slightly smaller */
+            color: #CFD8DC;
+        }
+        
+        .slide-content h3 {
+            color: #BB86FC; /* Secondary accent */
+            font-size: 1.4em;
+        }
+
+        .slide-content ul {
+            list-style-type: square;
+            padding-left: 40px;
+        }
+
+        .slide-content li, .slide-content p {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        /* HTML Math Styling */
+        i.math-var { font-style: italic; }
+        sup.math-sup { font-size: 0.75em; vertical-align: super; }
+        sub.math-sub { font-size: 0.75em; vertical-align: sub; }
+
+        /* Image Styling */
+        .slide-content img {
+            max-width: 40%; /* Adjusted */
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+            float: right;
+            margin-left: 20px;
+        }
+        
+        /* Reveal items */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal-item.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* Special slide types */
+        .title-slide, .thank-you-slide {
+            background: linear-gradient(135deg, #2C3E50, #1a2a3a);
+            color: white;
+            align-items: center;
+            text-align: center;
+            border-left: 10px solid #BB86FC;
+        }
+        .title-slide .slide-title, .thank-you-slide .slide-title { font-size: 4.5em; color: white; border-bottom: none; }
+        .title-slide .slide-content, .thank-you-slide .slide-content { font-size: 1.8em; color: #ddd; }
+
+        .hook-slide {
+            align-items: center;
+            text-align: center;
+            background-color: #333;
+            border-left: 10px solid #FBC02D;
+        }
+        .hook-slide .slide-title { font-size: 2.8em; color: #FBC02D; }
+        .hook-slide .slide-content { font-size: 1.8em; }
+
+        .quiz-slide { border-left: 10px solid #E91E63; }
+        .quiz-slide .slide-title { color: #E91E63; }
+        .quiz-slide .quiz-option { font-size: 1.1em; margin: 8px 0; } /* Adjusted */
+        .quiz-slide .quiz-cq { font-size: 1.1em; background: #2a2a2a; padding: 15px; border-radius: 8px; border-left: 4px solid #E91E63; }
+        
+        .answer-slide { border-left: 10px solid #4CAF50; }
+        .answer-slide .slide-title { color: #4CAF50; }
+        .answer-slide .correct-answer {
+            background-color: #388E3C;
+            color: #FFFFFF;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+        .answer-slide .explanation {
+            font-size: 0.9em;
+            background: #2a2a2a;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        /* Navigation */
+        .nav-buttons { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+        .nav-buttons button { font-size: 1em; padding: 10px 20px; margin-left: 10px; background-color: #03DAC6; color: #121212; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        .nav-buttons button:hover { background-color: #018786; transform: scale(1.05); }
+        /* kj */
+        .slide-jump {
+            position: fixed;
+            bottom: 35px;
+            left: 150px; /* Adjust position as needed */
+            z-index: 1000;
+        }
+        .slide-jump input {
+            width: 80px;
+            padding: 8px 10px;
+            font-size: 1em;
+            background-color: #333;
+            color: #E0E0E0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            text-align: center;
+        }
+        /* Hide number input arrows */
+        .slide-jump input::-webkit-outer-spin-button,
+        .slide-jump input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        .slide-jump input[type=number] {
+          -moz-appearance: textfield; /* Firefox */
+        }
+        /* kj */
+        .slide-counter { position: fixed; bottom: 40px; left: 30px; font-size: 1.2em; color: #888; z-index: 1000; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <div class="slide title-slide active">
+            <h1 class="slide-title">ভৌত রাশি এবং পরিমাপ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">অধ্যায় ১</p>
+                <p class="reveal-item">পদার্থবিজ্ঞান</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">এই অধ্যায়ে আমরা শিখব</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">পদার্থ বিজ্ঞানের পরিসর ও ক্রমবিকাশ।</li>
+                    <li class="reveal-item">পদার্থ বিজ্ঞানের উদ্দেশ্য।</li>
+                    <li class="reveal-item">ভৌত রাশি এবং তার পরিমাপ।</li>
+                    <li class="reveal-item">পরিমাপের যন্ত্রপাতি সম্বন্ধে।</li>
+                    <li class="reveal-item">পরিমাপের যথার্থতা, নির্ভুলতা বজায় রাখার কৌশল।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">পদার্থবিজ্ঞান কী?</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">বিজ্ঞানের যে শাখায় **পদার্থ** আর **শক্তি** এবং এ দুইয়ের মাঝে যে **অন্তঃক্রিয়া** তা বোঝার চেষ্টা করা হয়, সেটা হচ্ছে পদার্থবিজ্ঞান।</li>
+                    <li class="reveal-item">এটি বিজ্ঞানের প্রাচীনতম ও মৌলিক শাখা।</li>
+                    <li class="reveal-item">পদার্থবিজ্ঞানের সূত্র ব্যবহার করে নানা প্রযুক্তি গড়ে উঠেছে।</li>
+                    <li class="reveal-item">বিজ্ঞানের অন্যান্য শাখার সাথে মিলে তৈরি হয়েছে Astrophysics, Chemical Physics, Bio Physics, Geophysics ইত্যাদি।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">পদার্থবিজ্ঞানের শাখাসমূহ</h2>
+            <div class="slide-content">
+                <p class="reveal-item">পঠন-পাঠনের সুবিধার জন্য পদার্থবিজ্ঞানকে দুটি প্রধান ভাগে ভাগ করা যায়:</p>
+                <ul>
+                    <li class="reveal-item"><strong>সনাতন পদার্থবিজ্ঞান (Classical Physics):</strong>
+                        <ul>
+                            <li>বলবিজ্ঞান (Mechanics)</li>
+                            <li>শব্দবিজ্ঞান (Acoustics)</li>
+                            <li>তাপ ও তাপগতিবিজ্ঞান (Heat & Thermodynamics)</li>
+                            <li>বিদ্যুৎ ও চৌম্বক বিজ্ঞান (Electromagnetism)</li>
+                            <li>আলোকবিজ্ঞান (Optics)</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>আধুনিক পদার্থবিজ্ঞান (Modern Physics):</strong>
+                        <ul>
+                            <li>কোয়ান্টাম বলবিজ্ঞান (Quantum Mechanics)</li>
+                            <li>আপেক্ষিক তত্ত্ব (Relativity)</li>
+                            <li>পারমাণবিক ও নিউক্লিয় পদার্থবিজ্ঞান</li>
+                            <li>কঠিন অবস্থার পদার্থবিজ্ঞান (Solid State Physics)</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১। ক্লাসিকাল পদার্থবিজ্ঞানে রয়েছে-</h3>
+                <p class="reveal-item">i. শব্দবিজ্ঞান<br>
+                   ii. তাপ ও তাপগতিবিজ্ঞান<br>
+                   iii. কঠিন অবস্থার পদার্থবিজ্ঞান</p>
+                <h3 class="reveal-item">নিচের কোনটি সঠিক?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) i ও ii</p>
+                    <p class="quiz-option">(খ) i ও iii</p>
+                    <p class="quiz-option">(গ) ii ও iii</p>
+                    <p class="quiz-option">(ঘ) i, ii ও iii</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১</h2>
+            <div class="slide-content">
+                <h3>১। ক্লাসিকাল পদার্থবিজ্ঞানে রয়েছে-</h3>
+                <p class="reveal-item">i. শব্দবিজ্ঞান (সঠিক)<br>
+                   ii. তাপ ও তাপগতিবিজ্ঞান (সঠিক)<br>
+                   iii. কঠিন অবস্থার পদার্থবিজ্ঞান (ভুল, এটি আধুনিক পদার্থবিজ্ঞানের অংশ)</p>
+                <p class="quiz-option correct-answer">(ক) i ও ii</p>
+                <p class="quiz-option">(খ) i ও iii</p>
+                <p class="quiz-option">(গ) ii ও iii</p>
+                <p class="quiz-option">(ঘ) i, ii ও iii</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ক্রমবিকাশ: আদি পর্ব (গ্রিক)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>থেলিস:</strong> সূর্যগ্রহণের ভবিষ্যদ্বাণী করেন এবং লোডস্টোনের চৌম্বক ধর্ম সম্পর্কে জানতেন।</li>
+                    <li class="reveal-item"><strong>পিথাগোরাস:</strong> কম্পমান তারের উপর কাজ করেন, যা থেকে বাদ্যযন্ত্র ও সংগীতের স্কেল তৈরি হয়।</li>
+                    <li class="reveal-item"><strong>ডেমোক্রিটাস:</strong> পদার্থের অবিভাজ্য এককের ধারণা দেন এবং এর নাম দেন 'পরমাণু' (Atom)।</li>
+                    <li class="reveal-item"><strong>অ্যারিস্টোটল:</strong> মতামত দেন যে, সূর্য, গ্রহ, নক্ষত্র পৃথিবীকে কেন্দ্র করে ঘুরছে।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ক্রমবিকাশ: আদি পর্ব (গ্রিক)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>অ্যারিস্টার্কাস:</strong> সর্বপ্রথম **সূর্যকেন্দ্রিক** সৌরজগতের কথা বলেন।</li>
+                    <li class="reveal-item"><strong>আর্কিমিডিস:</strong> লিভারের নীতি এবং তরলে নিমজ্জিত বস্তুর উপর ঊর্ধ্বমুখী বলের সূত্র (প্লবতা) আবিষ্কার করেন।</li>
+                    <li class="reveal-item"><strong>ইরাতোস্থিনিস:</strong> সঠিকভাবে পৃথিবীর ব্যাসার্ধ পরিমাপ করেন।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ক্রমবিকাশ: মুসলিম ও ভারতীয়</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>আল-খোয়ারিজমি:</strong> বীজগণিত ও ত্রিকোণমিতির ভিত প্রতিষ্ঠা করেন। তাঁর "আল জিবাল মুকাবিলা" গ্রন্থ থেকে 'Algebra' শব্দের উৎপত্তি।</li>
+                    <li class="reveal-item"><strong>ইবনে আল-হাইয়াম (আল-হাজেন):</strong> আলোকবিজ্ঞানের স্থপতি হিসেবে বিবেচিত।</li>
+                    <li class="reveal-item"><strong>আল-মাসুদী:</strong> প্রকৃতির ইতিহাস নিয়ে ৩০ খণ্ডের এনসাইক্লোপিডিয়া লেখেন, যাতে 'বায়ুকলের' (Windmill) উল্লেখ পাওয়া যায়।</li>
+                    <li class="reveal-item"><strong>আর্যভট্ট (ভারতীয়):</strong> দ্বিঘাত সমীকরণ সমাধান করেন এবং শূন্যকে সত্যিকার অর্থে ব্যবহার করেন।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ২</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২। আলোকবিজ্ঞানের স্থপতি কাকে বিবেচনা করা হয়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) আল-খোয়ারিজমি</p>
+                    <p class="quiz-option">(খ) শেন কুয়ো</p>
+                    <p class="quiz-option">(গ) ইবনে আল-হাইয়াম</p>
+                    <p class="quiz-option">(ঘ) টলেমি</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ২</h2>
+            <div class="slide-content">
+                <h3>২। আলোকবিজ্ঞানের স্থপতি কাকে বিবেচনা করা হয়?</h3>
+                <p class="quiz-option">(ক) আল-খোয়ারিজমি</p>
+                <p class="quiz-option">(খ) শেন কুয়ো</p>
+                <p class="quiz-option correct-answer">(গ) ইবনে আল-হাইয়াম</p>
+                <p class="quiz-option">(ঘ) টলেমি</p>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৩</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩। উইন্ডমিল বা বায়ুকলের উল্লেখ পাওয়া যায় কোন মুসলিম বিজ্ঞানীর গ্রন্থে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) গ্যালিলিও</p>
+                    <p class="quiz-option">(খ) আল-মাসুদী</p>
+                    <p class="quiz-option">(গ) আল-হাজেন</p>
+                    <p class="quiz-option">(ঘ) নিউটন</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৩</h2>
+            <div class="slide-content">
+                <h3>৩। উইন্ডমিল বা বায়ুকলের উল্লেখ পাওয়া যায় কোন মুসলিম বিজ্ঞানীর গ্রন্থে?</h3>
+                <p class="quiz-option">(ক) গ্যালিলিও</p>
+                <p class="quiz-option correct-answer">(খ) আল-মাসুদী</p>
+                <p class="quiz-option">(গ) আল-হাজেন</p>
+                <p class="quiz-option">(ঘ) নিউটন</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> আল-মাসুদী প্রকৃতির ইতিহাস সম্পর্কে তাঁর এনসাইক্লোপিডিয়ায় বায়ুকলের উল্লেখ করেন।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">বিজ্ঞানের উত্থানপর্ব</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>লিওনার্দো দা ভিঞ্চি:</strong> পাখির ওড়া পর্যবেক্ষণ করে উড়োজাহাজের মডেল তৈরি করেন।</li>
+                    <li class="reveal-item"><strong>কোপারনিকাস:</strong> সূর্যকেন্দ্রিক সৌরজগতের ব্যাখ্যা দেন।</li>
+                    <li class="reveal-item"><strong>গ্যালিলিও:</strong> বৈজ্ঞানিক পদ্ধতির প্রবক্তা; কোপার্নিকাসের তত্ত্ব প্রমাণ করেন।</li>
+                    <li class="reveal-item"><strong>নিউটন:</strong> বলবিদ্যা, মহাকর্ষ সূত্র এবং ক্যালকুলাস আবিষ্কার করেন।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">বিজ্ঞানের উত্থানপর্ব (তাপ ও বিদ্যুৎ)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>কাউন্ট রামফোর্ড:</strong> প্রমাণ করেন তাপ এক ধরনের শক্তি।</li>
+                    <li class="reveal-item"><strong>লর্ড কেলভিন:</strong> তাপগতিবিজ্ঞানের দুটি সূত্র প্রদান করেন।</li>
+                    <li class="reveal-item"><strong>ভোল্টা:</strong> বৈদ্যুতিক মোটর আবিষ্কার করেন।</li>
+                    <li class="reveal-item"><strong>অরস্টেড:</strong> দেখান যে বিদ্যুৎপ্রবাহ দিয়ে চুম্বক তৈরি করা যায়।</li>
+                    <li class="reveal-item"><strong>ফ্যারাডে ও হেনরি:</strong> দেখান যে চুম্বক দিয়ে বিদ্যুৎ তৈরি করা যায়।</li>
+                    <li class="reveal-item"><strong>ম্যাক্সওয়েল:</strong> প্রমাণ করেন আলো একটি বিদ্যুৎচৌম্বকীয় তরঙ্গ।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৪</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৪। কে প্রমাণ করেন যে তাপ এক ধরনের শক্তি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) জুল</p>
+                    <p class="quiz-option">(খ) নিউটন</p>
+                    <p class="quiz-option">(গ) কাউন্ট রামফোর্ড</p>
+                    <p class="quiz-option">(ঘ) রাদারফোর্ড</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৪</h2>
+            <div class="slide-content">
+                <h3>৪। কে প্রমাণ করেন যে তাপ এক ধরনের শক্তি?</h3>
+                <p class="quiz-option">(ক) জুল</p>
+                <p class="quiz-option">(খ) নিউটন</p>
+                <p class="quiz-option correct-answer">(গ) কাউন্ট রামফোর্ড</p>
+                <p class="quiz-option">(ঘ) রাদারফোর্ড</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> ১৭৯৮ সালে কাউন্ট রামফোর্ড দেখান যে, তাপ এক ধরনের শক্তি এবং যান্ত্রিক শক্তিকে তাপশক্তিতে রূপান্তর করা যায়।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৫</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৫। কে দেখান যে, বিদ্যুৎ প্রবাহ দিয়ে চুম্বক তৈরি করা যায়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) অরস্টেড</p>
+                    <p class="quiz-option">(খ) ফ্যারাডে</p>
+                    <p class="quiz-option">(গ) ইয়ং</p>
+                    <p class="quiz-option">(ঘ) হেনরি</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৫</h2>
+            <div class="slide-content">
+                <h3>৫। কে দেখান যে, বিদ্যুৎ প্রবাহ দিয়ে চুম্বক তৈরি করা যায়?</h3>
+                <p class="quiz-option correct-answer">(ক) অরস্টেড</p>
+                <p class="quiz-option">(খ) ফ্যারাডে (চুম্বক দিয়ে বিদ্যুৎ)</p>
+                <p class="quiz-option">(গ) ইয়ং</p>
+                <p class="quiz-option">(ঘ) হেনরি (চুম্বক দিয়ে বিদ্যুৎ)</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">আধুনিক পদার্থবিজ্ঞানের সূচনা</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>ম্যাক্স প্ল্যাঙ্ক (১৯০০):</strong> কোয়ান্টাম তত্ত্ব আবিষ্কার করেন।</li>
+                    <li class="reveal-item"><strong>রন্টজেন (১৮৯৫):</strong> এক্স-রে (X-Ray) আবিষ্কার করেন।</li>
+                    <li class="reveal-item"><strong>বেকেরেল (১৮৯৬):</strong> পরমাণুর কেন্দ্র থেকে তেজস্ক্রিয় রশ্মি বিকিরণ আবিষ্কার করেন।</li>
+                    <li class="reveal-item"><strong>পিয়ারে ও মেরি কুরি (১৮৯৯):</strong> রেডিয়াম আবিষ্কার করেন।</li>
+                    <li class="reveal-item"><strong>আইনস্টাইন (১৯০৫):</strong> আপেক্ষিক তত্ত্ব (Relativity Theory) প্রদান করেন।</li>
+                    <li class="reveal-item"><strong>সত্যেন্দ্রনাথ বসু:</strong> বিকিরণ সংক্রান্ত কোয়ান্টাম তত্ত্বের গাণিতিক ব্যাখ্যা দেন। তাঁর নামানুসারে মৌলিক কণিকার নাম "বোজন" (Boson) রাখা হয়।</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৬</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৬। "বোজন" কার নাম থেকে এসেছে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) জগদীশ চন্দ্র বসু</p>
+                    <p class="quiz-option">(খ) সুভাষ চন্দ্র বসু</p>
+                    <p class="quiz-option">(গ) সত্যেন্দ্রনাথ বসু</p>
+                    <p class="quiz-option">(ঘ) শরৎ চন্দ্র বসু</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৬</h2>
+            <div class="slide-content">
+                <h3>৬। "বোজন" কার নাম থেকে এসেছে?</h3>
+                <p class="quiz-option">(ক) জগদীশ চন্দ্র বসু</p>
+                <p class="quiz-option">(খ) সুভাষ চন্দ্র বসু</p>
+                <p class="quiz-option correct-answer">(গ) সত্যেন্দ্রনাথ বসু</p>
+                <p class="quiz-option">(ঘ) শরৎ চন্দ্র বসু</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> প্রফেসর সত্যেন্দ্রনাথ বসুর বিকিরণ সংক্রান্ত কোয়ান্টাম সংখ্যায়ন তত্ত্বের ব্যাখ্যার স্বীকৃতিস্বরূপ এক শ্রেণির মৌলিক কণিকার নাম "বোজন" রাখা হয়।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">পদার্থবিজ্ঞানের উদ্দেশ্য</h2>
+            <div class="slide-content">
+                <p class="reveal-item">পদার্থবিজ্ঞানের মূল উদ্দেশ্যকে তিনটি ভাগে ভাগ করা যায়:</p>
+                <ol>
+                    <li class="reveal-item"><strong>প্রকৃতির রহস্য উদঘাটন:</strong> মহাবিশ্বের মৌলিক বল (যেমন বিদ্যুৎ-চুম্বকীয় বল) ও কণা (যেমন কোয়ার্ক) সম্পর্কে জানা।</li>
+                    <li class="reveal-item"><strong>প্রকৃতির নিয়মগুলো জানা:</strong> পর্যবেক্ষণ ও পরীক্ষার মাধ্যমে প্রকৃতির নিয়মগুলো (যেমন নিউটনের মহাকর্ষ সূত্র) আবিষ্কার করা।</li>
+                    <li class="reveal-item"><strong>প্রকৃতির নিয়ম ব্যবহার করে প্রযুক্তি বিকাশ:</strong> আবিষ্কৃত সূত্র (যেমন $E=mc^2$) ব্যবহার করে প্রযুক্তি (যেমন নিউক্লিয়ার পাওয়ার প্ল্যান্ট) তৈরি করা।</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ভৌত রাশি (Physical Quantities)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>রাশি:</strong> এই ভৌত জগতে যা কিছু পরিমাপ করা যায়, তাকে রাশি বলে।</li>
+                    <li class="reveal-item"><strong>মৌলিক রাশি (Fundamental):</strong> যে সকল রাশি স্বাধীন বা নিরপেক্ষ, অন্য রাশির উপর নির্ভর করে না। (মোট ৭টি)।</li>
+                    <li class="reveal-item"><strong>লব্ধ রাশি (Derived):</strong> যে সকল রাশি মৌলিক রাশির উপর নির্ভর করে বা মৌলিক রাশি থেকে লাভ করা যায়। (যেমন: বেগ = দূরত্ব/সময়)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">SI একক: ৭টি মৌলিক রাশি</h2>
+            <div class="slide-content">
+                <ol>
+                    <li class="reveal-item">দৈর্ঘ্য (Length) &rarr; <strong>মিটার (m)</strong></li>
+                    <li class="reveal-item">ভর (Mass) &rarr; <strong>কিলোগ্রাম (kg)</strong></li>
+                    <li class="reveal-item">সময় (Time) &rarr; <strong>সেকেন্ড (s)</strong></li>
+                    <li class="reveal-item">বৈদ্যুতিক প্রবাহ (Electric Current) &rarr; <strong>অ্যাম্পিয়ার (A)</strong></li>
+                    <li class="reveal-item">তাপমাত্রা (Temperature) &rarr; <strong>কেলভিন (K)</strong></li>
+                    <li class="reveal-item">পদার্থের পরিমাণ (Amount of Substance) &rarr; <strong>মোল (mol)</strong></li>
+                    <li class="reveal-item">দীপন তীব্রতা (Luminous Intensity) &rarr; <strong>ক্যান্ডেলা (cd)</strong></li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৭</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৭। মৌলিক রাশি-</h3>
+                <p class="reveal-item">i. অন্য রাশির উপর নির্ভর করে না<br>
+                   ii. কালের বিবর্তনে পরিবর্তন হবে না<br>
+                   iii. মৌলিক রাশি আটটি</p>
+                <h3 class="reveal-item">নিচের কোনটি সঠিক?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) i ও ii</p>
+                    <p class="quiz-option">(খ) i ও iii</p>
+                    <p class="quiz-option">(গ) ii ও iii</p>
+                    <p class="quiz-option">(ঘ) i, ii ও iii</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৭</h2>
+            <div class="slide-content">
+                <h3>৭। মৌলিক রাশি-</h3>
+                <p class="reveal-item">i. অন্য রাশির উপর নির্ভর করে না (সঠিক)<br>
+                   ii. কালের বিবর্তনে পরিবর্তন হবে না (সঠিক, এককের সংজ্ঞা অপরিবর্তনীয়)<br>
+                   iii. মৌলিক রাশি আটটি (ভুল, ৭টি)</p>
+                <p class="quiz-option correct-answer">(ক) i ও ii</p>
+                <p class="quiz-option">(খ) i ও iii</p>
+                <p class="quiz-option">(গ) ii ও iii</p>
+                <p class="quiz-option">(ঘ) i, ii ও iii</p>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৮</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৮। লব্ধ রাশি –</h3>
+                <p class="reveal-item">i. সরণ<br>
+                   ii. দ্রুতি<br>
+                   iii. বেগ</p>
+                <h3 class="reveal-item">নিচের কোনটি সঠিক?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) i</p>
+                    <p class="quiz-option">(খ) ii, iii</p>
+                    <p class="quiz-option">(গ) i, ii</p>
+                    <p class="quiz-option">(ঘ) i, ii ও iii</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৮</h2>
+            <div class="slide-content">
+                <h3>৮। লব্ধ রাশি –</h3>
+                <p class="reveal-item">i. সরণ (মৌলিক রাশি দৈর্ঘ্যের সমতুল্য)<br>
+                   ii. দ্রুতি (লব্ধ রাশি = দূরত্ব/সময়)<br>
+                   iii. বেগ (লব্ধ রাশি = সরণ/সময়)</p>
+                <p class="quiz-option">(ক) i</p>
+                <p class="quiz-option correct-answer">(খ) ii, iii</p>
+                <p class="quiz-option">(গ) i, ii</p>
+                <p class="quiz-option">(ঘ) i, ii ও iii</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> সরণকে মৌলিক রাশি দৈর্ঘ্যের একটি রূপ হিসেবে ধরা হয়। দ্রুতি ও বেগ উভয়ই দৈর্ঘ্য ও সময়—এই দুটি মৌলিক রাশি থেকে উদ্ভূত, তাই এরা লব্ধ রাশি।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">এককের সংজ্ঞা (ব্যবহারিক)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>এক মিটার:</strong> একজন স্বাভাবিক উচ্চতার মানুষের মাটি থেকে পেট পর্যন্ত দূরত্ব।</li>
+                    <li class="reveal-item"><strong>এক কিলোগ্রাম:</strong> ১ লিটার পানির বোতলের ভর।</li>
+                    <li class="reveal-item"><strong>এক সেকেন্ড:</strong> "এক হাজার এক" (১০০১) বলতে যে সময় লাগে।</li>
+                    <li class="reveal-item"><strong>এক কেলভিন:</strong> জ্বর হলে শরীরের তাপমাত্রা যতটুকু বাড়ে (প্রায়)।</li>
+                    <li class="reveal-item"><strong>এক অ্যাম্পিয়ার:</strong> তিনটি মোবাইল ফোন একসাথে চার্জ দিলে যে বিদ্যুৎ ব্যবহৃত হয়।</li>
+                    <li class="reveal-item"><strong>এক মোল:</strong> এক বড় চামচ পানিতে যত মোল পানির অণু থাকে।</li>
+                    <li class="reveal-item"><strong>এক ক্যান্ডেলা:</strong> একটি মোমবাতির আলোর তীব্রতা।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">উপসর্গ বা গুণিতক (Prefix)</h2>
+            <div class="slide-content">
+                <p class="reveal-item">বড় বা ছোট সংখ্যাকে সংক্ষেপে প্রকাশের জন্য উপসর্গ ব্যবহৃত হয়।</p>
+                <ul>
+                    <li class="reveal-item"><strong>বড় উপসর্গ (গুণিতক):</strong>
+                        <ul>
+                            <li>ডেকা (da) = 10<sup class="math-sup">1</sup></li>
+                            <li>কিলো (k) = 10<sup class="math-sup">3</sup></li>
+                            <li>মেগা (M) = 10<sup class="math-sup">6</sup></li>
+                            <li>গিগা (G) = 10<sup class="math-sup">9</sup></li>
+                            <li>টেরা (T) = 10<sup class="math-sup">12</sup></li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>ছোট উপসর্গ (উপগুণিতক):</strong>
+                        <ul>
+                            <li>ডেসি (d) = 10<sup class="math-sup">-1</sup></li>
+                            <li>সেন্টি (c) = 10<sup class="math-sup">-2</sup></li>
+                            <li>মিলি (m) = 10<sup class="math-sup">-3</sup></li>
+                            <li>মাইক্রো (&mu;) = 10<sup class="math-sup">-6</sup></li>
+                            <li>ন্যানো (n) = 10<sup class="math-sup">-9</sup></li>
+                            <li>পিকো (p) = 10<sup class="math-sup">-12</sup></li>
+                            <li>ফেমটো (f) = 10<sup class="math-sup">-15</sup></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৯</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৯। 1 গিগাবাইট = ?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 10<sup class="math-sup">-6</sup> বাইট</p>
+                    <p class="quiz-option">(খ) 10<sup class="math-sup">6</sup> বাইট</p>
+                    <p class="quiz-option">(গ) 10<sup class="math-sup">-9</sup> বাইট</p>
+                    <p class="quiz-option">(ঘ) 10<sup class="math-sup">9</sup> বাইট</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৯</h2>
+            <div class="slide-content">
+                <h3>৯। 1 গিগাবাইট = ?</h3>
+                <p class="quiz-option">(ক) 10<sup class="math-sup">-6</sup> বাইট</p>
+                <p class="quiz-option">(খ) 10<sup class="math-sup">6</sup> বাইট (মেগা)</p>
+                <p class="quiz-option">(গ) 10<sup class="math-sup">-9</sup> বাইট (ন্যানো)</p>
+                <p class="quiz-option correct-answer">(ঘ) 10<sup class="math-sup">9</sup> বাইট</p>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১০</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১০। 10 ফেমটোমিটার = কত মিটার?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 10<sup class="math-sup">-12</sup> m</p>
+                    <p class="quiz-option">(খ) 10<sup class="math-sup">-13</sup> m</p>
+                    <p class="quiz-option">(গ) 10<sup class="math-sup">-14</sup> m</p>
+                    <p class="quiz-option">(ঘ) 10<sup class="math-sup">-15</sup> m</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১০</h2>
+            <div class="slide-content">
+                <h3>১০। 10 ফেমটোমিটার = কত মিটার?</h3>
+                <p class="quiz-option">(ক) 10<sup class="math-sup">-12</sup> m</p>
+                <p class="quiz-option">(খ) 10<sup class="math-sup">-13</sup> m</p>
+                <p class="quiz-option correct-answer">(গ) 10<sup class="math-sup">-14</sup> m</p>
+                <p class="quiz-option">(ঘ) 10<sup class="math-sup">-15</sup> m</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> 1 ফেমটোমিটার = 10<sup class="math-sup">-15</sup> m।<br>
+                সুতরাং, 10 ফেমটোমিটার = 10 &times; 10<sup class="math-sup">-15</sup> m = 10<sup class="math-sup">1</sup> &times; 10<sup class="math-sup">-15</sup> m = 10<sup class="math-sup">-14</sup> m।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">মাত্রা (Dimension)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> একটা রাশিতে বিভিন্ন মৌলিক রাশি কোন সূচকে বা কোন পাওয়ারে (Power) আছে, সেটাকে তার মাত্রা বলে।</li>
+                    <li class="reveal-item">মাত্রাকে তৃতীয় বন্ধনী [ ] দিয়ে প্রকাশ করা হয়।</li>
+                    <li class="reveal-item"><strong>মৌলিক রাশির মাত্রা:</strong>
+                        <ul>
+                            <li>দৈর্ঘ্য [L]</li>
+                            <li>ভর [M]</li>
+                            <li>সময় [T]</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>লব্ধ রাশির মাত্রা:</strong>
+                        <ul>
+                            <li>বেগ = <sup>দূরত্ব</sup>/<sub>সময়</sub> &rArr; [v] = L/T = [LT<sup class="math-sup">-1</sup>]</li>
+                            <li>ত্বরণ = <sup>বেগ</sup>/<sub>সময়</sub> &rArr; [a] = [LT<sup class="math-sup">-1</sup>]/T = [LT<sup class="math-sup">-2</sup>]</li>
+                            <li>বল = ভর &times; ত্বরণ &rArr; [F] = M &times; [LT<sup class="math-sup">-2</sup>] = [MLT<sup class="math-sup">-2</sup>]</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১১</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১১। $S = ut + \frac{1}{2}at^2$ সমীকরণে $at^2$ এর মাত্রা কোনটি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) [L]</p>
+                    <p class="quiz-option">(খ) [LT<sup class="math-sup">-1</sup>]</p>
+                    <p class="quiz-option">(গ) [LT<sup class="math-sup">-2</sup>]</p>
+                    <p class="quiz-option">(ঘ) [LT<sup class="math-sup">2</sup>]</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১১</h2>
+            <div class="slide-content">
+                <h3>১১। $S = ut + \frac{1}{2}at^2$ সমীকরণে $at^2$ এর মাত্রা কোনটি?</h3>
+                <p class="quiz-option correct-answer">(ক) [L]</p>
+                <p class="quiz-option">(খ) [LT<sup class="math-sup">-1</sup>]</p>
+                <p class="quiz-option">(গ) [LT<sup class="math-sup">-2</sup>]</p>
+                <p class="quiz-option">(ঘ) [LT<sup class="math-sup">2</sup>]</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> [a] = [LT<sup class="math-sup">-2</sup>] এবং [t&sup2;] = [T&sup2;]।<br>
+                [at&sup2;] = [LT<sup class="math-sup">-2</sup>] &times; [T&sup2;] = [L]। (সংখ্যার কোনো মাত্রা নেই)।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">পরিমাপের যন্ত্রপাতি: স্লাইড ক্যালিপার্স</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">সূক্ষ্মভাবে দৈর্ঘ্য পরিমাপের জন্য ভার্নিয়ার স্কেল ব্যবহৃত হয়, যা স্লাইড ক্যালিপার্সে থাকে।</li>
+                    <li class="reveal-item"><strong>ভার্নিয়ার ধ্রুবক (VC):</strong> মূল স্কেলের ক্ষুদ্রতম এক ভাগের দৈর্ঘ্য এবং ভার্নিয়ার স্কেলের এক ভাগের দৈর্ঘ্যের পার্থক্য।
+                    <br><strong>বা,</strong> VC = <sup>(মূল স্কেলের ক্ষুদ্রতম ১ ভাগের দৈর্ঘ্য)</sup> / <sub>(ভার্নিয়ার স্কেলের মোট ভাগ সংখ্যা)</sub></li>
+                    <li class="reveal-item"><strong>ভার্নিয়ার সমপাতন (V):</strong> ভার্নিয়ার স্কেলের যে দাগটি মূল স্কেলের কোনো দাগের সাথে হুবহু মিলে যায়।</li>
+                    <li class="reveal-item"><strong>পাঠের সূত্র:</strong><br>
+                    দৈর্ঘ্য = M + (V &times; VC)
+                    <br> (M = মূল স্কেল পাঠ)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <h2 class="slide-title">পরিমাপের যন্ত্রপাতি: স্ক্রু গজ</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">খুব ছোট দৈর্ঘ্য, তারের ব্যাস বা পাতলা পাতের পুরুত্ব মাপার জন্য ব্যবহৃত হয়।</li>
+                    <li class="reveal-item"><strong>পিচ (Pitch):</strong> বৃত্তাকার স্কেল একবার ঘোরালে এটি রৈখিক স্কেল বরাবর যে দূরত্ব অতিক্রম করে।</li>
+                    <li class="reveal-item"><strong>ন্যূনাঙ্ক বা লঘিষ্ঠ গণন (LC):</strong> বৃত্তাকার স্কেলের মাত্র এক ভাগ ঘুরালে এটি রৈখিক স্কেলে যে দৈর্ঘ্য অতিক্রম করে।
+                    <br><strong>LC = <sup>পিচ</sup> / <sub>বৃত্তাকার স্কেলের মোট ভাগ সংখ্যা</sub></strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১২</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১২। একটি স্লাইড ক্যালিপার্সের প্রধান স্কেলের ১৯ ভাগ ভার্নিয়ার স্কেলের ২০ ভাগের সমান। প্রধান স্কেলের এক ভাগের দৈর্ঘ্য ১ মি.মি. হলে ভার্নিয়ার ধ্রুবক কত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 0.5 mm</p>
+                    <p class="quiz-option">(খ) 0.05 mm</p>
+                    <p class="quiz-option">(গ) 0.005 mm</p>
+                    <p class="quiz-option">(ঘ) 0.1 mm</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১২</h2>
+            <div class="slide-content">
+                <h3>১২। একটি স্লাইড ক্যালিপার্সের প্রধান স্কেলের ১৯ ভাগ ভার্নিয়ার স্কেলের ২০ ভাগের সমান। প্রধান স্কেলের এক ভাগের দৈর্ঘ্য ১ মি.মি. হলে ভার্নিয়ার ধ্রুবক কত?</h3>
+                <p class="quiz-option">(ক) 0.5 mm</p>
+                <p class="quiz-option correct-answer">(খ) 0.05 mm</p>
+                <p class="quiz-option">(গ) 0.005 mm</p>
+                <p class="quiz-option">(ঘ) 0.1 mm</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> এখানে, S = 1 mm, n = 20।<br>
+                VC = S/n = 1 mm / 20 = 0.05 mm।</p>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৩</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">একটি দণ্ডের দৈর্ঘ্য মাপার সময় স্লাইড ক্যালিপার্সের প্রধান স্কেলের পাঠ 4 cm, ভার্নিয়ার সমপাতন 7 এবং ভার্নিয়ার ধ্রুবক 0.1 mm। দণ্ডটির দৈর্ঘ্য কত?</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৩</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                প্রধান স্কেল পাঠ, M = 4 cm = 40 mm<br>
+                ভার্নিয়ার সমপাতন, V = 7<br>
+                ভার্নিয়ার ধ্রুবক, VC = 0.1 mm</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong><br>
+                দৈর্ঘ্য = M + (V &times; VC)<br>
+                দৈর্ঘ্য = 40 mm + (7 &times; 0.1 mm)<br>
+                দৈর্ঘ্য = 40 mm + 0.7 mm = 40.7 mm</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> দণ্ডটির দৈর্ঘ্য 40.7 mm বা 4.07 cm।</h3>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">পরিমাপের ত্রুটি (Error)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>চূড়ান্ত ত্রুটি (Absolute Error):</strong> পরিমাপ করা মান এবং প্রকৃত মানের পার্থক্য। যেহেতু প্রকৃত মান জানা থাকে না, তাই যন্ত্রের লঘিষ্ঠ গণন বা সম্ভাব্য সর্বোচ্চ ত্রুটিকে চূড়ান্ত ত্রুটি ধরা হয়। (যেমন: সেমি স্কেলের জন্য &plusmn;0.5 cm)।</li>
+                    <li class="reveal-item"><strong>আপেক্ষিক ত্রুটি (Relative Error):</strong><br>
+                    আপেক্ষিক ত্রুটি = <sup>চূড়ান্ত ত্রুটি</sup> / <sub>পরিমাপ করা মান</sub></li>
+                    <li class="reveal-item"><strong>শতাংশ ত্রুটি (Percentage Error):</strong><br>
+                    = আপেক্ষিক ত্রুটি &times; 100%</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৪</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">বর্গাকৃতি একটা বইয়ের দৈর্ঘ্য পরিমাপ করে তুমি 10 cm পেয়েছ। পরিমাপে 10% আপেক্ষিক ত্রুটি হয়েছে। বস্তুটির ক্ষেত্রফলে আপেক্ষিক ত্রুটি কত?</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৪</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                পরিমাপকৃত দৈর্ঘ্য = 10 cm<br>
+                আপেক্ষিক ত্রুটি (দৈর্ঘ্যে) = 10% = 0.1<br>
+                চূড়ান্ত ত্রুটি (দৈর্ঘ্যে) = 10 cm &times; 10% = 1 cm। (ত্রুটি &plusmn;0.5 cm নয়)</p>
+                <p class="reveal-item"><strong>পরিমাপকৃত ক্ষেত্রফল</strong> = 10 cm &times; 10 cm = 100 cm&sup2;</p>
+                <p class="reveal-item"><strong>সম্ভাব্য সর্বনিম্ন দৈর্ঘ্য</strong> = 10 - 1 = 9 cm<br>
+                <strong>সম্ভাব্য সর্বোচ্চ দৈর্ঘ্য</strong> = 10 + 1 = 11 cm</p>
+                <p class="reveal-item"><strong>সম্ভাব্য সর্বনিম্ন ক্ষেত্রফল</strong> = 9 &times; 9 = 81 cm&sup2;<br>
+                <strong>সম্ভাব্য সর্বোচ্চ ক্ষেত্রফল</strong> = 11 &times; 11 = 121 cm&sup2;</p>
+                <p class="reveal-item"><strong>চূড়ান্ত ত্রুটি (ক্ষেত্রফলে):</strong><br>
+                নিম্ন ত্রুটি = 100 - 81 = 19 cm&sup2;<br>
+                ঊর্ধ্ব ত্রুটি = 121 - 100 = 21 cm&sup2;<br>
+                (বড়টি নিতে হবে) = 21 cm&sup2;</p>
+                <p class="reveal-item"><strong>আপেক্ষিক ত্রুটি (ক্ষেত্রফলে)</strong> = <sup>চূড়ান্ত ত্রুটি</sup> / <sub>পরিমাপকৃত মান</sub><br>
+                = <sup>21 cm&sup2;</sup> / <sub>100 cm&sup2;</sub> = 0.21</p>
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> শতাংশে ত্রুটি = 0.21 &times; 100% = 21%।</h3>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ১</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">একটি স্লাইড ক্যালিপার্সের প্রধান স্কেলের ক্ষুদ্রতম ভাগের দৈর্ঘ্য 1 mm এবং ভার্নিয়ার স্কেলের মোট ভাগ সংখ্যা 10 টি। একটি ফাঁপা সিলিন্ডারের ভিতরের ব্যাস ও গভীরতা নির্ণয়ের পাঠ নিম্নরূপ:</p>
+                <p class="quiz-cq reveal-item">ব্যাস: প্রধান স্কেল পাঠ 3 cm, ভার্নিয়ার সমপাতন 10।<br>
+                গভীরতা (উচ্চতা): প্রধান স্কেল পাঠ 5 cm, ভার্নিয়ার সমপাতন 6।</p>
+                <div class="reveal-item">
+                    <p>(ক) পরিমাপ কাকে বলে?</p>
+                    <p>(খ) পরিমাপের ক্ষেত্রে এককের ভূমিকা ব্যাখ্যা কর।</p>
+                    <p>(গ) স্লাইড ক্যালিপার্সটির ভার্নিয়ার ধ্রুবক (VC) cm এককে নির্ণয় কর।</p>
+                    <p>(ঘ) সিলিন্ডারটিতে $40 cm^3$ পানি রাখা হলে তা পূর্ণ হবে, না কিছু অংশ খালি থাকবে?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ক ও খ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) পরিমাপ:</strong> কোনো কিছুর পরিমাণ নির্ণয় করাকেই পরিমাপ বলে।</p>
+                <p class="reveal-item"><strong>(খ) এককের ভূমিকা:</strong> পরিমাপের জন্য একটি আদর্শ মানের প্রয়োজন হয়, যার সাথে তুলনা করে পরিমাপ করা হয়। এই আদর্শ মানই একক। একক ছাড়া কোনো পরিমাপ (যেমন "দৈর্ঘ্য ১০") অর্থপূর্ণ হয় না, কিন্তু "দৈর্ঘ্য ১০ মিটার" বললে তা সুনির্দিষ্ট হয়। তাই পরিমাপকে অর্থপূর্ণ করতে এককের ভূমিকা অপরিহার্য।</p>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                প্রধান স্কেলের ক্ষুদ্রতম ১ ভাগের দৈর্ঘ্য, S = 1 mm = 0.1 cm<br>
+                ভার্নিয়ার স্কেলের মোট ভাগ সংখ্যা, n = 10</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong><br>
+                ভার্নিয়ার ধ্রুবক (VC) = S / n</p>
+                
+                <p class="reveal-item">VC = <sup>0.1 cm</sup> / <sub>10</sub></p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> VC = 0.01 cm।</h3>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>১ম ধাপ: সিলিন্ডারের ব্যাস (d) নির্ণয়</strong><br>
+                d = M + (V &times; VC)<br>
+                d = 3 cm + (10 &times; 0.01 cm) = 3 + 0.1 = 3.1 cm</p>
+
+                <p class="reveal-item"><strong>২য় ধাপ: সিলিন্ডারের উচ্চতা (h) নির্ণয়</strong><br>
+                h = M' + (V' &times; VC)<br>
+                h = 5 cm + (6 &times; 0.01 cm) = 5 + 0.06 = 5.06 cm</p>
+                
+                <p class="reveal-item"><strong>৩য় ধাপ: সিলিন্ডারের আয়তন (V) নির্ণয়</strong><br>
+                V = <sup>1</sup>/<sub>4</sub> &pi; d&sup2;h<br>
+                V = <sup>1</sup>/<sub>4</sub> &times; 3.1416 &times; (3.1 cm)&sup2; &times; (5.06 cm)<br>
+                V &approx; 38.19 cm&sup3;</p>
+                
+                <h3 class="reveal-item"><strong>সিদ্ধান্ত:</strong> সিলিন্ডারের আয়তন (38.19 cm&sup3;) $40 cm^3$ পানির আয়তনের চেয়ে কম। সুতরাং, সিলিন্ডারটিতে $40 cm^3$ পানি রাখা হলে তা পূর্ণ হয়ে কিছু পানি উপচে পড়বে (বা সম্পূর্ণ রাখা যাবে না)।</h3>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ২</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">একটি স্লাইড ক্যালিপার্স দিয়ে একটি বেলনাকার লোহার দণ্ডের ব্যাস পরিমাপ করতে গিয়ে দেখা গেল, প্রধান স্কেল পাঠ 4 cm এবং ভার্নিয়ার সমপাতন 6। ভার্নিয়ার স্কেলের 20 ভাগ, প্রধান স্কেলের 19 ভাগের সমান। প্রধান স্কেলের ক্ষুদ্রতম এক ভাগের দৈর্ঘ্য 1 mm।</p>
+                <div class="reveal-item">
+                    <p>(ক) পিচ কী?</p>
+                    <p>(খ) ভার্নিয়ার ধুবক 0.01 cm বলতে কী বুঝায়?</p>
+                    <p>(গ) লোহার দণ্ডটির ব্যাসার্ধ নির্ণয় কর।</p>
+                    <p>(ঘ) দণ্ডটির দৈর্ঘ্য 10 cm হলে সেটি কত আয়তনের পানি অপসারিত করবে?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>১ম ধাপ: ভার্নিয়ার ধ্রুবক (VC) নির্ণয়</strong><br>
+                S = 1 mm, n = 20<br>
+                VC = S / n = 1 mm / 20 = 0.05 mm</p>
+
+                <p class="reveal-item"><strong>২য় ধাপ: ব্যাস (d) নির্ণয়</strong><br>
+                M = 4 cm = 40 mm, V = 6<br>
+                d = M + (V &times; VC)<br>
+                d = 40 mm + (6 &times; 0.05 mm)<br>
+                d = 40 mm + 0.3 mm = 40.3 mm</p>
+                
+                <p class="reveal-item"><strong>৩য় ধাপ: ব্যাসার্ধ (r) নির্ণয়</strong><br>
+                r = d / 2 = 40.3 mm / 2 = 20.15 mm</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> দণ্ডটির ব্যাসার্ধ 20.15 mm (বা 2.015 cm)।</h3>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(গ) হতে পাই,</strong> দণ্ডটির ব্যাসার্ধ, r = 2.015 cm</p>
+                <p class="reveal-item"><strong>দেওয়া আছে,</strong> দণ্ডটির দৈর্ঘ্য, h = 10 cm</p>
+                
+                <p class="reveal-item"><strong>দণ্ডটির আয়তন (V) নির্ণয়:</strong><br>
+                V = &pi;r&sup2;h<br>
+                V = 3.1416 &times; (2.015 cm)&sup2; &times; 10 cm<br>
+                V &approx; 127.55 cm&sup3;</p>
+                
+                <p class="reveal-item"><strong>সিদ্ধান্ত:</strong><br>
+                লোহার ঘনত্ব (প্রায় 7800 $kg/m^3$) পানির ঘনত্ব (1000 $kg/m^3$) থেকে বেশি। তাই দণ্ডটি পানিতে সম্পূর্ণ ডুবে যাবে।</p>
+                <p class="reveal-item">আর্কিমিডিসের সূত্রানুসারে, কোনো বস্তু পানিতে সম্পূর্ণ নিমজ্জিত হলে তার সম-আয়তনের পানি অপসারণ করে।</p>
+                
+                <h3 class="reveal-item"><strong>উত্তর:</strong> দণ্ডটি 127.55 cm&sup3; আয়তনের পানি অপসারিত করবে।</h3>
+            </div>
+        </div>
+
+        <div class="slide thank-you-slide">
+            <h1 class="slide-title">ধন্যবাদ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">প্রশ্নোত্তর পর্ব</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter" id="slideCounter"></div>
+    <div class="slide-jump">
+        <input type="number" id="slideJumpInput" placeholder="স্লাইড #" min="1">
+    </div>
+    <div class="nav-buttons">
+        <button id="prevBtn">পূর্ববর্তী</button>
+        <button id="nextBtn">পরবর্তী</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slideCounter');
+        let revealIndex = 0;
+
+        function showSlide(index) {
+            // Ensure index is within bounds
+            if (index >= totalSlides) {
+                index = 0;
+            } else if (index < 0) {
+                index = totalSlides - 1;
+            }
+            currentSlide = index;
+
+            // Remove 'active' class from all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Add 'active' class to the current slide
+            const activeSlide = slides[currentSlide];
+            activeSlide.classList.add('active');
+
+            // Reset reveal items for the new slide
+            revealIndex = 0;
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            revealItems.forEach(item => item.classList.remove('is-visible'));
+
+            // Update slide counter
+            slideCounter.textContent = `স্লাইড ${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function revealNext() {
+            const activeSlide = slides[currentSlide];
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            
+            if (revealIndex < revealItems.length) {
+                revealItems[revealIndex].classList.add('is-visible');
+                revealIndex++;
+                return true; // An item was revealed
+            }
+            return false; // No items left to reveal
+        }
+
+        function handleNext() {
+            if (!revealNext()) {
+                // If no items were revealed (or no items to reveal), go to next slide
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function handlePrev() {
+            showSlide(currentSlide - 1);
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', handleNext);
+        document.getElementById('prevBtn').addEventListener('click', handlePrev);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (event) => {
+            if (event.target.id === 'slideJumpInput') {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent default Enter behavior
+                    const targetSlide = parseInt(slideJumpInput.value);
+                    
+                    // Validate the input number
+                    if (!isNaN(targetSlide) && targetSlide >= 1 && targetSlide <= totalSlides) {
+                        showSlide(targetSlide - 1); // Jump to the slide (0-based index)
+                    } else {
+                        // Optionally provide feedback for invalid input
+                        slideJumpInput.style.borderColor = 'red';
+                        setTimeout(() => {
+                            slideJumpInput.style.borderColor = '#555';
+                        }, 1000);
+                    }
+                    slideJumpInput.value = ''; // Clear the input box after jump
+                    slideJumpInput.blur(); // Remove focus from input box
+                }
+                return; // Don't trigger next/prev if typing in input
+            }
+
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === ' ') {
+                event.preventDefault(); // Stop space from scrolling
+                handleNext();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                handlePrev();
+            }
+        });
+
+        // Initial call to show the first slide
+        showSlide(0);
+        
+        // Slide Jump Functionality
+        const slideJumpInput = document.getElementById('slideJumpInput');
+        slideJumpInput.max = totalSlides; // Set max value dynamically
+
+        // Clear red border on focus
+        slideJumpInput.addEventListener('focus', () => {
+             slideJumpInput.style.borderColor = '#555';
+        });
+    </script>
+
+</body>
+</html>

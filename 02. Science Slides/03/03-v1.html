@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বল</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #1E1E1E;
+            box-sizing: border-box;
+            padding: 50px 80px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border-left: 10px solid #03DAC6; /* Accent color */
+            overflow-y: auto; /* Add scroll for overflow content */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-title {
+            font-size: 3.0em; /* Slightly smaller to fit more content */
+            color: #03DAC6; /* Accent color */
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+        }
+
+        .slide-content {
+            font-size: 1.4em; /* Slightly smaller */
+            color: #CFD8DC;
+        }
+        
+        .slide-content h3 {
+            color: #BB86FC; /* Secondary accent */
+            font-size: 1.4em;
+        }
+
+        .slide-content ul {
+            list-style-type: square;
+            padding-left: 40px;
+        }
+
+        .slide-content li, .slide-content p {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        /* HTML Math Styling */
+        i.math-var { font-style: italic; }
+        sup.math-sup { font-size: 0.75em; vertical-align: super; }
+        sub.math-sub { font-size: 0.75em; vertical-align: sub; }
+
+        /* Image Styling */
+        .slide-content img {
+            max-width: 40%; /* Adjusted */
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+            float: right;
+            margin-left: 20px;
+        }
+        
+        /* Reveal items */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal-item.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* Special slide types */
+        .title-slide, .thank-you-slide {
+            background: linear-gradient(135deg, #2C3E50, #1a2a3a);
+            color: white;
+            align-items: center;
+            text-align: center;
+            border-left: 10px solid #BB86FC;
+        }
+        .title-slide .slide-title, .thank-you-slide .slide-title { font-size: 4.5em; color: white; border-bottom: none; }
+        .title-slide .slide-content, .thank-you-slide .slide-content { font-size: 1.8em; color: #ddd; }
+
+        .hook-slide {
+            align-items: center;
+            text-align: center;
+            background-color: #333;
+            border-left: 10px solid #FBC02D;
+        }
+        .hook-slide .slide-title { font-size: 2.8em; color: #FBC02D; }
+        .hook-slide .slide-content { font-size: 1.8em; }
+
+        .quiz-slide { border-left: 10px solid #E91E63; }
+        .quiz-slide .slide-title { color: #E91E63; }
+        .quiz-slide .quiz-option { font-size: 1.1em; margin: 8px 0; } /* Adjusted */
+        .quiz-slide .quiz-cq { font-size: 1.1em; background: #2a2a2a; padding: 15px; border-radius: 8px; border-left: 4px solid #E91E63; }
+        
+        .answer-slide { border-left: 10px solid #4CAF50; }
+        .answer-slide .slide-title { color: #4CAF50; }
+        .answer-slide .correct-answer {
+            background-color: #388E3C;
+            color: #FFFFFF;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+        .answer-slide .explanation {
+            font-size: 0.9em;
+            background: #2a2a2a;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        /* Navigation */
+        .nav-buttons { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+        .nav-buttons button { font-size: 1em; padding: 10px 20px; margin-left: 10px; background-color: #03DAC6; color: #121212; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        .nav-buttons button:hover { background-color: #018786; transform: scale(1.05); }
+        /* kj */
+        .slide-jump {
+            position: fixed;
+            bottom: 35px;
+            left: 150px; /* Adjust position as needed */
+            z-index: 1000;
+        }
+        .slide-jump input {
+            width: 80px;
+            padding: 8px 10px;
+            font-size: 1em;
+            background-color: #333;
+            color: #E0E0E0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            text-align: center;
+        }
+        /* Hide number input arrows */
+        .slide-jump input::-webkit-outer-spin-button,
+        .slide-jump input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        .slide-jump input[type=number] {
+          -moz-appearance: textfield; /* Firefox */
+        }
+        /* kj */
+        .slide-counter { position: fixed; bottom: 40px; left: 30px; font-size: 1.2em; color: #888; z-index: 1000; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <div class="slide title-slide active">
+            <h1 class="slide-title">বল</h1>
+            <div class="slide-content">
+                <p class="reveal-item">অধ্যায় ৩</p>
+                <p class="reveal-item">পদার্থবিজ্ঞান</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">আজকের মূল বিষয়</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">জড়তা ও ভরের ধারণা</li>
+                    <li class="reveal-item">বল ও বলের প্রকারভেদ (মৌলিক, স্পর্শ, অস্পর্শ)</li>
+                    <li class="reveal-item">সাম্য ও অসাম্য বল</li>
+                    <li class="reveal-item">নিউটনের গতিসূত্র (১ম, ২য়, ৩য়)</li>
+                    <li class="reveal-item">ভরবেগ ও ভরবেগের সংরক্ষণ সূত্র</li>
+                    <li class="reveal-item">মহাকর্ষ বল ও ঘর্ষণ বল</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">জড়তা (Inertia)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> বস্তু যে অবস্থায় আছে চিরকাল সে অবস্থায় থাকতে চাওয়ার যে প্রবণতা বা সে অবস্থা বজায় রাখতে চাওয়ার যে ধর্ম, তাকে জড়তা বলে।</li>
+                    <li class="reveal-item"><strong>ভর ও জড়তা:</strong> বস্তুর ভর হচ্ছে তার জড়তার পরিমাপ।</li>
+                    <li class="reveal-item">যার ভর বেশি, তার জড়তা বেশি (তাকে নড়ানো বেশি কঠিন)।</li>
+                    <li class="reveal-item">যার ভর কম, তার জড়তা কম (তাকে নড়ানো সহজ)।</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <h2 class="slide-title">জড়তার প্রকারভেদ</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>স্থিতি জড়তা:</strong> স্থির বস্তুর স্থির থাকতে চাওয়ার প্রবণতা।
+                        <ul>
+                            <li><strong>উদাহরণ:</strong> থেমে থাকা বাস হঠাৎ চলতে শুরু করলে যাত্রীরা পেছনের দিকে হেলে পড়ে। কারণ শরীরের উপরের অংশ স্থির থাকতে চায়।</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>গতি জড়তা:</strong> গতিশীল বস্তুর সমবেগে চলতে চাওয়ার প্রবণতা।
+                        <ul>
+                            <li><strong>উদাহরণ:</strong> চলন্ত বাস হঠাৎ ব্রেক করলে যাত্রীরা সামনের দিকে ঝুঁকে পড়েন। কারণ শরীরের উপরের অংশ গতিশীল থাকতে চায়।</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">বল (Force)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> যা কোনো স্থির বস্তুর উপর প্রযুক্ত হয়ে তাকে গতিশীল করে বা করতে চায়, অথবা কোনো গতিশীল বস্তুর উপর প্রযুক্ত হয়ে তার গতির পরিবর্তন করে বা করতে চায়, তাকে বল বলে।</li>
+                    <li class="reveal-item">এটি বস্তুর জড়তার অবস্থা পরিবর্তন করে।</li>
+                    <li class="reveal-item"><strong>বলের বৈশিষ্ট্য:</strong>
+                        <ul>
+                            <li>বলের দিক আছে (এটি একটি ভেক্টর রাশি)।</li>
+                            <li>বল জোড়ায় জোড়ায় ক্রিয়া করে (ক্রিয়া-প্রতিক্রিয়া)।</li>
+                            <li>বল বস্তুতে ত্বরণ সৃষ্টি করতে পারে।</li>
+                            <li>বল বস্তুর আকার বিকৃত করতে পারে।</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১। বস্তুর জড়তা পরিমাপ করা হয় কোনটির সাহায্যে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) বল</p>
+                    <p class="quiz-option">(খ) বেগ</p>
+                    <p class="quiz-option">(গ) ভর</p>
+                    <p class="quiz-option">(ঘ) ভরবেগ</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১</h2>
+            <div class="slide-content">
+                <h3>১। বস্তুর জড়তা পরিমাপ করা হয় কোনটির সাহায্যে?</h3>
+                <p class="quiz-option">(ক) বল</p>
+                <p class="quiz-option">(খ) বেগ</p>
+                <p class="quiz-option correct-answer">(গ) ভর</p>
+                <p class="quiz-option">(ঘ) ভরবেগ</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> ভর হচ্ছে পদার্থের জড়তার পরিমাপ। যে বস্তুর ভর বেশি, তার জড়তাও বেশি।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ২</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২। গাড়ির ব্রেক চাপলে যাত্রী সামনের দিকে ঝুঁকে পড়েন কেন?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) গতি জড়তার জন্য</p>
+                    <p class="quiz-option">(খ) স্থিতি জড়তার জন্য</p>
+                    <p class="quiz-option">(গ) মহাকর্ষ বলের জন্য</p>
+                    <p class="quiz-option">(ঘ) ঘর্ষণ বলের জন্য</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ২</h2>
+            <div class="slide-content">
+                <h3>২। গাড়ির ব্রেক চাপলে যাত্রী সামনের দিকে ঝুঁকে পড়েন কেন?</h3>
+                <p class="quiz-option correct-answer">(ক) গতি জড়তার জন্য</p>
+                <p class="quiz-option">(খ) স্থিতি জড়তার জন্য</p>
+                <p class="quiz-option">(গ) মহাকর্ষ বলের জন্য</p>
+                <p class="quiz-option">(ঘ) ঘর্ষণ বলের জন্য</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> বাস যখন চলন্ত থাকে, যাত্রীর শরীরও গতিশীল থাকে। ব্রেক করলে বাসের সাথে যাত্রীর শরীরের নিচের অংশ স্থির হয়, কিন্তু উপরের অংশ গতি জড়তার কারণে সামনে এগিয়ে যেতে চায়, তাই যাত্রী সামনের দিকে ঝুঁকে পড়েন।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">মৌলিক বল (Fundamental Forces)</h2>
+            <div class="slide-content">
+                <p class="reveal-item">যে সকল বল মূল বা অকৃত্রিম, অর্থাৎ অন্য কোনো বল থেকে উৎপন্ন হয় না, তাদের মৌলিক বল বলে।</p>
+                <p class="reveal-item">মৌলিক বল ৪ প্রকার:</p>
+                <ul>
+                    <li class="reveal-item"><strong>১. মহাকর্ষ বল:</strong> মহাবিশ্বের যেকোনো দুটি বস্তুর ভরের কারণে পারস্পরিক আকর্ষণ বল।</li>
+                    <li class="reveal-item"><strong>২. তাড়িতচৌম্বক বল:</strong> দুটি আহিত (Charged) কণার আকর্ষণ বা বিকর্ষণ বল।</li>
+                    <li class="reveal-item"><strong>৩. সবল নিউক্লিয় বল:</strong> পরমাণুর নিউক্লিয়াসে নিউক্লিয়নগুলোকে (প্রোটন ও নিউট্রন) একত্রে আবদ্ধ রাখে যে শক্তিশালী বল।</li>
+                    <li class="reveal-item"><strong>৪. দুর্বল নিউক্লিয় বল:</strong> যে স্বল্প পাল্লার বলের কারণে নিউক্লিয়াসের অস্থিতিশীলতা ও তেজস্ক্রিয়তা (যেমন বিটা ক্ষয়) ঘটে।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৩</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩। তেজস্ক্রিয় নিউক্লিয়াস থেকে বিটা (β) রশ্মি নিঃসরণের জন্য দায়ী কোন বল?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) মহাকর্ষ বল</p>
+                    <p class="quiz-option">(খ) তাড়িতচৌম্বক বল</p>
+                    <p class="quiz-option">(গ) সবল নিউক্লিয় বল</p>
+                    <p class="quiz-option">(ঘ) দুর্বল নিউক্লিয় বল</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৩</h2>
+            <div class="slide-content">
+                <h3>৩। তেজস্ক্রিয় নিউক্লিয়াস থেকে বিটা (β) রশ্মি নিঃসরণের জন্য দায়ী কোন বল?</h3>
+                <p class="quiz-option">(ক) মহাকর্ষ বল</p>
+                <p class="quiz-option">(খ) তাড়িতচৌম্বক বল</p>
+                <p class="quiz-option">(গ) সবল নিউক্লিয় বল</p>
+                <p class="quiz-option correct-answer">(ঘ) দুর্বল নিউক্লিয় বল</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> তেজস্ক্রিয় নিউক্লিয়াস থেকে যে বিটা রশ্মি বা ইলেকট্রন বের হয়, সেটার কারণ হলো দুর্বল নিউক্লিয় বল।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">স্পর্শ ও অস্পর্শ বল</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>স্পর্শ বল (Contact Force):</strong> যে বল সৃষ্টির জন্য দুটি বস্তুর প্রত্যক্ষ সংস্পর্শের প্রয়োজন হয়।
+                        <ul>
+                            <li>উদাহরণ: ঘর্ষণ বল, টান বল, সংঘর্ষের সময় সৃষ্ট বল।</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>অস্পর্শ বল (Non-contact Force):</strong> দুটি বস্তুর প্রত্যক্ষ সংস্পর্শ ছাড়াই যে বল ক্রিয়া করে।
+                        <ul>
+                            <li>উদাহরণ: মহাকর্ষ বল, তাড়িতচৌম্বক বল।</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">সাম্য ও অসাম্য বল</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সাম্য বল (Balanced Force):</strong> কোনো বস্তুর উপর একাধিক বল ক্রিয়া করলে যদি বলের লব্ধি (Net Force) **শূন্য** হয়, তখন সেই বলগুলোকে সাম্য বল বলে।
+                        <ul>
+                            <li><strong>ফল:</strong> বস্তুর কোনো ত্বরণ হয় না। স্থির বস্তু স্থির থাকে এবং গতিশীল বস্তু সমবেগে চলতে থাকে। (যেমন: ঝুলন্ত বস্তু, টেবিলে রাখা বই)।</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>অসাম্য বল (Unbalanced Force):</strong> কোনো বস্তুর উপর একাধিক বল ক্রিয়া করলে যদি বলের লব্ধি **অশূন্য** হয় (মান বা দিক থাকে), তখন সেই বলগুলোকে অসাম্য বল বলে।
+                        <ul>
+                            <li><strong>ফল:</strong> বস্তুর ত্বরণ হয়। স্থির বস্তু গতিশীল হয় বা গতিশীল বস্তুর বেগের পরিবর্তন হয়।</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৪</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৪। কোন বলের লব্ধি শূন্য হয়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) অসাম্য বল</p>
+                    <p class="quiz-option">(খ) অস্পর্শ বল</p>
+                    <p class="quiz-option">(গ) সাম্য বল</p>
+                    <p class="quiz-option">(ঘ) স্পর্শ বল</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৪</h2>
+            <div class="slide-content">
+                <h3>৪। কোন বলের লব্ধি শূন্য হয়?</h3>
+                <p class="quiz-option">(ক) অসাম্য বল</p>
+                <p class="quiz-option">(খ) অস্পর্শ বল</p>
+                <p class="quiz-option correct-answer">(গ) সাম্য বল</p>
+                <p class="quiz-option">(ঘ) স্পর্শ বল</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> সাম্য বলের সংজ্ঞা অনুযায়ী, একাধিক বলের লব্ধি শূন্য হলে বস্তুটি সাম্যাবস্থায় থাকে।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">নিউটনের গতিসূত্র</h2>
+            <div class="slide-content">
+                <p class="reveal-item">স্যার আইজ্যাক নিউটন ১৬৮৬ সালে তাঁর "প্রিন্সিপিয়া ম্যাথমেটিকা" গ্রন্থে গতির তিনটি সূত্র প্রকাশ করেন।</p>
+                <ul>
+                    <li class="reveal-item"><strong>প্রথম সূত্র (জড়তার সূত্র):</strong> বাহ্যিক কোনো বল প্রয়োগ না করলে স্থির বস্তু স্থিরই থাকবে এবং গতিশীল বস্তু সুষম দ্রুতিতে সরল পথে চলতে থাকবে। (যদি F=0 হয়, তবে v=u)।</li>
+                    <li class="reveal-item"><strong>দ্বিতীয় সূত্র (বলের সূত্র):</strong> বস্তুর ভরবেগের পরিবর্তনের হার এর উপর প্রযুক্ত বলের সমানুপাতিক এবং বল যেদিকে ক্রিয়া করে বস্তুর ভরবেগের পরিবর্তনও সেদিকে ঘটে।</li>
+                    <li class="reveal-item"><strong>তৃতীয় সূত্র (ক্রিয়া-প্রতিক্রিয়া):</strong> প্রত্যেক ক্রিয়ারই একটি সমান ও বিপরীত প্রতিক্রিয়া আছে।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">নিউটনের দ্বিতীয় সূত্র: F=ma</h2>
+            <div class="slide-content">
+                <p class="reveal-item">m ভরের বস্তু u বেগে চলছিল। F বল t সময় ধরে প্রয়োগ করায় বেগ v হলো।</p>
+                <ul>
+                    <li class="reveal-item">আদি ভরবেগ = mu</li>
+                    <li class="reveal-item">শেষ ভরবেগ = mv</li>
+                    <li class="reveal-item">ভরবেগের পরিবর্তনের হার = <sup>(mv - mu)</sup> / <sub>t</sub> = <sup>m(v - u)</sup> / <sub>t</sub></li>
+                    <li class="reveal-item">যেহেতু ত্বরণ, a = <sup>(v - u)</sup> / <sub>t</sub>, তাই ভরবেগের পরিবর্তনের হার = ma</li>
+                    <li class="reveal-item">নিউটনের ২য় সূত্র মতে, F &prop; ma</li>
+                    <li class="reveal-item">বা, F = kma (এখানে k একটি সমানুপাতিক ধ্রুবক)</li>
+                    <li class="reveal-item">সংজ্ঞা অনুযায়ী, k=1 ধরা হলে, <strong>F = ma</strong> (বল = ভর &times; ত্বরণ)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <h2 class="slide-title">১ নিউটন (N) বল</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> যে পরিমাণ বল 1 kg ভরের কোনো বস্তুর উপর প্রযুক্ত হয়ে 1 $ms^{-2}$ ত্বরণ সৃষ্টি করে, তাকে 1 নিউটন (N) বল বলে।</li>
+                    <li class="reveal-item"><strong>মাত্রা:</strong> বলের মাত্রা = [ভর] &times; [ত্বরণ] = M &times; LT<sup class="math-sup">-2</sup> = <strong>[MLT<sup class="math-sup">-2</sup>]</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৫</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৫। নিউটনের কোন সূত্র থেকে বলের পরিমাপ করা যায়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) ১ম সূত্র</p>
+                    <p class="quiz-option">(খ) ২য় সূত্র</p>
+                    <p class="quiz-option">(গ) ৩য় সূত্র</p>
+                    <p class="quiz-option">(ঘ) উপরের সবগুলো</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৫</h2>
+            <div class="slide-content">
+                <h3>৫। নিউটনের কোন সূত্র থেকে বলের পরিমাপ করা যায়?</h3>
+                <p class="quiz-option">(ক) ১ম সূত্র (বলের সংজ্ঞা দেয়)</p>
+                <p class="quiz-option correct-answer">(খ) ২য় সূত্র</p>
+                <p class="quiz-option">(গ) ৩য় সূত্র (বলের প্রকৃতি বর্ণনা করে)</p>
+                <p class="quiz-option">(ঘ) উপরের সবগুলো</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> নিউটনের ২য় সূত্র থেকে আমরা বলের পরিমাপের সমীকরণ F=ma পাই।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৬</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৬। 30 kg ভরের একটি বস্তুর ওপর কত বল প্রয়োগ করলে এর ত্বরণ 2 $ms^{-2}$ হবে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 60 N</p>
+                    <p class="quiz-option">(খ) 58 N</p>
+                    <p class="quiz-option">(গ) 600 N</p>
+                    <p class="quiz-option">(ঘ) 20 N</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৬</h2>
+            <div class="slide-content">
+                <h3>৬। 30 kg ভরের একটি বস্তুর ওপর কত বল প্রয়োগ করলে এর ত্বরণ 2 $ms^{-2}$ হবে?</h3>
+                <p class="quiz-option correct-answer">(ক) 60 N</p>
+                <p class="quiz-option">(খ) 58 N</p>
+                <p class="quiz-option">(গ) 600 N</p>
+                <p class="quiz-option">(ঘ) 20 N</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> আমরা জানি, F = ma = (30 kg) &times; (2 $ms^{-2}$) = 60 N।</p>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ১</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">$5 ms^{-1}$ বেগে চলন্ত 20kg ভরের একটি বস্তুর উপর বল প্রয়োগ করলে এটি 5s -এ $30 ms^{-1}$ বেগ প্রাপ্ত হয়। বস্তুর উপর প্রযুক্ত বলের মান কত?</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                ভর, m = 20 kg<br>
+                আদিবেগ, u = 5 $ms^{-1}$<br>
+                শেষবেগ, v = 30 $ms^{-1}$<br>
+                সময়, t = 5 s</p>
+                
+                <p class="reveal-item"><strong>১ম ধাপ: ত্বরণ (a) নির্ণয়</strong><br>
+                a = (v - u) / t = (30 - 5) / 5 = 25 / 5 = 5 $ms^{-2}$</p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: বল (F) নির্ণয়</strong><br>
+                F = ma = 20 kg &times; 5 $ms^{-2}$ = 100 N</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> প্রযুক্ত বলের মান 100 N।</h3>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <h2 class="slide-title">২য় সূত্র থেকে ১ম সূত্রের প্রতিপাদন</h2>
+            <div class="slide-content">
+                <p class="reveal-item">নিউটনের ২য় সূত্র থেকে আমরা জানি:</p>
+                <p class="reveal-item">F = m &times; (<sup>(v - u)</sup> / <sub>t</sub>)</p>
+                <p class="reveal-item">বা, Ft = m(v - u)</p>
+                <p class="reveal-item">এখন, যদি বাহ্যিক বল প্রয়োগ না করা হয়, অর্থাৎ <strong>F = 0</strong> হয়, তবে:</p>
+                <p class="reveal-item">0 = m(v - u)</p>
+                <p class="reveal-item">যেহেতু বস্তুর ভর m শূন্য হতে পারে না (m &ne; 0),</p>
+                <p class="reveal-item">সুতরাং, (v - u) = 0, বা <strong>v = u</strong></p>
+                <p class="reveal-item">এর অর্থ হলো, আদিবেগ ও শেষবেগ সমান। অর্থাৎ, বল প্রয়োগ না করলে স্থির বস্তু (u=0) স্থিরই (v=0) থাকবে, এবং গতিশীল বস্তু (u) সমবেগে (v=u) চলতে থাকবে। এটিই নিউটনের প্রথম সূত্র।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">নিউটনের তৃতীয় সূত্র (ব্যাখ্যা)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সূত্র:</strong> প্রত্যেক ক্রিয়ারই একটি সমান ও বিপরীত প্রতিক্রিয়া আছে। (F<sub class="math-sub">1</sub> = -F<sub class="math-sub">2</sub>)</li>
+                    <li class="reveal-item"><strong>গুরুত্বপূর্ণ দ্রষ্টব্য:</strong> ক্রিয়া ও প্রতিক্রিয়া বল দুটি **ভিন্ন ভিন্ন বস্তুর** উপর কাজ করে।</li>
+                    <li class="reveal-item">যদি A বস্তু B বস্তুর উপর $F_1$ বল (ক্রিয়া) প্রয়োগ করে, তবে B বস্তু A বস্তুর উপর $F_2$ বল (প্রতিক্রিয়া) প্রয়োগ করবে।</li>
+                    <li class="reveal-item">যেহেতু বল দুটি ভিন্ন বস্তুর উপর প্রযুক্ত হয়, তাই তারা একে অপরকে কাটাকাটি বা নিষ্ক্রিয় করতে পারে না।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৭</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৭। দুটি বস্তুর মধ্যে ক্রিয়া বল $F_1$ ও প্রতিক্রিয়া বল $F_2$ হলে নিচের কোন সম্পর্কটি সঠিক?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) $F_1 = F_2$</p>
+                    <p class="quiz-option">(খ) $-F_1 = -F_2$</p>
+                    <p class="quiz-option">(গ) $F_1 + F_2 = 0$</p>
+                    <p class="quiz-option">(ঘ) $F_1 > F_2$</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৭</h2>
+            <div class="slide-content">
+                <h3>৭। দুটি বস্তুর মধ্যে ক্রিয়া বল $F_1$ ও প্রতিক্রিয়া বল $F_2$ হলে নিচের কোন সম্পর্কটি সঠিক?</h3>
+                <p class="quiz-option">(ক) $F_1 = F_2$</p>
+                <p class="quiz-option">(খ) $-F_1 = -F_2$</p>
+                <p class="quiz-option correct-answer">(গ) $F_1 + F_2 = 0$</p>
+                <p class="quiz-option">(ঘ) $F_1 > F_2$</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> নিউটনের তৃতীয় সূত্রানুসারে, ক্রিয়া ও প্রতিক্রিয়া বল সমান ও বিপরীতমুখী। অর্থাৎ, $F_1 = -F_2$। পক্ষান্তর করলে $F_1 + F_2 = 0$ হয়।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ভরবেগ (Momentum)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> কোনো বস্তুর ভর ও বেগের গুণফলকে ভরবেগ বলে।</li>
+                    <li class="reveal-item"><strong>উপমা:</strong> একই বেগে চলন্ত একটি সাইকেল ও একটি ট্রাকের মধ্যে ট্রাকের ভরবেগ অনেক বেশি, কারণ এর ভর বেশি। তাই এর থামানোর ক্ষমতা বা আঘাত করার ক্ষমতাও বেশি।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> P = mv (ভরবেগ = ভর &times; বেগ)</li>
+                    <li class="reveal-item">এটি একটি **ভেক্টর** রাশি (এর দিক বেগের দিকে)।</li>
+                    <li class="reveal-item"><strong>একক:</strong> $kg \cdot ms^{-1}$</li>
+                    <li class="reveal-item"><strong>মাত্রা:</strong> [MLT<sup class="math-sup">-1</sup>]</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৮</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৮। ভরবেগের মাত্রা কোনটি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) $ML^2T^{-2}$ (কাজ)</p>
+                    <p class="quiz-option">(খ) $ML^2T^{-3}$ (ক্ষমতা)</p>
+                    <p class="quiz-option">(গ) $MLT^{-1}$</p>
+                    <p class="quiz-option">(ঘ) $MLT^{-2}$ (বল)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৮</h2>
+            <div class="slide-content">
+                <h3>৮। ভরবেগের মাত্রা কোনটি?</h3>
+                <p class="quiz-option">(ক) $ML^2T^{-2}$ (কাজ)</p>
+                <p class="quiz-option">(খ) $ML^2T^{-3}$ (ক্ষমতা)</p>
+                <p class="quiz-option correct-answer">(গ) $MLT^{-1}$</p>
+                <p class="quiz-option">(ঘ) $MLT^{-2}$ (বল)</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> ভরবেগ = ভর &times; বেগ। ভরের মাত্রা M এবং বেগের মাত্রা $LT^{-1}$। সুতরাং ভরবেগের মাত্রা $MLT^{-1}$।</p>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ২</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">200kg ভরের একটি গাড়ি স্থিরাবস্থা থেকে যাত্রা শুরু করে 2 $ms^{-2}$ ত্বরণে চলছে, যাত্রা শুরু করার 6s পরে ভরবেগ কত?</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                ভর, m = 200 kg<br>
+                আদিবেগ (স্থিরাবস্থা), u = 0<br>
+                ত্বরণ, a = 2 $ms^{-2}$<br>
+                সময়, t = 6 s</p>
+                
+                <p class="reveal-item"><strong>১ম ধাপ: 6s পর বেগ (v) নির্ণয়</strong><br>
+                v = u + at = 0 + (2 &times; 6) = 12 $ms^{-1}$</p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: ভরবেগ (P) নির্ণয়</strong><br>
+                P = mv = 200 kg &times; 12 $ms^{-1}$ = 2400 $kg \cdot ms^{-1}$</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> ভরবেগ 2400 $kg \cdot ms^{-1}$।</h3>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ভরবেগের সংরক্ষণ সূত্র</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সূত্র:</strong> "একাধিক বস্তুর মধ্যে শুধু ক্রিয়া-প্রতিক্রিয়া ছাড়া অন্য কোনো বল কাজ না করলে (অর্থাৎ বাহ্যিক বল শূন্য হলে), কোনো নির্দিষ্ট দিকে তাদের মোট ভরবেগের কোনো পরিবর্তন হয় না।"</li>
+                    <li class="reveal-item"><strong>ব্যাখ্যা:</strong> সংঘর্ষের আগের মোট ভরবেগ এবং সংঘর্ষের পরের মোট ভরবেগ সর্বদা সমান থাকে।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong><br>
+                    <h3 class="reveal-item">$m_1u_1 + m_2u_2 = m_1v_1 + m_2v_2$</h3></li>
+                    <li class="reveal-item"><strong>মিলিত বস্তুর ক্ষেত্রে:</strong> যদি বস্তু দুটি সংঘর্ষের পর মিলিত হয়ে V বেগে চলে, তবে:<br>
+                    <h3 class="reveal-item">$m_1u_1 + m_2u_2 = (m_1 + m_2)V$</h3></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <h2 class="slide-title">বলের ঘাত (Impulse)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> বল এবং বলের ক্রিয়াকালের (সময়) গুণফলকে বলের ঘাত বলে।</li>
+                    <li class="reveal-item"><strong>বলের ঘাত ও ভরবেগ:</strong> বলের ঘাত বস্তুর ভরবেগের পরিবর্তনের সমান।</li>
+                    <li class="reveal-item"><strong>প্রতিপাদন:</strong><br>
+                    আমরা জানি, F = <sup>(mv - mu)</sup> / <sub>t</sub><br>
+                    বা, <strong>Ft = mv - mu</strong><br>
+                    (বলের ঘাত = শেষ ভরবেগ - আদি ভরবেগ)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৩</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">80 kg ভরের একটি বস্তুর উপর 1050 N বল 0.1 s সময় ব্যাপী কাজ করে। বস্তুর ভরবেগের পরিবর্তন কত হবে?</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৩</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                বল, F = 1050 N<br>
+                সময়, t = 0.1 s</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong><br>
+                বলের ঘাত = ভরবেগের পরিবর্তন</p>
+                
+                <p class="reveal-item">ভরবেগের পরিবর্তন = F &times; t<br>
+                = 1050 N &times; 0.1 s<br>
+                = 105 $N \cdot s$ (বা 105 $kg \cdot ms^{-1}$)</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> ভরবেগের পরিবর্তন 105 $kg \cdot ms^{-1}$।</h3>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৪</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">700 kg ভরের একটি গতিশীল ট্রাক $20 ms^{-1}$ বেগে 1300 kg ভরের একটি স্থিতিশীল ট্রাককে ধাক্কা দেয়। ট্রাক দুটি মিলিত হয়ে সামনের দিকে চলতে থাকে। ট্রাক দুটির মিলিত বেগ নির্ণয় কর।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৪</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                ১ম গাড়ির ভর, $m_1$ = 700 kg<br>
+                ১ম গাড়ির আদিবেগ, $u_1$ = 20 $ms^{-1}$<br>
+                ২য় গাড়ির ভর, $m_2$ = 1300 kg<br>
+                ২য় গাড়ির আদিবেগ (স্থিতিশীল), $u_2$ = 0 $ms^{-1}$<br>
+                মিলিত বেগ, V = ?</p>
+                
+                <p class="reveal-item"><strong>ভরবেগের সংরক্ষণ সূত্রানুসারে,</strong><br>
+                $m_1u_1 + m_2u_2 = (m_1 + m_2)V$<br>
+                (700 &times; 20) + (1300 &times; 0) = (700 + 1300)V<br>
+                14000 + 0 = 2000V<br>
+                V = 14000 / 2000 = 7 $ms^{-1}$</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> মিলিত গাড়ির বেগ 7 $ms^{-1}$।</h3>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৯</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৯। বন্দুক থেকে গুলি ছুড়লে-</h3>
+                <p class="reveal-item">i. গুলি ও বন্দুকের ভরবেগ সমমুখী হয়।<br>
+                   ii. গুলি ও বন্দুকের ভরবেগ সমমানের হয়।<br>
+                   iii. বন্দুকের পশ্চাৎ বেগ গুলির তুলনায় কম হয়।</p>
+                <h3 class="reveal-item">নিচের কোনটি সঠিক?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) i ও ii</p>
+                    <p class="quiz-option">(খ) i ও iii</p>
+                    <p class="quiz-option">(গ) ii ও iii</p>
+                    <p class="quiz-option">(ঘ) i, ii ও iii</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৯</h2>
+            <div class="slide-content">
+                <h3>৯। বন্দুক থেকে গুলি ছুড়লে-</h3>
+                <p class="reveal-item">i. গুলি ও বন্দুকের ভরবেগ সমমুখী হয়। (ভুল, বিপরীতমুখী হয়)<br>
+                   ii. গুলি ও বন্দুকের ভরবেগ সমমানের হয়। (সঠিক)<br>
+                   iii. বন্দুকের পশ্চাৎ বেগ গুলির তুলনায় কম হয়। (সঠিক, কারণ বন্দুকের ভর বেশি)</p>
+                <p class="quiz-option">(ক) i ও ii</p>
+                <p class="quiz-option">(খ) i ও iii</p>
+                <p class="quiz-option correct-answer">(গ) ii ও iii</p>
+                <p class="quiz-option">(ঘ) i, ii ও iii</p>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৫</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">একটি বন্দুক থেকে 10g ভরের একটি গুলি $600 ms^{-1}$ বেগে নির্গত হওয়ার সময় বন্দুকটি $2 ms^{-1}$ বেগে পিছনে ধাক্কা দেয়। বন্দুকটির ভর নির্ণয় কর।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৫</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                গুলির ভর, $m_1$ = 10 g = 0.01 kg<br>
+                গুলির শেষবেগ, $v_1$ = 600 $ms^{-1}$<br>
+                বন্দুকের ভর, $m_2$ = ?<br>
+                বন্দুকের পশ্চাৎবেগ, $v_2$ = -2 $ms^{-1}$ (বিপরীত দিক)<br>
+                আদিবেগ (উভয়ের), $u_1 = u_2 = 0$</p>
+                
+                <p class="reveal-item"><strong>ভরবেগের সংরক্ষণ সূত্রানুসারে,</strong><br>
+                $m_1u_1 + m_2u_2 = m_1v_1 + m_2v_2$<br>
+                0 + 0 = (0.01 &times; 600) + ($m_2$ &times; -2)<br>
+                0 = 6 - 2$m_2$<br>
+                2$m_2$ = 6<br>
+                $m_2$ = 3 kg</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> বন্দুকের ভর 3 kg।</h3>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <h2 class="slide-title">মহাকর্ষ বল (Gravitation)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> মহাবিশ্বের প্রতিটি বস্তুকণা একে অপরকে নিজ দিকে আকর্ষণ করে। এই আকর্ষণ বলের মান বস্তু কণাদ্বয়ের ভরের গুণফলের সমানুপাতিক এবং এদের দূরত্বের বর্গের ব্যস্তানুপাতিক।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">F</i> = G <sup>(<i class="math-var">m</i><sub class="math-sub">1</sub><i class="math-var">m</i><sub class="math-sub">2</sub>)</sup> / <sub><i class="math-var">r</i>&sup2;</sub></li>
+                    <li class="reveal-item"><strong>মহাকর্ষীয় ধ্রুবক (G):</strong> G = 6.673 &times; 10<sup class="math-sup">-11</sup> $N \cdot m^2 kg^{-2}$।</li>
+                    <li class="reveal-item"><strong>অভিকর্ষজ ত্বরণ (g):</strong> পৃথিবীর মহাকর্ষ বলের কারণে যে ত্বরণ হয়। $g = GM/R^2$ (যেখানে M পৃথিবীর ভর, R পৃথিবীর ব্যাসার্ধ)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১০</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১০। কোনো বস্তুর ওজন কোথায় সবচেয়ে বেশি হবে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) বিষুব অঞ্চলে</p>
+                    <p class="quiz-option">(খ) মেরু অঞ্চলে</p>
+                    <p class="quiz-option">(গ) সমুদ্র সমতলে</p>
+                    <p class="quiz-option">(ঘ) ভূ-কেন্দ্রে</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১০</h2>
+            <div class="slide-content">
+                <h3>১০। কোনো বস্তুর ওজন কোথায় সবচেয়ে বেশি হবে?</h3>
+                <p class="quiz-option">(ক) বিষুব অঞ্চলে</p>
+                <p class="quiz-option correct-answer">(খ) মেরু অঞ্চলে</p>
+                <p class="quiz-option">(গ) সমুদ্র সমতলে</p>
+                <p class="quiz-option">(ঘ) ভূ-কেন্দ্রে (শূন্য হয়)</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> বস্তুর ওজন ($W=mg$) g-এর উপর নির্ভরশীল। মেরু অঞ্চলে পৃথিবীর ব্যাসার্ধ (R) সবচেয়ে কম, তাই $g = GM/R^2$ অনুসারে g-এর মান ও ওজন সবচেয়ে বেশি।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৬</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">দুটি গোলকের ভর যথাক্রমে 35 kg ও 20kg। তাদের কেন্দ্রদ্বয়ের মধ্যবর্তী দূরত্ব 0.2m হলে পারস্পরিক আকর্ষণ বল (F) কত?</p>
+                <p class="quiz-cq reveal-item">(G = 6.673 &times; 10<sup class="math-sup">-11</sup> $N \cdot m^2 kg^{-2}$)</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৬</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                $m_1$ = 35 kg, $m_2$ = 20 kg<br>
+                দূরত্ব, r = 0.2 m<br>
+                G = 6.673 &times; 10<sup class="math-sup">-11</sup> $N \cdot m^2 kg^{-2}$</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong> F = G <sup>(<i class="math-var">m</i><sub class="math-sub">1</sub><i class="math-var">m</i><sub class="math-sub">2</sub>)</sup> / <sub><i class="math-var">r</i>&sup2;</sub></p>
+                
+                <p class="reveal-item">F = (6.673 &times; 10<sup class="math-sup">-11</sup> &times; 35 &times; 20) / (0.2)&sup2;</p>
+                <p class="reveal-item">F = (4.6711 &times; 10<sup class="math-sup">-8</sup>) / 0.04</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> F &approx; 1.168 &times; 10<sup class="math-sup">-6</sup> N।</h3>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ঘর্ষণ বল (Friction)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> একটি বস্তু যখন অন্য একটি বস্তুর সংস্পর্শে থেকে চলতে চেষ্টা করে বা চলতে থাকে, তখন বস্তুদ্বয়ের স্পর্শতলে গতির বিরুদ্ধে যে বাধার উৎপত্তি হয়, তাকে ঘর্ষণ বলে। এই বাধাদানকারী বলই ঘর্ষণ বল।</li>
+                    <li class="reveal-item"><strong>কারণ:</strong> কোনো তলই আপাতদৃষ্টিতে মসৃণ মনে হলেও অণুবীক্ষণিক পর্যায়ে উঁচু-নিচু বা খাঁজকাটা থাকে। এই খাঁজগুলো পরস্পর আটকে গিয়ে গতিকে বাধা দেয়।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ঘর্ষণের প্রকারভেদ</h2>
+            <div class="slide-content">
+                <p class="reveal-item">ঘর্ষণ প্রধানত চার প্রকার:</p>
+                <ol>
+                    <li class="reveal-item"><strong>স্থিতি ঘর্ষণ (Static):</strong> একটি বস্তু অপরটির সাপেক্ষে গতিশীল না হলে যে ঘর্ষণ। (এর কারণেই আমরা হাঁটতে পারি)।</li>
+                    <li class="reveal-item"><strong>গতি ঘর্ষণ (Sliding/Kinetic):</strong> একটি বস্তু যখন অন্য বস্তুর উপর দিয়ে পিছলিয়ে বা ঘষে চলে। (ব্রেক কষা গাড়ি পিছলে যাওয়া)।</li>
+                    <li class="reveal-item"><strong>আবর্ত ঘর্ষণ (Rolling):</strong> একটি বস্তু যখন অপর তলের উপর দিয়ে গড়িয়ে চলে। (সাইকেলের চাকার গতি)।</li>
+                    <li class="reveal-item"><strong>প্রবাহী ঘর্ষণ (Fluid):</strong> কোনো বস্তু তরল বা বায়বীয় পদার্থের (প্রবাহী) মধ্য দিয়ে গতিশীল থাকলে যে ঘর্ষণ। (প্যারাসুটের অবতরণ)।</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১১</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১১। সাইকেলের চাকার গতি কোন ধরনের ঘর্ষণের উদাহরণ?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) স্থিতি ঘর্ষণ</p>
+                    <p class="quiz-option">(খ) বিসর্প ঘর্ষণ (গতি ঘর্ষণ)</p>
+                    <p class="quiz-option">(গ) আবর্ত ঘর্ষণ</p>
+                    <p class="quiz-option">(ঘ) প্রবাহী ঘর্ষণ</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১১</h2>
+            <div class="slide-content">
+                <h3>১১। সাইকেলের চাকার গতি কোন ধরনের ঘর্ষণের উদাহরণ?</h3>
+                <p class="quiz-option">(ক) স্থিতি ঘর্ষণ</p>
+                <p class="quiz-option">(খ) বিসর্প ঘর্ষণ (গতি ঘর্ষণ)</p>
+                <p class="quiz-option correct-answer">(গ) আবর্ত ঘর্ষণ</p>
+                <p class="quiz-option">(ঘ) প্রবাহী ঘর্ষণ</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> একটি তলের উপর যখন অন্য একটি বস্তু গড়িয়ে বা ঘুরতে চলে, তখন তাকে আবর্ত ঘর্ষণ বলে।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১২</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১২। প্যারাসুটের মাধ্যমে আরোহীকে নিরাপদ অবতরণে সাহায্য করে কোনটি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) স্থিতি ঘর্ষণ</p>
+                    <p class="quiz-option">(খ) বিসর্প ঘর্ষণ</p>
+                    <p class="quiz-option">(গ) আবর্ত ঘর্ষণ</p>
+                    <p class="quiz-option">(ঘ) প্রবাহী ঘর্ষণ</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১২</h2>
+            <div class="slide-content">
+                <h3>১২। প্যারাসুটের মাধ্যমে আরোহীকে নিরাপদ অবতরণে সাহায্য করে কোনটি?</h3>
+                <p class="quiz-option">(ক) স্থিতি ঘর্ষণ</p>
+                <p class="quiz-option">(খ) বিসর্প ঘর্ষণ</p>
+                <p class="quiz-option">(গ) আবর্ত ঘর্ষণ</p>
+                <p class="quiz-option correct-answer">(ঘ) প্রবাহী ঘর্ষণ</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> প্যারাসুট বায়ুর বাধাকে (যা এক প্রকার প্রবাহী ঘর্ষণ) কাজে লাগিয়ে পতনের গতি হ্রাস করে।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ঘর্ষণ বাড়ানো ও কমানো</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>ঘর্ষণ কমানোর উপায়:</strong></p>
+                <ul>
+                    <li class="reveal-item">পৃষ্ঠকে মসৃণ করা।</li>
+                    <li class="reveal-item">পিচ্ছিলকারী পদার্থ (তেল, গ্রিজ) বা লুব্রিকেন্ট ব্যবহার করা।</li>
+                    <li class="reveal-item">চাকা বা বল বিয়ারিং ব্যবহার করা (গতি ঘর্ষণকে আবর্ত ঘর্ষণে রূপান্তর)।</li>
+                    <li class="reveal-item">স্ট্রিমলাইন (Streamline) বা সুষম আকৃতি (গাড়ি বা বিমানের)।</li>
+                </ul>
+                <p class="reveal-item"><strong>ঘর্ষণ বাড়ানোর উপায়:</strong></p>
+                <ul>
+                    <li class="reveal-item">তলকে অমসৃণ বা খসখসে করা।</li>
+                    <li class="reveal-item">দুটি তলের মাঝে খাঁজ কাটা (যেমন: টায়ার)।</li>
+                    <li class="reveal-item">তলগুলোকে জোরে চেপে ধরা (যেমন: ব্রেক)।</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <h2 class="slide-title">ঘর্ষণ: একটি প্রয়োজনীয় উপদ্রব</h2>
+            <div class="slide-content">
+                <p class="reveal-item">ঘর্ষণ আমাদের অনেক ক্ষতি করে, যেমন যন্ত্রাংশ ক্ষয় হয়, শক্তি তাপে রূপান্তরিত হয়ে অপচয় হয়।</p>
+                <p class="reveal-item">কিন্তু ঘর্ষণ ছাড়া আমরা চলতে পারতাম না:</p>
+                <ul>
+                    <li class="reveal-item">ঘর্ষণের কারণেই আমরা রাস্তায় হাঁটতে পারি।</li>
+                    <li class="reveal-item">ঘর্ষণ আছে বলেই গাড়ির ব্রেক কাজ করে।</li>
+                    <li class="reveal-item">ঘর্ষণের জন্যই দেয়ালে পেরেক আটকানো যায়।</li>
+                </ul>
+                <p class="reveal-item">ঘর্ষণ উপকারী আবার অপকারীও, তাই একে "প্রয়োজনীয় উপদ্রব" (A Necessary Evil) বলা হয়।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (অনুশীলনী)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">(ক) সাম্য বল কাকে বলে?</h3>
+                <p class="quiz-cq reveal-item">(খ) বস্তুর ভর ধ্রুব হলেও ওজন ধ্রুব নয় কেন?</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (অনুশীলনী)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) সাম্য বল:</strong> কোনো বস্তুর উপর একাধিক বল ক্রিয়া করলে যদি বলের লব্ধি শূন্য হয়, তখন বলগুলোকে সাম্য বল বলে।</p>
+                <p class="reveal-item"><strong>(খ) ব্যাখ্যা:</strong> বস্তুর ভর (m) একটি ধ্রুব রাশি। কিন্তু বস্তুর ওজন (W = mg) অভিকর্ষজ ত্বরণ g-এর উপর নির্ভরশীল। পৃথিবীর ব্যাসার্ধ (R) সব জায়গায় সমান নয় (মেরু অঞ্চলে কম, বিষুব অঞ্চলে বেশি)। $g = GM/R^2$ হওয়ায় R-এর পরিবর্তনের সাথে g-এর মান পরিবর্তিত হয়। যেহেতু g ধ্রুব নয়, তাই বস্তুর ওজনও (W) ধ্রুব নয়।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ১</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">3.92N ওজনের একটি খেলনা গাড়ির উপর বল প্রয়োগ করায় এটি ঘর্ষণযুক্ত মেঝেতে 0.5 $ms^{-2}$ ত্বরণে চলতে শুরু করে। ঘর্ষণ বল 0.5N।</p>
+                <div class="reveal-item">
+                    <p>(ক) অভিকর্ষজ ত্বরণ কাকে বলে?</p>
+                    <p>(খ) পৃথিবীর কেন্দ্রে বস্তুর ওজন শূন্য কেন?</p>
+                    <p>(গ) গাড়ীর উপর প্রযুক্ত বলের মান কত?</p>
+                    <p>(ঘ) ঘর্ষণযুক্ত ও ঘর্ষণহীন অবস্থায় মেঝেতে ত্বরণের কি পরিবর্তন হবে? গাণিতিকভাবে মূল্যায়ন কর।</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                ওজন, W = 3.92 N<br>
+                ত্বরণ, a = 0.5 $ms^{-2}$<br>
+                ঘর্ষণ বল, $f_k$ = 0.5 N</p>
+                
+                <p class="reveal-item"><strong>১ম ধাপ: ভর (m) নির্ণয়</strong><br>
+                W = mg &rArr; m = W/g = 3.92 / 9.8 = 0.4 kg</p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: প্রযুক্ত বল (F) নির্ণয়</strong><br>
+                কার্যকর বল = প্রযুক্ত বল - ঘর্ষণ বল<br>
+                ma = F - $f_k$<br>
+                F = ma + $f_k$<br>
+                F = (0.4 &times; 0.5) + 0.5<br>
+                F = 0.2 + 0.5 = 0.7 N</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> গাড়ির উপর প্রযুক্ত বল 0.7 N।</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>ঘর্ষণযুক্ত অবস্থায় (দেওয়া আছে):</strong><br>
+                ত্বরণ, $a_1$ = 0.5 $ms^{-2}$</p>
+
+                <p class="reveal-item"><strong>ঘর্ষণহীন অবস্থায়:</strong><br>
+                (গ) হতে, প্রযুক্ত বল, F = 0.7 N<br>
+                ঘর্ষণ বল, $f_k$ = 0 N<br>
+                ভর, m = 0.4 kg</p>
+                
+                <p class="reveal-item"><strong>নতুন ত্বরণ (a') নির্ণয়:</strong><br>
+                F = ma' (যেহেতু ঘর্ষণ বল শূন্য)<br>
+                a' = F / m = 0.7 / 0.4 = 1.75 $ms^{-2}$</p>
+                
+                <p class="reveal-item"><strong>ত্বরণের পরিবর্তন:</strong><br>
+                &Delta;a = a' - $a_1$ = 1.75 - 0.5 = 1.25 $ms^{-2}$</p>
+
+                <h3 class="reveal-item"><strong>উত্তর:</strong> ঘর্ষণহীন অবস্থায় ত্বরণ 1.75 $ms^{-2}$ হবে, যা ঘর্ষণযুক্ত অবস্থার চেয়ে 1.25 $ms^{-2}$ বেশি।</h3>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ২</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">700kg ভরের একটি গতিশীল ট্রাক $20ms^{-1}$ বেগে 1300kg ভরের একটি স্থিতিশীল ট্রাককে ধাক্কা দেয়, এবং ট্রাক দুইটি মিলিত হয়ে সামনের দিকে চলতে থাকে।</p>
+                <div class="reveal-item">
+                    <p>(ক) জড়তা কী?</p>
+                    <p>(খ) গতির উপর ঘর্ষণের প্রভাব ব্যাখ্যা কর।</p>
+                    <p>(গ) ট্রাক দুইটির মিলিত বেগ নির্ণয় কর।</p>
+                    <p>(ঘ) ভরবেগের সংরক্ষণ সূত্র কীভাবে নিউটনের তৃতীয় সূত্রকে সমর্থন করে, গাণিতিক যুক্তিসহ মতামত দাও।</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                ১ম ট্রাকের ভর, $m_1$ = 700 kg<br>
+                ১ম ট্রাকের আদিবেগ, $u_1$ = 20 $ms^{-1}$<br>
+                ২য় ট্রাকের ভর, $m_2$ = 1300 kg<br>
+                ২য় ট্রাকের আদিবেগ (স্থিতিশীল), $u_2$ = 0 $ms^{-1}$<br>
+                মিলিত বেগ, V = ?</p>
+                
+                <p class="reveal-item"><strong>ভরবেগের সংরক্ষণ সূত্রানুসারে,</strong><br>
+                $m_1u_1 + m_2u_2 = (m_1 + m_2)V$<br>
+                (700 &times; 20) + (1300 &times; 0) = (700 + 1300)V<br>
+                14000 = 2000V<br>
+                V = 14000 / 2000 = 7 $ms^{-1}$</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> ট্রাক দুটির মিলিত বেগ 7 $ms^{-1}$।</h3>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item">ভরবেগের সংরক্ষণ সূত্রটি নিউটনের তৃতীয় সূত্র থেকেই প্রতিপাদন করা যায়।</p>
+                <p class="reveal-item">ধরি, সংঘর্ষের সময় $m_1$ ভরের বস্তু $m_2$-এর উপর $F_1$ (ক্রিয়া) বল এবং $m_2$ ভরের বস্তু $m_1$-এর উপর $F_2$ (প্রতিক্রিয়া) বল প্রয়োগ করে।</p>
+                <p class="reveal-item"><strong>নিউটনের ৩য় সূত্র মতে:</strong> $F_1 = -F_2$</p>
+                <p class="reveal-item"><strong>২য় সূত্র ($F=ma$) মতে:</strong><br>
+                $m_1a_1 = -m_2a_2$<br>
+                $m_1$ (<sup>($v_1 - u_1$)</sup> / <sub>t</sub>) = -$m_2$ (<sup>($v_2 - u_2$)</sup> / <sub>t</sub>)<br>
+                (উভয় পাশ থেকে t বাদ দিয়ে)<br>
+                $m_1v_1 - m_1u_1 = -m_2v_2 + m_2u_2$<br>
+                $m_1v_1 + m_2v_2 = m_1u_1 + m_2u_2$</p>
+                
+                <p class="reveal-item">অর্থাৎ, **শেষ ভরবেগ = আদি ভরবেগ**।<br>
+                সুতরাং, ভরবেগের সংরক্ষণ সূত্রটি নিউটনের তৃতীয় সূত্রকেই সমর্থন করে।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ৩</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">5g ভরের একটি বুলেট 3kg ভরের বন্দুক হতে $400ms^{-1}$ বেগে বের হয়ে একটি কাঠে 10mm প্রবেশ করে থেমে গেল।</p>
+                <div class="reveal-item">
+                    <p>(ক) পিছলানো ঘর্ষণ কী?</p>
+                    <p>(খ) সাম্য ও অসাম্য বলের মধ্যে দুটি পার্থক্য লিখ।</p>
+                    <p>(গ) বন্দুকের পশ্চাৎবেগ নির্ণয় কর।</p>
+                    <p>(ঘ) বাধা প্রদানকারী বলের মান এবং ঐ দূরত্ব অতিক্রম করতে বুলেটটির প্রয়োজনীয় সময় নিরূপণ কর।</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৩ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                গুলির ভর, $m_1$ = 5 g = 0.005 kg<br>
+                গুলির শেষবেগ, $v_1$ = 400 $ms^{-1}$<br>
+                বন্দুকের ভর, $m_2$ = 3 kg<br>
+                আদিবেগ (উভয়ের), $u_1 = u_2 = 0$</p>
+                
+                <p class="reveal-item"><strong>ভরবেগের সংরক্ষণ সূত্রানুসারে,</strong><br>
+                $m_1u_1 + m_2u_2 = m_1v_1 + m_2v_2$<br>
+                0 + 0 = (0.005 &times; 400) + (3 &times; $v_2$)<br>
+                0 = 2 + 3$v_2$<br>
+                $v_2$ = -2 / 3 &approx; -0.67 $ms^{-1}$</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> বন্দুকের পশ্চাৎবেগ 0.67 $ms^{-1}$।</h3>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৩ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>কাঠের মধ্যে প্রবেশ:</strong><br>
+                আদিবেগ, u = 400 $ms^{-1}$<br>
+                শেষবেগ, v = 0 (থেমে গেল)<br>
+                সরণ, s = 10 mm = 0.01 m</p>
+                
+                <p class="reveal-item"><strong>১ম ধাপ: মন্দন (a) নির্ণয়</strong><br>
+                $v^2 = u^2 + 2as$<br>
+                $0^2 = (400)^2 + 2 \times a \times 0.01$<br>
+                0 = 160000 + 0.02a<br>
+                a = -160000 / 0.02 = -8,000,000 $ms^{-2}$<br>
+                (বা, $a = -8 \times 10^6 ms^{-2}$)</p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: বাধাদানকারী বল (F) নির্ণয়</strong><br>
+                F = ma = (0.005 kg) &times; (-8 &times; 10<sup class="math-sup">6</sup> $ms^{-2}$) = -40,000 N</p>
+                
+                <p class="reveal-item"><strong>৩য় ধাপ: সময় (t) নির্ণয়</strong><br>
+                v = u + at &rArr; t = (v - u) / a<br>
+                t = (0 - 400) / (-8 &times; 10<sup class="math-sup">6</sup>) = 5 &times; 10<sup class="math-sup">-5</sup> s</p>
+                
+                <h3 class="reveal-item"><strong>উত্তর:</strong> বাধাদানকারী বল 40,000 N এবং সময় $5 \times 10^{-5}$ s।</h3>
+            </div>
+        </div>
+
+        <div class="slide thank-you-slide">
+            <h1 class="slide-title">ধন্যবাদ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">প্রশ্নোত্তর পর্ব</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter" id="slideCounter"></div>
+    <div class="slide-jump">
+        <input type="number" id="slideJumpInput" placeholder="স্লাইড #" min="1">
+    </div>
+    <div class="nav-buttons">
+        <button id="prevBtn">পূর্ববর্তী</button>
+        <button id="nextBtn">পরবর্তী</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slideCounter');
+        let revealIndex = 0;
+
+        function showSlide(index) {
+            // Ensure index is within bounds
+            if (index >= totalSlides) {
+                index = 0;
+            } else if (index < 0) {
+                index = totalSlides - 1;
+            }
+            currentSlide = index;
+
+            // Remove 'active' class from all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Add 'active' class to the current slide
+            const activeSlide = slides[currentSlide];
+            activeSlide.classList.add('active');
+
+            // Reset reveal items for the new slide
+            revealIndex = 0;
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            revealItems.forEach(item => item.classList.remove('is-visible'));
+
+            // Update slide counter
+            slideCounter.textContent = `স্লাইড ${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function revealNext() {
+            const activeSlide = slides[currentSlide];
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            
+            if (revealIndex < revealItems.length) {
+                revealItems[revealIndex].classList.add('is-visible');
+                revealIndex++;
+                return true; // An item was revealed
+            }
+            return false; // No items left to reveal
+        }
+
+        function handleNext() {
+            if (!revealNext()) {
+                // If no items were revealed (or no items to reveal), go to next slide
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function handlePrev() {
+            showSlide(currentSlide - 1);
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', handleNext);
+        document.getElementById('prevBtn').addEventListener('click', handlePrev);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (event) => {
+            if (event.target.id === 'slideJumpInput') {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent default Enter behavior
+                    const targetSlide = parseInt(slideJumpInput.value);
+                    
+                    // Validate the input number
+                    if (!isNaN(targetSlide) && targetSlide >= 1 && targetSlide <= totalSlides) {
+                        showSlide(targetSlide - 1); // Jump to the slide (0-based index)
+                    } else {
+                        // Optionally provide feedback for invalid input
+                        slideJumpInput.style.borderColor = 'red';
+                        setTimeout(() => {
+                            slideJumpInput.style.borderColor = '#555';
+                        }, 1000);
+                    }
+                    slideJumpInput.value = ''; // Clear the input box after jump
+                    slideJumpInput.blur(); // Remove focus from input box
+                }
+                return; // Don't trigger next/prev if typing in input
+            }
+
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === ' ') {
+                event.preventDefault(); // Stop space from scrolling
+                handleNext();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                handlePrev();
+            }
+        });
+
+        // Initial call to show the first slide
+        showSlide(0);
+        
+        // Slide Jump Functionality
+        const slideJumpInput = document.getElementById('slideJumpInput');
+        slideJumpInput.max = totalSlides; // Set max value dynamically
+
+        // Clear red border on focus
+        slideJumpInput.addEventListener('focus', () => {
+             slideJumpInput.style.borderColor = '#555';
+        });
+    </script>
+
+</body>
+</html>

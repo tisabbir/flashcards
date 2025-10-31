@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>স্থির বিদ্যুৎ</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #1E1E1E;
+            box-sizing: border-box;
+            padding: 50px 80px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border-left: 10px solid #03DAC6; /* Accent color */
+            overflow-y: auto; /* Add scroll for overflow content */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-title {
+            font-size: 3.0em; /* Slightly smaller to fit more content */
+            color: #03DAC6; /* Accent color */
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+        }
+
+        .slide-content {
+            font-size: 1.4em; /* Slightly smaller */
+            color: #CFD8DC;
+        }
+        
+        .slide-content h3 {
+            color: #BB86FC; /* Secondary accent */
+            font-size: 1.4em;
+        }
+
+        .slide-content ul {
+            list-style-type: square;
+            padding-left: 40px;
+        }
+
+        .slide-content li, .slide-content p {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        /* HTML Math Styling */
+        i.math-var { font-style: italic; }
+        sup.math-sup { font-size: 0.75em; vertical-align: super; }
+        sub.math-sub { font-size: 0.75em; vertical-align: sub; }
+
+        /* Image Styling */
+        .slide-content img {
+            max-width: 40%; /* Adjusted */
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+            float: right;
+            margin-left: 20px;
+        }
+        
+        /* Reveal items */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal-item.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* Special slide types */
+        .title-slide, .thank-you-slide {
+            background: linear-gradient(135deg, #2C3E50, #1a2a3a);
+            color: white;
+            align-items: center;
+            text-align: center;
+            border-left: 10px solid #BB86FC;
+        }
+        .title-slide .slide-title, .thank-you-slide .slide-title { font-size: 4.5em; color: white; border-bottom: none; }
+        .title-slide .slide-content, .thank-you-slide .slide-content { font-size: 1.8em; color: #ddd; }
+
+        .hook-slide {
+            align-items: center;
+            text-align: center;
+            background-color: #333;
+            border-left: 10px solid #FBC02D;
+        }
+        .hook-slide .slide-title { font-size: 2.8em; color: #FBC02D; }
+        .hook-slide .slide-content { font-size: 1.8em; }
+
+        .quiz-slide { border-left: 10px solid #E91E63; }
+        .quiz-slide .slide-title { color: #E91E63; }
+        .quiz-slide .quiz-option { font-size: 1.1em; margin: 8px 0; } /* Adjusted */
+        .quiz-slide .quiz-cq { font-size: 1.1em; background: #2a2a2a; padding: 15px; border-radius: 8px; border-left: 4px solid #E91E63; }
+        
+        .answer-slide { border-left: 10px solid #4CAF50; }
+        .answer-slide .slide-title { color: #4CAF50; }
+        .answer-slide .correct-answer {
+            background-color: #388E3C;
+            color: #FFFFFF;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+        .answer-slide .explanation {
+            font-size: 0.9em;
+            background: #2a2a2a;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        /* Navigation */
+        .nav-buttons { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+        .nav-buttons button { font-size: 1em; padding: 10px 20px; margin-left: 10px; background-color: #03DAC6; color: #121212; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        .nav-buttons button:hover { background-color: #018786; transform: scale(1.05); }
+        /* kj */
+        .slide-jump {
+            position: fixed;
+            bottom: 35px;
+            left: 150px; /* Adjust position as needed */
+            z-index: 1000;
+        }
+        .slide-jump input {
+            width: 80px;
+            padding: 8px 10px;
+            font-size: 1em;
+            background-color: #333;
+            color: #E0E0E0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            text-align: center;
+        }
+        /* Hide number input arrows */
+        .slide-jump input::-webkit-outer-spin-button,
+        .slide-jump input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        .slide-jump input[type=number] {
+          -moz-appearance: textfield; /* Firefox */
+        }
+        /* kj */
+        .slide-counter { position: fixed; bottom: 40px; left: 30px; font-size: 1.2em; color: #888; z-index: 1000; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <div class="slide title-slide active">
+            <h1 class="slide-title">স্থির বিদ্যুৎ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">অধ্যায় ১০</p>
+                <p class="reveal-item">পদার্থবিজ্ঞান</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">আজকের মূল বিষয়</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">আধান বা চার্জ</li>
+                    <li class="reveal-item">ঘর্ষণে স্থির বিদ্যুৎ তৈরি</li>
+                    <li class="reveal-item">বৈদ্যুতিক আবেশ</li>
+                    <li class="reveal-item">ইলেক্ট্রোস্কোপ (তড়িৎবীক্ষণ যন্ত্র)</li>
+                    <li class="reveal-item">বৈদ্যুতিক বল (কুলম্বের সূত্র)</li>
+                    <li class="reveal-item">তড়িৎ ক্ষেত্র ও তড়িৎ বলরেখা</li>
+                    <li class="reveal-item">ইলেকট্রিক পটেনশিয়াল (তড়িৎ বিভব)</li>
+                    <li class="reveal-item">ধারক (Capacitor)</li>
+                    <li class="reveal-item">স্থির বিদ্যুতের ব্যবহার</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide hook-slide">
+            <h2 class="slide-title">একটা প্রশ্ন...</h2>
+            <div class="slide-content">
+                <p class="reveal-item">চিরুনি দিয়ে চুল আঁচড়ানোর পর সেই চিরুনি ছোট কাগজের টুকরাকে আকর্ষণ করে কেন?</p>
+                <p class="reveal-item">...অথবা শীতকালে কার্পেটে হাঁটার পর খাট বা ধাতব কিছু ধরলে শক লাগে কেন?</p>
+                <p class="reveal-item">এর কারণ হলো **স্থির বিদ্যুৎ**!</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">আধান বা চার্জ (Charge)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> পদার্থ সৃষ্টিকারী মৌলিক কণাগুলোর (যেমন ইলেকট্রন, প্রোটন) মৌলিক ও বৈশিষ্ট্যমূলক ধর্মই হচ্ছে আধান বা চার্জ।</li>
+                    <li class="reveal-item"><strong>আধান সৃষ্টি:</strong> কোনো পরমাণু থেকে ইলেকট্রন সরিয়ে নিলে তা **ধনাত্মক** আধানে আহিত হয়। পরমাণুতে ইলেকট্রন যুক্ত হলে তা **ঋণাত্মক** আধানে আহিত হয়।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">পরিবাহী ও অপরিবাহী</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>বিদ্যুৎ সুপরিবাহী (Conductor):</strong> যে পদার্থের মধ্য দিয়ে আধান বা ইলেকট্রন খুব সহজে চলাচল করতে পারে।
+                        <ul>
+                            <li>এদের শেষ কক্ষপথের ইলেকট্রন প্রায় মুক্ত থাকে।</li>
+                            <li>উদাহরণ: সোনা, তামা, রূপা, অ্যালুমিনিয়াম।</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>বিদ্যুৎ অপরিবাহী (Insulator):</strong> যে পদার্থের মধ্য দিয়ে আধান চলাচল করতে পারে না।
+                        <ul>
+                            <li>উদাহরণ: কাঠ, প্লাস্টিক, কাচ, রাবার।</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১। আধান কিসের মৌলিক ধর্ম?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) ইলেকট্রন</p>
+                    <p class="quiz-option">(খ) প্রোটন</p>
+                    <p class="quiz-option">(গ) ইলেকট্রন ও প্রোটনের</p>
+                    <p class="quiz-option">(ঘ) ইলেকট্রন ও নিউট্রনের</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১</h2>
+            <div class="slide-content">
+                <h3>১। আধান কিসের মৌলিক ধর্ম?</h3>
+                <p class="quiz-option">(ক) ইলেকট্রন</p>
+                <p class="quiz-option">(খ) প্রোটন</p>
+                <p class="quiz-option correct-answer">(গ) ইলেকট্রন ও প্রোটনের</p>
+                <p class="quiz-option">(ঘ) ইলেকট্রন ও নিউট্রনের</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> আধান বা চার্জ হলো পদার্থ সৃষ্টিকারী মৌলিক কণা (যেমন ইলেকট্রন ও প্রোটন) -এর একটি মৌলিক ধর্ম।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ঘর্ষণে স্থির বিদ্যুৎ তৈরি</h2>
+            <div class="slide-content">
+                <p class="reveal-item">দুটি বস্তুর ঘর্ষণের ফলে এক বস্তু থেকে অন্য বস্তুতে ইলেকট্রন স্থানান্তরিত হয়, ফলে স্থির বিদ্যুৎ তৈরি হয়।</p>
+                <ul>
+                    <li class="reveal-item"><strong>উদাহরণ ১:</strong> কাচদণ্ডকে সিল্ক দিয়ে ঘষলে, কাচ থেকে ইলেকট্রন সিল্কে চলে যায়।
+                        <ul>
+                            <li>কাচদণ্ড &rarr; ইলেকট্রন হারায় &rarr; **ধনাত্মক (+)** চার্জযুক্ত হয়।</li>
+                            <li>সিল্ক &rarr; ইলেকট্রন গ্রহণ করে &rarr; **ঋণাত্মক (-)** চার্জযুক্ত হয়।</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>উদাহরণ ২:</strong> প্লাস্টিককে ফ্লানেল (পশমি কাপড়) দিয়ে ঘষলে, ফ্লানেল থেকে ইলেকট্রন প্লাস্টিকে চলে আসে।
+                        <ul>
+                            <li>প্লাস্টিক &rarr; ইলেকট্রন গ্রহণ করে &rarr; **ঋণাত্মক (-)** চার্জযুক্ত হয়।</li>
+                            <li>ফ্লানেল &rarr; ইলেকট্রন হারায় &rarr; **ধনাত্মক (+)** চার্জযুক্ত হয়।</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ২</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২। একটি কাচদণ্ডকে রেশম দ্বারা ঘষলে কোনটি কোন আধানে আহিত হয়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) উভয়ই ধনাত্মক আধানে</p>
+                    <p class="quiz-option">(খ) উভয়ই ঋণাত্মক আধানে</p>
+                    <p class="quiz-option">(গ) রেশম ধনাত্মক এবং কাচদণ্ড ঋণাত্মক আধানে</p>
+                    <p class="quiz-option">(ঘ) রেশম ঋণাত্মক এবং কাচদণ্ড ধনাত্মক আধানে</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ২</h2>
+            <div class="slide-content">
+                <h3>২। একটি কাচদণ্ডকে রেশম দ্বারা ঘষলে কোনটি কোন আধানে আহিত হয়?</h3>
+                <p class="quiz-option">(ক) উভয়ই ধনাত্মক আধানে</p>
+                <p class="quiz-option">(খ) উভয়ই ঋণাত্মক আধানে</p>
+                <p class="quiz-option">(গ) রেশম ধনাত্মক এবং কাচদণ্ড ঋণাত্মক আধানে</p>
+                <p class="quiz-option correct-answer">(ঘ) রেশম ঋণাত্মক এবং কাচদণ্ড ধনাত্মক আধানে</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> সিল্ক বা রেশমের ইলেকট্রন আসক্তি কাচের চেয়ে বেশি। তাই কাচ থেকে ইলেকট্রন রেশমে চলে যায়। ফলে রেশম ঋণাত্মক ও কাচদণ্ড ধনাত্মক আধানে আহিত হয়।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">বৈদ্যুতিক আবেশ (Electrical Induction)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> একটি আহিত (চার্জিত) বস্তুর কাছে এনে **স্পর্শ না করে** শুধু তার উপস্থিতিতে কোনো অনাহিত (চার্জহীন) বস্তুকে আহিত করার পদ্ধতিকে বৈদ্যুতিক আবেশ বলে।</li>
+                    <li class="reveal-item"><strong>উদাহরণ (চিরুনি ও কাগজ):</strong>
+                        <ul>
+                            <li>ঋণাত্মক চার্জযুক্ত চিরুনি কাগজের কাছে আনলে কাগজের ইলেকট্রনগুলো বিকর্ষিত হয়ে দূরে সরে যায়।</li>
+                            <li>ফলে কাগজের যে প্রান্ত চিরুনির কাছে, সেই প্রান্তে **ধনাত্মক (+)** আধান আবিষ্ট হয়।</li>
+                            <li>এই বিপরীত আধানের আকর্ষণের কারণেই কাগজের টুকরা চিরুনির দিকে ছুটে যায়।</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (অনুশীলনী)</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">(ক) তড়িৎ আবেশ কাকে বলে?</p>
+                <p class="quiz-cq reveal-item">(খ) ঘর্ষণের ফলে অনাহিত বস্তু আহিত হওয়ার কারণ ব্যাখ্যা কর।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (অনুশীলনী)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) তড়িৎ আবেশ:</strong> একটি আহিত বস্তুর কাছে এনে স্পর্শ না করে শুধুমাত্র এর উপস্থিতিতে কোনো অনাহিত বস্তুকে আহিত করার পদ্ধতিকে তড়িৎ আবেশ বলে।</p>
+                <p class="reveal-item"><strong>(খ) ব্যাখ্যা:</strong> সকল পদার্থের ইলেকট্রন আসক্তি (ইলেকট্রন গ্রহণের প্রবণতা) সমান নয়। দুটি বস্তুকে পরস্পরের সাথে ঘষলে, যে বস্তুর ইলেকট্রন আসক্তি বেশি সে অন্য বস্তুটি থেকে ইলেকট্রন গ্রহণ করে ঋণাত্মক আধানে আহিত হয়। অপর বস্তুটি ইলেকট্রন হারানোয় ধনাত্মক আধানে আহিত হয়। এভাবেই ঘর্ষণের ফলে ইলেকট্রনের আদান-প্রদানের মাধ্যমে অনাহিত বস্তু আহিত হয়।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ইলেক্ট্রোস্কোপ (তড়িৎবীক্ষণ যন্ত্র)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> যে যন্ত্রের সাহায্যে কোনো বস্তুতে আধানের **অস্তিত্ব** ও **প্রকৃতি** (ধনাত্মক না ঋণাত্মক) নির্ণয় করা যায়, তাকে তড়িৎবীক্ষণ যন্ত্র বলে।</li>
+                    <li class="reveal-item"><strong>গঠন:</strong> একটি ধাতব দণ্ডের উপরে ধাতব চাকতি এবং নিচে দুটি হালকা সোনার (বা অ্যালুমিনিয়ামের) পাত থাকে। এটি কাঁচের বোতলে আবদ্ধ থাকে।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ইলেক্ট্রোস্কোপের কার্যপদ্ধতি</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>আধানের অস্তিত্ব নির্ণয় (আবেশ দ্বারা):</strong>
+                        <ul>
+                            <li>একটি চার্জিত বস্তু (যেমন, ঋণাত্মক চিরুনি) চাকতির কাছে আনলে (স্পর্শ না করে) আবেশের কারণে চাকতিতে ধনাত্মক ও পাতদ্বয়ে ঋণাত্মক চার্জ আবিষ্ট হয়।</li>
+                            <li>পাত দুটি সমধর্মী ঋণাত্মক চার্জ পাওয়ায় পরস্পরকে বিকর্ষণ করে **ফাঁক হয়ে যায়**। বস্তুটি অচার্জিত হলে পাতের কোনো পরিবর্তন হবে না।</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>আধানের প্রকৃতি নির্ণয়:</strong>
+                        <ul>
+                            <li>প্রথমে যন্ত্রটিকে একটি জানা চার্জে (যেমন ঋণাত্মক) আহিত করতে হবে (পাত দুটি ফাঁক থাকবে)।</li>
+                            <li>এখন অজানা বস্তুটি চাকতির কাছে আনলে:
+                                <ul>
+                                    <li>পাত দুটির ফাঁক **বেড়ে গেলে** বস্তুটি সমধর্মী (ঋণাত্মক)।</li>
+                                    <li>পাত দুটির ফাঁক **কমে গেলে** বস্তুটি বিপরীতধর্মী (ধনাত্মক)।</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (অনুশীলনী)</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">(ক) তড়িৎবীক্ষণ যন্ত্র কী?</p>
+                <p class="quiz-cq reveal-item">(খ) ঋণাত্মক আধানে আহিত তড়িতবীক্ষণ যন্ত্রের চাকতির সংস্পর্শে ঋণাত্মক আধানে আহিত বস্তু আনলে কী ঘটে- ব্যাখ্যা কর।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (অনুশীলনী)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) তড়িৎবীক্ষণ যন্ত্র:</strong> যে যন্ত্রের সাহায্যে কোনো বস্তুতে আধানের অস্তিত্ব ও প্রকৃতি নির্ণয় করা যায়, তাকে তড়িৎবীক্ষণ যন্ত্র বলে।</p>
+                <p class="reveal-item"><strong>(খ) ব্যাখ্যা:</strong> যন্ত্রটি আগে থেকেই ঋণাত্মক আধানে আহিত থাকায় এর পাত দুটি নির্দিষ্ট পরিমাণ ফাঁক হয়ে থাকে। এখন ঋণাত্মক আধানে আহিত বস্তুটি চাকতিতে স্পর্শ করালে বস্তুটি থেকে আরও অতিরিক্ত ঋণাত্মক আধান যন্ত্রটিতে (ও পাতদ্বয়ে) চলে যাবে। পাতের মোট ঋণাত্মক আধানের পরিমাণ বেড়ে যাওয়ায় এদের মধ্যকার বিকর্ষণ বলও বেড়ে যাবে। ফলে পাত দুটির মধ্যবর্তী ফাঁক আরও বৃদ্ধি পাবে।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">বৈদ্যুতিক বল: কুলম্বের সূত্র</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">দুটি বিন্দু আধানের মধ্যে আকর্ষণ বা বিকর্ষণ বলের মান আধানদ্বয়ের গুণফলের সমানুপাতিক এবং এদের মধ্যবর্তী দূরত্বের বর্গের ব্যস্তানুপাতিক।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">F</i> = <i class="math-var">K</i> (<sup>(<i class="math-var">q</i><sub class="math-sub">1</sub><i class="math-var">q</i><sub class="math-sub">2</sub>)</sup> / <sub><i class="math-var">r</i>&sup2;</sub>)</li>
+                    <li class="reveal-item">এখানে, <i class="math-var">q</i><sub class="math-sub">1</sub> ও <i class="math-var">q</i><sub class="math-sub">2</sub> হলো আধানের পরিমাণ (একক: কুলম্ব, C)।</li>
+                    <li class="reveal-item"><i class="math-var">r</i> হলো মধ্যবর্তী দূরত্ব (একক: m)।</li>
+                    <li class="reveal-item"><i class="math-var">F</i> হলো বল (একক: নিউটন, N)।</li>
+                    <li class="reveal-item"><i class="math-var">K</i> হলো কুলম্বের ধ্রুবক, K = 9 &times; 10<sup class="math-sup">9</sup> Nm&sup2;C<sup class="math-sup">-2</sup>।</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৯</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৯। দুটি আধানের মধ্যবর্তী দূরত্ব দ্বিগুণ করা হলে, এদের মধ্যবর্তী বলের কী ঘটবে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) দ্বিগুণ হবে</p>
+                    <p class="quiz-option">(খ) এক-চতুর্থাংশ হবে</p>
+                    <p class="quiz-option">(গ) চার গুণ হবে</p>
+                    <p class="quiz-option">(ঘ) অর্ধেক হবে</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৯</h2>
+            <div class="slide-content">
+                <h3>৯। দুটি আধানের মধ্যবর্তী দূরত্ব দ্বিগুণ করা হলে, এদের মধ্যবর্তী বলের কী ঘটবে?</h3>
+                <p class="quiz-option">(ক) দ্বিগুণ হবে</p>
+                <p class="quiz-option correct-answer">(খ) এক-চতুর্থাংশ হবে</p>
+                <p class="quiz-option">(গ) চার গুণ হবে</p>
+                <p class="quiz-option">(ঘ) অর্ধেক হবে</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> কুলম্বের সূত্র $F \propto 1/r^2$ অনুযায়ী বল দূরত্বের বর্গের ব্যস্তানুপাতিক। দূরত্ব দ্বিগুণ (2) করলে বল $1/(2^2)$ = $1/4$ গুণ বা এক-চতুর্থাংশ হবে।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৩</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">বায়ু মাধ্যমে 10 কুলম্বের ও 20 কুলম্বের দুটি বৈদ্যুতিক চার্জ পরস্পর হতে 50 সেন্টিমিটার দূরে আছে। এদের মধ্যবর্তী বলের মান নির্ণয় কর।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৩</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                $q_1$ = 10 C, $q_2$ = 20 C<br>
+                দূরত্ব, d = 50 cm = 0.5 m<br>
+                ধ্রুবক, k = 9 &times; 10<sup class="math-sup">9</sup> Nm&sup2;C<sup class="math-sup">-2</sup></p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong> F = k ($q_1q_2$ / $d^2$)</p>
+                <p class="reveal-item">F = (9 &times; 10<sup class="math-sup">9</sup> &times; 10 &times; 20) / (0.5)&sup2;</p>
+                <p class="reveal-item">F = (180 &times; 10<sup class="math-sup">9</sup>) / 0.25</p>
+                <p class="reveal-item">F = 720 &times; 10<sup class="math-sup">9</sup> N = 7.2 &times; 10<sup class="math-sup">11</sup> N</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> 7.2 &times; 10<sup class="math-sup">11</sup> N। (PDF এর উত্তরে $10^{12}$ আছে, যা $1800/0.25$ হলে হতো।)</h3>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তড়িৎ ক্ষেত্র (Electric Field)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> একটি আহিত বস্তুর চারপাশে যে অঞ্চল জুড়ে তার প্রভাব (আকর্ষণ বা বিকর্ষণ বল) বিদ্যমান থাকে, তাকে তড়িৎ ক্ষেত্র বলে।</li>
+                    <li class="reveal-item"><strong>তড়িৎ তীব্রতা বা প্রাবল্য (E):</strong> তড়িৎ ক্ষেত্রের কোনো বিন্দুতে একটি একক ধনাত্মক আধান (+1 C) স্থাপন করলে সেটি যে বল (F) অনুভব করে, তাকে ঐ বিন্দুর তড়িৎ তীব্রতা বলে।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> E = F / q</li>
+                    <li class="reveal-item">অথবা, Q চার্জ থেকে r দূরত্বে তীব্রতা, <strong>E = kQ / r&sup2;</strong></li>
+                    <li class="reveal-item"><strong>একক:</strong> N/C বা $NC^{-1}$</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১০</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১০। কোনো তড়িৎক্ষেত্রে 30 কুলম্বের একটি চার্জ স্থাপন করলে 15 নিউটন বল লাভ করে। তড়িৎ তীব্রতা কত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 450 $NC^{-1}$</p>
+                    <p class="quiz-option">(খ) 2 $NC^{-1}$</p>
+                    <p class="quiz-option">(গ) 0.5 $NC^{-1}$</p>
+                    <p class="quiz-option">(ঘ) 15 $NC^{-1}$</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১০</h2>
+            <div class="slide-content">
+                <h3>১০। কোনো তড়িৎক্ষেত্রে 30 কুলম্বের একটি চার্জ স্থাপন করলে 15 নিউটন বল লাভ করে। তড়িৎ তীব্রতা কত?</h3>
+                <p class="quiz-option">(ক) 450 $NC^{-1}$</p>
+                <p class="quiz-option">(খ) 2 $NC^{-1}$</p>
+                <p class="quiz-option correct-answer">(গ) 0.5 $NC^{-1}$</p>
+                <p class="quiz-option">(ঘ) 15 $NC^{-1}$</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> E = F / q = 15 N / 30 C = 0.5 $NC^{-1}$।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৪</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">বাতাসে 100 C চার্জ হতে 1m দূরে কোন বিন্দুতে বৈদ্যুতিক প্রাবল্য (তীব্রতা) নির্ণয় কর।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৪</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                আধান, Q = 100 C<br>
+                দূরত্ব, r = 1 m<br>
+                ধ্রুবক, k = 9 &times; 10<sup class="math-sup">9</sup> Nm&sup2;C<sup class="math-sup">-2</sup></p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong> E = kQ / r&sup2;</p>
+                <p class="reveal-item">E = (9 &times; 10<sup class="math-sup">9</sup> &times; 100) / (1)&sup2;</p>
+                <p class="reveal-item">E = 900 &times; 10<sup class="math-sup">9</sup> N/C = 9 &times; 10<sup class="math-sup">11</sup> N/C</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> তড়িৎ প্রাবল্য 9 &times; 10<sup class="math-sup">11</sup> $NC^{-1}$।</h3>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তড়িৎ বলরেখা</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">তড়িৎ ক্ষেত্রকে চিত্ররূপ দেয়ার জন্য যে কাল্পনিক রেখা ব্যবহার করা হয়।</li>
+                    <li class="reveal-item">একটি একক ধনাত্মক আধান তড়িৎ ক্ষেত্রে যে পথে পরিভ্রমণ করে, তাই হলো তড়িৎ বলরেখা।</li>
+                    <li class="reveal-item"><strong>বৈশিষ্ট্য:</strong>
+                        <ol>
+                            <li>ধনাত্মক (+) চার্জ থেকে বলরেখা বের হয় (বহির্মুখী)।</li>
+                            <li>ঋণাত্মক (-) চার্জে বলরেখা প্রবেশ করে (অন্তর্মুখী)।</li>
+                            <li>বলরেখাগুলো যত কাছাকাছি, তড়িৎ ক্ষেত্র তত বেশি শক্তিশালী।</li>
+                            <li>দুটি বলরেখা কখনো পরস্পরকে ছেদ করে না।</li>
+                        </ol>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তড়িৎ বিভব (Electric Potential)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> অসীম দূরত্ব থেকে প্রতি একক ধনাত্মক আধানকে (+1 C) তড়িৎ ক্ষেত্রের কোনো বিন্দুতে আনতে যে পরিমাণ কাজ (W) সম্পন্ন হয়, তাকে ঐ বিন্দুর তড়িৎ বিভব (V) বলে।</li>
+                    <li class="reveal-item"><strong>সূত্র:</strong> V = W / q</li>
+                    <li class="reveal-item"><strong>Q চার্জ থেকে r দূরত্বে বিভব:</strong> V = kQ / r</li>
+                    <li class="reveal-item"><strong>বিভব পার্থক্য:</strong> প্রতি একক আধানকে তড়িৎ ক্ষেত্রের এক বিন্দু থেকে অন্য বিন্দুতে স্থানান্তর করতে সম্পন্ন কাজ।</li>
+                    <li class="reveal-item">বিদ্যুৎ প্রবাহের দিক নির্ভর করে বিভব পার্থক্যের উপর, মোট বিভবের উপর নয়। বিদ্যুৎ সর্বদা উচ্চ বিভব থেকে নিম্ন বিভবের দিকে প্রবাহিত হয়।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৫</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">A ও B দুটি বস্তুর বিভব যথাক্রমে 500V ও 300V হলে B থেকে A তে +15 C আধান আনতে কৃতকাজের পরিমাণ নির্ণয় কর।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৫</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                A এর বিভব, $V_A$ = 500 V (উচ্চ বিভব)<br>
+                B এর বিভব, $V_B$ = 300 V (নিম্ন বিভব)<br>
+                আধান, q = +15 C</p>
+                
+                <p class="reveal-item"><strong>বিভব পার্থক্য,</strong> &Delta;V = $V_A - V_B$ = 500 - 300 = 200 V</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong> বিভব = কাজ / আধান (V = W / q)</p>
+                <p class="reveal-item">কৃতকাজ, W = q &times; &Delta;V<br>
+                W = 15 C &times; 200 V = 3000 J</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> 3000 J কাজ সম্পন্ন হবে।</h3>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৬</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">একটি বর্গের চার কোণায় Q, +2C, -4C, +5C চার্জ আছে। Q এর মান কত হলে কেন্দ্রে বিভব শূন্য হবে?</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৬</h2>
+            <div class="slide-content">
+                <p class="reveal-item">বর্গের কেন্দ্র থেকে প্রতিটি কোণার দূরত্ব (r) সমান।</p>
+                <p class="reveal-item">কেন্দ্রের মোট বিভব = $V_Q + V_2 + V_{-4} + V_5$</p>
+                <p class="reveal-item">$V_{total}$ = (kQ/r) + (k(2)/r) + (k(-4)/r) + (k(5)/r)</p>
+                <p class="reveal-item">$V_{total}$ = (k/r) [Q + 2 - 4 + 5] = (k/r) [Q + 3]</p>
+                
+                <p class="reveal-item"><strong>প্রশ্নমতে,</strong> কেন্দ্রে বিভব শূন্য ($V_{total}$ = 0)।</p>
+                <p class="reveal-item">(k/r) [Q + 3] = 0</p>
+                <p class="reveal-item">যেহেতু k/r শূন্য নয়, সুতরাং:</p>
+                <p class="reveal-item">Q + 3 = 0</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> Q = -3 C।</h3>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">ধারক (Capacitor)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> কাছাকাছি স্থাপিত দুটি পরিবাহকের মধ্যবর্তী স্থানে অপরিবাহী পদার্থ (ডাই-ইলেকট্রিক) রেখে চার্জ জমিয়ে শক্তি সঞ্চয় করে রাখার যান্ত্রিক কৌশলকে ধারক বলে।</li>
+                    <li class="reveal-item"><strong>ধারকত্ব (C):</strong> এটি চার্জ জমা রাখার ক্ষমতা। $C = Q / V$ (আধান / বিভব)।</li>
+                    <li class="reveal-item"><strong>একক:</strong> ফ্যারাডে (F)।</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <h2 class="slide-title">ধারকে সঞ্চিত শক্তি (U)</h2>
+            <div class="slide-content">
+                <p class="reveal-item">ধারকের দুটি পাতে চার্জ জমা হতে থাকলে পাত দুটির মাঝে একটি ইলেকট্রিক ফিল্ড তৈরি হয়, যার মধ্যে শক্তি সঞ্চিত থাকে।</p>
+                <p class="reveal-item"><strong>সঞ্চিত শক্তির সূত্র:</strong></p>
+                <ul>
+                    <li class="reveal-item"><i>U</i> = <sup>1</sup>/<sub>2</sub> <i>CV</i>&sup2;</li>
+                    <li class="reveal-item"><i>U</i> = <sup>1</sup>/<sub>2</sub> <i>QV</i></li>
+                    <li class="reveal-item"><i>U</i> = <sup>1</sup>/<sub>2</sub> (<i>Q</i>&sup2; / <i>C</i>)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ৭</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">2 mF (মিলিফ্যারাডে) এর ধারকে 10 C চার্জ জমা রাখা হলে এর ভেতর সঞ্চিত শক্তির পরিমাণ কতো?</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ৭</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                ধারকত্ব, C = 2 mF = 2 &times; 10<sup class="math-sup">-3</sup> F<br>
+                চার্জ, Q = 10 C<br>
+                <em>(নোট: PDF এর হিসাবে Q=20C ধরা হয়েছে, আমি Q=10C ব্যবহার করছি।)</em></p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong> W = <sup>1</sup>/<sub>2</sub> (Q&sup2; / C)</p>
+                <p class="reveal-item">W = <sup>1</sup>/<sub>2</sub> &times; ( (10)&sup2; / (2 &times; 10<sup class="math-sup">-3</sup>) )</p>
+                <p class="reveal-item">W = <sup>1</sup>/<sub>2</sub> &times; ( 100 / (2 &times; 10<sup class="math-sup">-3</sup>) )</p>
+                <p class="reveal-item">W = <sup>1</sup>/<sub>2</sub> &times; (50 &times; 10<sup class="math-sup">3</sup>) = 25 &times; 10<sup class="math-sup">3</sup> J</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> 25,000 J (বা 2.5 &times; 10<sup class="math-sup">4</sup> J)।</h3>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">স্থির বিদ্যুতের ব্যবহার</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>ফটোকপি মেশিন:</strong> আবেশের মাধ্যমে রোলারে চার্জ তৈরি করে সেই চার্জ অনুযায়ী কালি আকর্ষণ করে কাগজে ছাপ দেওয়া হয়।</li>
+                    <li class="reveal-item"><strong>স্থির বৈদ্যুতিক রঙ স্প্রে:</strong> রঙের কণাগুলোকে চার্জযুক্ত করা হয়। ফলে কণাগুলো পরস্পর বিকর্ষিত হয়ে মসৃণভাবে ছড়িয়ে পড়ে এবং বস্তুর পৃষ্ঠে দৃঢ়ভাবে আকর্ষিত হয়।</li>
+                    <li class="reveal-item"><strong>বজ্রপাত ও বজ্রনিরোধক:</strong> মেঘে মেঘে ঘর্ষণে স্থির বিদ্যুৎ জমে। উঁচু বিল্ডিংকে রক্ষা করার জন্য সুচালো ধাতব শলাকা (বজ্রনিরোধক) মাটির সাথে সংযুক্ত করা হয়, যা মেঘের চার্জকে নিরাপদে মাটিতে পৌঁছে দেয়।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ১</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">A বিন্দুতে +112 nC এবং B বিন্দুতে -7 nC মানের দুটি চার্জ পরস্পর হতে 600 cm (6 m) দূরে স্থাপন করা আছে।</p>
+                <div class="reveal-item">
+                    <p>(ক) তড়িৎ আবেশ কী?</p>
+                    <p>(খ) উঁচু বিল্ডিং এ বজ্র নিরোধক দণ্ড কেন ব্যবহার করা হয়?</p>
+                    <p>(গ) A বিন্দুর আধানের জন্য B বিন্দুতে তড়িৎ প্রাবল্য নির্ণয় কর।</p>
+                    <p>(ঘ) A ও B এর সংযোজক সরলরেখার কোন বিন্দুতে চার্জদ্বয়ের কারণে সৃষ্ট তড়িৎ তীব্রতা শূন্য হবে?</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                A বিন্দুর আধান, $q_A$ = +112 nC = +112 &times; 10<sup class="math-sup">-9</sup> C<br>
+                দূরত্ব, d = 6 m<br>
+                ধ্রুবক, C (k) = 9 &times; 10<sup class="math-sup">9</sup> Nm&sup2;C<sup class="math-sup">-2</sup></p>
+                
+                <p class="reveal-item"><strong>B বিন্দুতে $q_A$ এর জন্য প্রাবল্য (E):</strong><br>
+                E = C &times; ($q_A$ / $d^2$)<br>
+                E = (9 &times; 10<sup class="math-sup">9</sup> &times; 112 &times; 10<sup class="math-sup">-9</sup>) / (6)&sup2;<br>
+                E = 1008 / 36 = 28 $NC^{-1}$</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> B বিন্দুতে তড়িৎ প্রাবল্য 28 $NC^{-1}$।</h3>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item">দুটি চার্জ বিপরীতধর্মী হওয়ায়, তীব্রতা শূন্য হবে দুটি চার্জের বাইরে এবং ছোট চার্জটির (B) কাছে।</p>
+                <p class="reveal-item">ধরি, B বিন্দু থেকে x মিটার দূরত্বে C বিন্দুতে তীব্রতা শূন্য হবে।<br>
+                A থেকে C এর দূরত্ব = (6 + x) m<br>
+                B থেকে C এর দূরত্ব = x m</p>
+                
+                <p class="reveal-item"><strong>C বিন্দুতে $E_A = E_B$</strong><br>
+                k &times; ($q_A$ / $(6+x)^2$) = k &times; ($q_B$ / $x^2$)<br>
+                <sup>(112 &times; 10<sup class="math-sup">-9</sup>)</sup> / <sub>(6+x)&sup2;</sub> = <sup>(7 &times; 10<sup class="math-sup">-9</sup>)</sup> / <sub>x&sup2;</sub>  (তীব্রতার মানে চিহ্ন বসে না)<br>
+                112 / (6+x)&sup2; = 7 / x&sup2;<br>
+                16 / (6+x)&sup2; = 1 / x&sup2; (7 দিয়ে ভাগ করে)<br>
+                &radic;(16) / (6+x) = 1 / x (বর্গমূল করে)<br>
+                4 / (6+x) = 1 / x<br>
+                4x = 6 + x &rArr; 3x = 6 &rArr; x = 2 m</p>
+
+                <h3 class="reveal-item"><strong>উত্তর:</strong> B বিন্দু থেকে 2 m দূরে (এবং A থেকে 8 m দূরে) তড়িৎ তীব্রতা শূন্য হবে।</h3>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ২</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">100 C এবং 25 C আধানবিশিষ্ট 5 cm ব্যাসার্ধের দুটি গোলক পরস্পর থেকে 70 cm দূরে অবস্থিত।</p>
+                <div class="reveal-item">
+                    <p>(ক) তড়িৎ তীব্রতা কাকে বলে?</p>
+                    <p>(খ) আপেক্ষিক রোধ $100 \times 10^{-8} \Omega m$ বলতে কী বোঝায়?</p>
+                    <p>(গ) P ও Q এর মধ্যকার বল নির্ণয় কর।</p>
+                    <p>(ঘ) গোলকদ্বয়ের সংযোগ রেখার উপর 7C আধান স্থাপন করলে এটি কোনো বল অনুভব করে না- গাণিতিকভাবে বিশ্লেষণ কর।</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                $q_1$ = 100 C, $q_2$ = 25 C<br>
+                গোলকের ব্যাসার্ধ = 5 cm = 0.05 m<br>
+                গোলকের পৃষ্ঠের মধ্যবর্তী দূরত্ব = 70 cm = 0.7 m<br>
+                কেন্দ্রের মধ্যবর্তী দূরত্ব, r = 0.05 + 0.7 + 0.05 = 0.8 m</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong> F = k ($q_1q_2$ / $r^2$)</p>
+                <p class="reveal-item">F = (9 &times; 10<sup class="math-sup">9</sup> &times; 100 &times; 25) / (0.8)&sup2;</p>
+                <p class="reveal-item">F = (22500 &times; 10<sup class="math-sup">9</sup>) / 0.64</p>
+                <p class="reveal-item">F &approx; 35156 &times; 10<sup class="math-sup">9</sup> N &approx; 3.52 &times; 10<sup class="math-sup">13</sup> N</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> বিকর্ষণ বল 3.52 &times; 10<sup class="math-sup">13</sup> N।</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item">7C আধানটি বল অনুভব করবে না যদি ঐ বিন্দুতে লব্ধি তড়িৎ তীব্রতা শূন্য হয়।</p>
+                <p class="reveal-item">ধরি, 100 C (P) গোলক থেকে x cm দূরে বল শূন্য হবে।<br>
+                তাহলে 25 C (Q) গোলক থেকে দূরত্ব (80 - x) cm।</p>
+                
+                <p class="reveal-item"><strong>শর্তমতে, $E_P = E_Q$</strong><br>
+                k &times; ($q_1$ / $x^2$) = k &times; ($q_2$ / $(80-x)^2$)<br>
+                <sup>100</sup> / <sub>x&sup2;</sub> = <sup>25</sup> / <sub>(80-x)&sup2;</sub><br>
+                4 / x&sup2; = 1 / (80-x)&sup2;<br>
+                (বর্গমূল করে) 2 / x = 1 / (80 - x)<br>
+                2(80 - x) = x<br>
+                160 - 2x = x<br>
+                3x = 160<br>
+                x = 160 / 3 &approx; 53.33 cm</p>
+                
+                <h3 class="reveal-item"><strong>উত্তর:</strong> হ্যাঁ, P গোলকের কেন্দ্র থেকে 53.33 cm দূরে (এবং Q গোলকের কেন্দ্র থেকে 26.67 cm দূরে) 7C আধানটি স্থাপন করলে এটি কোনো বল অনুভব করবে না।</h3>
+            </div>
+        </div>
+
+        <div class="slide thank-you-slide">
+            <h1 class="slide-title">ধন্যবাদ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">প্রশ্নোত্তর পর্ব</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter" id="slideCounter"></div>
+    <div class="slide-jump">
+        <input type="number" id="slideJumpInput" placeholder="স্লাইড #" min="1">
+    </div>
+    <div class="nav-buttons">
+        <button id="prevBtn">পূর্ববর্তী</button>
+        <button id="nextBtn">পরবর্তী</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slideCounter');
+        let revealIndex = 0;
+
+        function showSlide(index) {
+            // Ensure index is within bounds
+            if (index >= totalSlides) {
+                index = 0;
+            } else if (index < 0) {
+                index = totalSlides - 1;
+            }
+            currentSlide = index;
+
+            // Remove 'active' class from all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Add 'active' class to the current slide
+            const activeSlide = slides[currentSlide];
+            activeSlide.classList.add('active');
+
+            // Reset reveal items for the new slide
+            revealIndex = 0;
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            revealItems.forEach(item => item.classList.remove('is-visible'));
+
+            // Update slide counter
+            slideCounter.textContent = `স্লাইড ${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function revealNext() {
+            const activeSlide = slides[currentSlide];
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            
+            if (revealIndex < revealItems.length) {
+                revealItems[revealIndex].classList.add('is-visible');
+                revealIndex++;
+                return true; // An item was revealed
+            }
+            return false; // No items left to reveal
+        }
+
+        function handleNext() {
+            if (!revealNext()) {
+                // If no items were revealed (or no items to reveal), go to next slide
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function handlePrev() {
+            showSlide(currentSlide - 1);
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', handleNext);
+        document.getElementById('prevBtn').addEventListener('click', handlePrev);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (event) => {
+            if (event.target.id === 'slideJumpInput') {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent default Enter behavior
+                    const targetSlide = parseInt(slideJumpInput.value);
+                    
+                    // Validate the input number
+                    if (!isNaN(targetSlide) && targetSlide >= 1 && targetSlide <= totalSlides) {
+                        showSlide(targetSlide - 1); // Jump to the slide (0-based index)
+                    } else {
+                        // Optionally provide feedback for invalid input
+                        slideJumpInput.style.borderColor = 'red';
+                        setTimeout(() => {
+                            slideJumpInput.style.borderColor = '#555';
+                        }, 1000);
+                    }
+                    slideJumpInput.value = ''; // Clear the input box after jump
+                    slideJumpInput.blur(); // Remove focus from input box
+                }
+                return; // Don't trigger next/prev if typing in input
+            }
+
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === ' ') {
+                event.preventDefault(); // Stop space from scrolling
+                handleNext();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                handlePrev();
+            }
+        });
+
+        // Initial call to show the first slide
+        showSlide(0);
+        
+        // Slide Jump Functionality
+        const slideJumpInput = document.getElementById('slideJumpInput');
+        slideJumpInput.max = totalSlides; // Set max value dynamically
+
+        // Clear red border on focus
+        slideJumpInput.addEventListener('focus', () => {
+             slideJumpInput.style.borderColor = '#555';
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পদার্থ বিজ্ঞান প্রি-টেস্ট (সেট-০১)</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #1E1E1E;
+            box-sizing: border-box;
+            padding: 50px 80px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border-left: 10px solid #03DAC6; /* Accent color */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-title {
+            font-size: 3.2em;
+            color: #03DAC6; /* Accent color */
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+
+        .slide-content {
+            font-size: 1.6em;
+            color: #CFD8DC;
+        }
+        
+        .slide-content h3 {
+            color: #BB86FC; /* Secondary accent */
+            font-size: 1.5em;
+        }
+
+        .slide-content ul {
+            list-style-type: square;
+            padding-left: 40px;
+        }
+
+        .slide-content li, .slide-content p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        /* HTML Math Styling */
+        sup, .math-sup { font-size: 0.75em; vertical-align: super; }
+        sub, .math-sub { font-size: 0.75em; vertical-align: sub; }
+
+        /* Reveal items */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal-item.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* Special slide types */
+        .title-slide, .thank-you-slide {
+            background: linear-gradient(135deg, #2C3E50, #1a2a3a);
+            color: white;
+            align-items: center;
+            text-align: center;
+            border-left: 10px solid #BB86FC;
+        }
+        .title-slide .slide-title, .thank-you-slide .slide-title { font-size: 4.5em; color: white; border-bottom: none; }
+        .title-slide .slide-content, .thank-you-slide .slide-content { font-size: 1.8em; color: #ddd; }
+
+        .quiz-slide { border-left: 10px solid #E91E63; }
+        .quiz-slide .slide-title { color: #E91E63; }
+        
+        /* New Interactive Quiz Option Styles */
+        .quiz-option {
+            font-size: 1.1em !important;
+            margin: 10px 0 !important;
+            padding: 12px 15px;
+            border: 2px solid #444;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        .quiz-option:hover {
+            border-color: #03DAC6;
+            background-color: #2a2a2a;
+        }
+        .quiz-option.selected-correct {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border-color: #4CAF50;
+        }
+        .quiz-option.selected-wrong {
+            background-color: #f44336; /* Red */
+            color: white;
+            border-color: #f44336;
+        }
+        .quiz-option.locked {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .quiz-slide .quiz-cq { font-size: 1.2em; background: #2a2a2a; padding: 15px; border-radius: 8px; border-left: 4px solid #E91E63; }
+        
+        /* New Explanation Slide Style */
+        .explanation-slide { border-left: 10px solid #faad14; /* Amber */ }
+        .explanation-slide .slide-title { color: #faad14; }
+        .explanation-slide .explanation-text {
+            font-size: 1.2em;
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #faad14;
+        }
+        .explanation-slide .correct-answer-text {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #4CAF50; /* Green */
+            margin-bottom: 15px;
+        }
+
+        /* Navigation */
+        .nav-buttons { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+        .nav-buttons button { font-size: 1em; padding: 10px 20px; margin-left: 10px; background-color: #03DAC6; color: #121212; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        .nav-buttons button:hover { background-color: #018786; transform: scale(1.05); }
+        
+        .slide-jump {
+            position: fixed;
+            bottom: 35px;
+            left: 150px; /* Adjust position as needed */
+            z-index: 1000;
+        }
+        .slide-jump input {
+            width: 80px;
+            padding: 8px 10px;
+            font-size: 1em;
+            background-color: #333;
+            color: #E0E0E0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            text-align: center;
+        }
+        /* Hide number input arrows */
+        .slide-jump input::-webkit-outer-spin-button,
+        .slide-jump input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        .slide-jump input[type=number] {
+          -moz-appearance: textfield; /* Firefox */
+        }
+        
+        .slide-counter { position: fixed; bottom: 40px; left: 30px; font-size: 1.2em; color: #888; z-index: 1000; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <div class="slide title-slide active">
+            <h1 class="slide-title">প্রি-টেস্ট পরীক্ষা (সেট-০১)</h1>
+            <div class="slide-content">
+                <p class="reveal-item">বিষয়: পদার্থ বিজ্ঞান</p>
+                <p class="reveal-item">শ্রেণি: দশম</p>
+                <p class="reveal-item">পূর্ণমান: ২৫ | সময়: ২৫ মিনিট</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১. আপেক্ষিক ত্রুটি = কী?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) পরম ত্রুটি × 2</p>
+                    <p class="quiz-option" data-correct="false">(খ) চূড়ান্ত ত্রুটি + পরিমাপকৃত মান</p>
+                    <p class="quiz-option" data-correct="false">(গ) চূড়ান্ত ত্রুটি + 2</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) চূড়ান্ত ত্রুটি × পরিমাপকৃত মান</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (কোনোটিই নয়)</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> আপেক্ষিক ত্রুটি হলো কোনো পরিমাপের <strong>চূড়ান্ত ত্রুটি</strong> (বা পরম ত্রুটি) এবং <strong>পরিমাপকৃত মান</strong>-এর <strong>অনুপাত</strong>।
+                    <br><br>
+                    সঠিক সূত্রটি হলো: <strong>আপেক্ষিক ত্রুটি = (চূড়ান্ত ত্রুটি / পরিমাপকৃত মান )</strong>।
+                    <br>
+                    প্রদত্ত বিকল্পগুলির (গুণফল, যোগফল) কোনোটিই এই সঠিক গাণিতিক সম্পর্কের সাথে মেলে না।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২. 1 Pa = ? atm?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) 76</p>
+                    <p class="quiz-option" data-correct="false">(খ) 10<sup>5</sup></p>
+                    <p class="quiz-option" data-correct="false">(গ) 9.8723 × 10<sup>-3</sup></p>
+                    <p class="quiz-option" data-correct="true">(ঘ) 9.8723 × 10<sup>-6</sup></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ঘ) 9.8723 × 10<sup>-6</sup></h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> প্রমাণ বায়ুমণ্ডলীয় চাপের (atm) সাথে প্যাসকেলের (Pa) সম্পর্ক হলো:
+                    <br>
+                    1 atm = 101325 Pa
+                    <br>
+                    সুতরাং, 1 Pa = (1 / 101325) atm
+                    <br>
+                    1 Pa ≈ 9.869 × 10<sup>-6</sup> atm।
+                    <br>
+                    প্রদত্ত বিকল্পগুলির মধ্যে (ঘ) এই মানের সবচেয়ে কাছাকাছি।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৩:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩. 2mm পিচ ও 0.002 cm ন্যূনাঙ্ক বিশিষ্ট স্ক্রু-গজের বৃত্তাকার স্কেলের ভাগসংখ্যা কত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) 10<sup>3</sup></p>
+                    <p class="quiz-option" data-correct="true">(খ) 10<sup>2</sup></p>
+                    <p class="quiz-option" data-correct="false">(গ) 10<sup>-2</sup></p>
+                    <p class="quiz-option" data-correct="false">(ঘ) 10<sup>-3</sup></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৩</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) 10<sup>2</sup></h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> স্ক্রু-গজের ন্যূনাঙ্ক (LC) = পিচ (P) / বৃত্তাকার স্কেলের ভাগসংখ্যা (N)
+                    <br>
+                    <strong>একক একরকম করতে হবে:</strong>
+                    <br>
+                    পিচ P = 2 mm
+                    <br>
+                    ন্যূনাঙ্ক LC = 0.002 cm = 0.02 mm
+                    <br><br>
+                    সুতরাং, N = P / LC = 2 mm / 0.02 mm = 100 = 10<sup>2</sup>।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৪:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৪. একটি স্কেলের সর্বনিম্ন মাপ 1mm। 1mm দৈর্ঘ্যের বস্তুর শতকরা আপেক্ষিক ত্রুটি কত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) 0.5%</p>
+                    <p class="quiz-option" data-correct="false">(খ) 5%</p>
+                    <p class="quiz-option" data-correct="false">(গ) 15%</p>
+                    <p class="quiz-option" data-correct="true">(ঘ) 50%</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৪</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ঘ) 50%</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> কোনো পরিমাপ যন্ত্রের চূড়ান্ত (পরম) ত্রুটি হলো যন্ত্রটির সর্বনিম্ন পরিমাপের অর্ধেক।
+                    <br>
+                    চূড়ান্ত ত্রুটি = 1 mm / 2 = 0.5 mm।
+                    <br>
+                    পরিমাপকৃত মান = 1 mm।
+                    <br><br>
+                    শতকরা আপেক্ষিক ত্রুটি = (চূড়ান্ত ত্রুটি / পরিমাপকৃত মান) × 100%
+                    <br>
+                    = (0.5 mm / 1 mm) × 100% = 0.5 × 100% = 50%।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৫:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৫. স্প্রিং ধ্রুবকের একক কোনটি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) Nm<sup>-2</sup></p>
+                    <p class="quiz-option" data-correct="false">(খ) Jkg<sup>-1</sup></p>
+                    <p class="quiz-option" data-correct="true">(গ) Jm<sup>-2</sup></p>
+                    <p class="quiz-option" data-correct="false">(ঘ) Nm<sup>2</sup>kg<sup>-2</sup></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৫</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (গ) Jm<sup>-2</sup></h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> স্প্রিং ধ্রুবক (k) দুটি সূত্র থেকে পাওয়া যায়:
+                    <br>
+                    ১. হুকের সূত্র: F = kx => k = F/x, একক: Nm<sup>-1</sup>।
+                    <br>
+                    ২. বিভব শক্তি: E = ½kx² => k = 2E/x², একক: J/m² বা Jm<sup>-2</sup>।
+                    <br><br>
+                    (J/m² = (N·m)/m² = N/m = Nm<sup>-1</sup>)। প্রদত্ত বিকল্পগুলির মধ্যে (গ) Jm<sup>-2</sup> সঠিক।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৬:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৬. 1 হেক্টো 1 ন্যানোর কত গুণ?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) 10<sup>-9</sup></p>
+                    <p class="quiz-option" data-correct="false">(খ) 10<sup>-7</sup></p>
+                    <p class="quiz-option" data-correct="false">(গ) 10<sup>-6</sup></p>
+                    <p class="quiz-option" data-correct="false">(ঘ) 10<sup>-3</sup></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৬</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (কোনোটিই নয়)</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> 'হেক্টো' (hecto) = 10<sup>2</sup> (একশ)।
+                    <br>
+                    'ন্যানো' (nano) = 10<sup>-9</sup>।
+                    <br><br>
+                    প্রশ্নটি হলো: 1 হেক্টো = ? × 1 ন্যানো
+                    <br>
+                    ? = 10<sup>2</sup> / 10<sup>-9</sup> = 10<sup>2+9</sup> = 10<sup>11</sup> (একশ বিলিয়ন)।
+                    <br>
+                    প্রদত্ত বিকল্পগুলির কোনোটিই সঠিক নয়।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৭:</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">উদ্দীপক: একই ভরের দুটি বুলেট গাছে ছোড়া হলো:
+                <br>বুলেট P: আদিবেগ X, সরণ 40.5 mm
+                <br>বুলেট Q: আদিবেগ 200 ms<sup>-1</sup>, সরণ 50 mm</p>
+                <h3 class="reveal-item">৭. Q এর মন্দন কত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) 4 × 10<sup>5</sup> ms<sup>-2</sup></p>
+                    <p class="quiz-option" data-correct="false">(খ) 4 × 10<sup>2</sup> ms<sup>-2</sup></p>
+                    <p class="quiz-option" data-correct="false">(গ) -4 × 10<sup>2</sup> ms<sup>-2</sup></p>
+                    <p class="quiz-option" data-correct="false">(ঘ) -4 × 10<sup>5</sup> ms<sup>-2</sup></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৭</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) 4 × 10<sup>5</sup> ms<sup>-2</sup></h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> বুলেট Q এর ক্ষেত্রে:
+                    <br>
+                    আদিবেগ, u = 200 ms<sup>-1</sup>
+                    <br>
+                    শেষবেগ, v = 0 (থেমে যায়)
+                    <br>
+                    সরণ, s = 50 mm = 0.05 m
+                    <br><br>
+                    সূত্র: v² = u² + 2as
+                    <br>
+                    0² = (200)² + 2 × a × 0.05
+                    <br>
+                    0 = 40000 + 0.1a
+                    <br>
+                    a = -40000 / 0.1 = -400000 ms<sup>-2</sup>
+                    <br>
+                    ত্বরণ (a) = -4 × 10<sup>5</sup> ms<sup>-2</sup>। মন্দন হলো ঋণাত্মক ত্বরণের ধনাত্মক মান, অর্থাৎ 4 × 10<sup>5</sup> ms<sup>-2</sup>।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৮:</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">উদ্দীপক: একই ভরের দুটি বুলেট গাছে ছোড়া হলো:
+                <br>বুলেট P: আদিবেগ X, সরণ 40.5 mm
+                <br>বুলেট Q: আদিবেগ 200 ms<sup>-1</sup>, সরণ 50 mm</p>
+                <h3 class="reveal-item">৮. বুলেটের ক্ষেত্রে-</h3>
+                <p class="reveal-item" style="font-size: 1em; line-height: 1.5;">
+                    i. x = 180 ms<sup>-1</sup><br>
+                    ii. P ও Q একই বাধা পাবে<br>
+                    iii. P ও Q একই সময়ে থামবে
+                </p>
+                <h3 class="reveal-item">সঠিক কোনটি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) i ও ii</p>
+                    <p class="quiz-option" data-correct="false">(খ) i ও iii</p>
+                    <p class="quiz-option" data-correct="false">(গ) ii ও iii</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) i, ii ও iii</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৮</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) i ও ii</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong>
+                    <br>
+                    (ii) একই ভর (m) ও একই গাছের (একই বাধা F) কারণে তাদের মন্দন (a = F/m) সমান হবে। (৭) নং থেকে পাই মন্দন a = -4 × 10<sup>5</sup> ms<sup>-2</sup>। (সঠিক)
+                    <br>
+                    (i) P এর ক্ষেত্রে: v² = u² + 2as => 0² = x² + 2(-4×10⁵)(0.0405) => x² = 32400 => x = 180 ms⁻¹। (সঠিক)
+                    <br>
+                    (iii) Q এর সময়, t = (v-u)/a = (0-200)/(-4×10⁵) = 0.0005 s। P এর সময়, t = (0-180)/(-4×10⁵) = 0.00045 s। সময় দুটি সমান নয়। (ভুল)
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৯:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৯. 54 kmh<sup>-1</sup> বেগে খাড়া উপরে নিক্ষিপ্ত বস্তুর সর্বোচ্চ উচ্চতায় আরোহণের সময় কত? (g = 9.8 ms<sup>-2</sup>)</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) 1.53 sec</p>
+                    <p class="quiz-option" data-correct="false">(খ) 3.06 sec</p>
+                    <p class="quiz-option" data-correct="false">(গ) 5.51 sec</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) 11.02 sec</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৯</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) 1.53 sec</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong>
+                    <br>
+                    আদিবেগ, u = 54 kmh<sup>-1</sup> = 54 × (1000 / 3600) ms<sup>-1</sup> = 15 ms<sup>-1</sup>।
+                    <br>
+                    সর্বোচ্চ উচ্চতায় শেষবেগ, v = 0।
+                    <br>
+                    আরোহণের সময়, v = u - gt
+                    <br>
+                    0 = 15 - 9.8t
+                    <br>
+                    t = 15 / 9.8 ≈ 1.53 s।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১০:</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">উদ্দীপক: P = 6kg ও Q = 3kg ভরের দুটি বস্তু পরস্পর অভিমুখে যথাক্রমে 8 ms<sup>-1</sup> ও 10 ms<sup>-1</sup> বেগে চলে সংঘর্ষে মিলিত হলো।</p>
+                <h3 class="reveal-item">১০. বস্তুদ্বয়ের মিলিত বেগ কত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) 2 ms<sup>-1</sup></p>
+                    <p class="quiz-option" data-correct="false">(খ) 6 ms<sup>-1</sup></p>
+                    <p class="quiz-option" data-correct="false">(গ) 8.67 ms<sup>-1</sup></p>
+                    <p class="quiz-option" data-correct="false">(ঘ) 26 ms<sup>-1</sup></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১০</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) 2 ms<sup>-1</sup></h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> ভরবেগের সংরক্ষণ সূত্র: m₁u₁ + m₂u₂ = (m₁ + m₂)V
+                    <br>
+                    (P এর দিক +ve ধরলে, Q এর দিক -ve হবে)
+                    <br>
+                    (6 × 8) + (3 × -10) = (6 + 3)V
+                    <br>
+                    48 - 30 = 9V
+                    <br>
+                    18 = 9V
+                    <br>
+                    V = 2 ms<sup>-1</sup>।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১১:</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">উদ্দীপক: P = 6kg ও Q = 3kg ভরের দুটি বস্তু পরস্পর অভিমুখে যথাক্রমে 8 ms<sup>-1</sup> ও 10 ms<sup>-1</sup> বেগে চলে সংঘর্ষে মিলিত হলো।</p>
+                <h3 class="reveal-item">১১. মিলিত বস্তুদ্বয়ের অভিমুখ কোন দিকে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) P বস্তুর দিকে</p>
+                    <p class="quiz-option" data-correct="false">(খ) Q বস্তুর দিকে</p>
+                    <p class="quiz-option" data-correct="false">(গ) পরস্পর বিপরীত দিকে</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) স্থির হয়ে যাবে</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১১</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) P বস্তুর দিকে</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> (১০) নং এ আমরা P বস্তুর বেগের দিক (+8) ধনাত্মক ধরেছিলাম।
+                    <br>
+                    যেহেতু মিলিত বেগ V = +2 ms<sup>-1</sup> (একটি ধনাত্মক মান) এসেছে, এর অর্থ হলো মিলিত বস্তুটি P বস্তুর আদি অভিমুখের দিকেই চলবে।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১২:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১২. বলের ক্ষেত্রে-</h3>
+                <p class="reveal-item" style="font-size: 1em; line-height: 1.5;">
+                    i. মহাকর্ষ বল তড়িৎ চৌম্বক বলের তুলনায় দুর্বল<br>
+                    ii. মহাকর্ষ বল দুর্বল নিউক্লিয় বল অপেক্ষা দুর্বল<br>
+                    iii. তড়িৎ চৌম্বক বল সবল নিউক্লিয় বল অপেক্ষা শক্তিশালী
+                </p>
+                <h3 class="reveal-item">সঠিক কোনটি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) i ও ii</p>
+                    <p class="quiz-option" data-correct="false">(খ) ii ও iii</p>
+                    <p class="quiz-option" data-correct="false">(গ) i ও iii</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) i, ii ও iii</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১২</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) i ও ii</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> মৌলিক বলের শক্তির ক্রম:
+                    <br>
+                    সবল নিউক্লিয় > তড়িৎ চৌম্বক > দুর্বল নিউক্লিয় > মহাকর্ষ।
+                    <br>
+                    i. মহাকর্ষ (৪) < তড়িৎ চৌম্বক (২)। (সঠিক)
+                    <br>
+                    ii. মহাকর্ষ (৪) < দুর্বল নিউক্লিয় (৩)। (সঠিক)
+                    <br>
+                    iii. তড়িৎ চৌম্বক (২) < সবল নিউক্লিয় (১)। (বিবৃতিটি ভুল)
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১৩:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১৩. শক্তির সবচেয়ে সাধারণ রূপ কোনটি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) তাপশক্তি</p>
+                    <p class="quiz-option" data-correct="false">(খ) আলোকশক্তি</p>
+                    <p class="quiz-option" data-correct="false">(গ) সৌরশক্তি</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) যান্ত্রিক শক্তি</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১৩</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) তাপশক্তি</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> শক্তির যেকোনো রূপান্তরের সময়, শক্তির একটি বড় অংশ তাপশক্তি হিসেবে পরিবেশে অপচয় হয় বা ছড়িয়ে পড়ে। এই কারণে, তাপশক্তিকে শক্তির সবচেয়ে সাধারণ বা সুলভ রূপ হিসেবে বিবেচনা করা হয়।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১৪:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১৪. 100 m উচ্চতা থেকে পড়ন্ত বস্তু কত বেগে ভূ-পৃষ্ঠে আঘাত করবে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) 44.27 ms<sup>-1</sup></p>
+                    <p class="quiz-option" data-correct="false">(খ) 43.27 ms<sup>-1</sup></p>
+                    <p class="quiz-option" data-correct="false">(গ) 42.27 ms<sup>-1</sup></p>
+                    <p class="quiz-option" data-correct="false">(ঘ) 41.27 ms<sup>-1</sup></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১৪</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) 44.27 ms<sup>-1</sup></h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> পড়ন্ত বস্তুর আদিবেগ u = 0।
+                    <br>
+                    v² = u² + 2gh = 0 + 2 × 9.8 × 100 = 1960
+                    <br>
+                    v = √1960 ≈ 44.27 ms<sup>-1</sup>।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১৫:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১৫. 20m উচ্চতা থেকে পড়ন্ত বস্তু ভূমি হতে 5m উঁচুতে বিভবশক্তি ও গতিশক্তির অনুপাত কত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) 1:2</p>
+                    <p class="quiz-option" data-correct="true">(খ) 1:3</p>
+                    <p class="quiz-option" data-correct="false">(গ) 2:1</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) 3:1</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১৫</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) 1:3</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> মোট উচ্চতা, H = 20 m।
+                    <br>
+                    ভূমি থেকে 5m উঁচুতে (h = 5 m):
+                    <br>
+                    বিভবশক্তি (PE) = mgh = mg(5) = 5mg
+                    <br>
+                    গতিশক্তি (KE) = মোট শক্তি - বিভবশক্তি = mgH - mgh
+                    <br>
+                    KE = mg(20) - mg(5) = 15mg
+                    <br>
+                    অনুপাত (PE : KE) = 5mg : 15mg = 1 : 3।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১৬:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১৬. ভর অর্ধেক এবং বেগ চারগুণ করলে গতিশক্তি পূর্বের কতগুণ হবে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) দ্বিগুণ</p>
+                    <p class="quiz-option" data-correct="false">(খ) চারগুণ</p>
+                    <p class="quiz-option" data-correct="true">(গ) আটগুণ</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) ষোলগুণ</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১৬</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (গ) আটগুণ</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> আদি গতিশক্তি, KE₁ = ½mv²
+                    <br>
+                    নতুন গতিশক্তি, KE₂ = ½(m/2)(4v)² = ½(m/2)(16v²)
+                    <br>
+                    KE₂ = (16/2) × (½mv²) = 8 × KE₁
+                    <br>
+                    সুতরাং, গতিশক্তি ৮ (আট) গুণ হবে।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১৭:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১৭. 3kg ও 9kg ভরের দুটি বস্তুর বেগের অনুপাত কত হলে গতিশক্তি সমান হবে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) 1:√3</p>
+                    <p class="quiz-option" data-correct="true">(খ) √3:1</p>
+                    <p class="quiz-option" data-correct="false">(গ) 1:3</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) 3:1</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১৭</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) √3:1</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> KE₁ = KE₂ => ½m₁v₁² = ½m₂v₂²
+                    <br>
+                    3 × v₁² = 9 × v₂²
+                    <br>
+                    v₁² / v₂² = 9 / 3 = 3
+                    <br>
+                    v₁ / v₂ = √3 / 1
+                    <br>
+                    অনুপাত v₁ : v₂ = √3 : 1।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১৮:</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">উদ্দীপক: 50N ওজনের বস্তুকে 5m উপরে উঠাতে বৈদ্যুতিক মোটর 400J শক্তি সরবরাহ করে।</p>
+                <h3 class="reveal-item">১৮. লভ্য কার্যকর শক্তি কত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) 250J</p>
+                    <p class="quiz-option" data-correct="false">(খ) 400J</p>
+                    <p class="quiz-option" data-correct="false">(গ) 500J</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) 800J</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১৮</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) 250J</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "লভ্য কার্যকর শক্তি" (আউটপুট) হলো বস্তুটি তুলতে যে ন্যূনতম কাজ করা হয়, যা বস্তুর বিভবশক্তি।
+                    <br>
+                    লভ্য কার্যকর শক্তি = বিভবশক্তি = (ওজন) × উচ্চতা = mgh
+                    <br>
+                    = 50 N × 5 m = 250 J।
+                    <br>
+                    (400J হলো প্রদত্ত শক্তি বা ইনপুট)।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১৯:</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">উদ্দীপক: 50N ওজনের বস্তুকে 5m উপরে উঠাতে বৈদ্যুতিক মোটর 400J শক্তি সরবরাহ করে।</p>
+                <h3 class="reveal-item">১৯. উদ্দীপকে-</h3>
+                <p class="reveal-item" style="font-size: 1em; line-height: 1.5;">
+                    i. শক্তির নিত্যতা প্রযোজ্য<br>
+                    ii. মোটরটির কর্মক্ষমতা 62.5%<br>
+                    iii. অপচয়কৃত শক্তি 150J
+                </p>
+                <h3 class="reveal-item">সঠিক কোনটি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) i</p>
+                    <p class="quiz-option" data-correct="false">(খ) ii</p>
+                    <p class="quiz-option" data-correct="false">(গ) i ও ii</p>
+                    <p class="quiz-option" data-correct="true">(ঘ) i, ii ও iii</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১৯</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ঘ) i, ii ও iii</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong>
+                    <br>
+                    প্রদত্ত শক্তি (Input) = 400 J। লভ্য শক্তি (Output) = 250 J (১৮ নং থেকে)।
+                    <br>
+                    i. শক্তির নিত্যতা সর্বদা প্রযোজ্য। (সঠিক)
+                    <br>
+                    ii. কর্মক্ষমতা = (Output / Input) × 100% = (250 / 400) × 100% = 62.5%। (সঠিক)
+                    <br>
+                    iii. অপচয়কৃত শক্তি = Input - Output = 400 J - 250 J = 150 J। (সঠিক)
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২০:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২০. দৃশ্যমান আলোর ক্ষুদ্রতম তরঙ্গদৈর্ঘ্যের থেকেও ছোট তরঙ্গদৈর্ঘ্যকে কী বলে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) ইনফ্রারেড</p>
+                    <p class="quiz-option" data-correct="true">(খ) আলট্রা ভায়োলেট</p>
+                    <p class="quiz-option" data-correct="false">(গ) মাইক্রোওয়েভ</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) রেডিও ওয়েভ</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২০</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) আলট্রা ভায়োলেট</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> দৃশ্যমান আলোর বর্ণালীতে, বেগুনী (Violet) আলোর তরঙ্গদৈর্ঘ্য সবচেয়ে কম (ক্ষুদ্রতম)। বেগুনী আলোর চেয়েও কম তরঙ্গদৈর্ঘ্যের রশ্মিকে আলট্রা ভায়োলেট (Ultraviolet) বা অতিবেগুনি রশ্মি বলা হয়।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২১:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২১. বাতাসে শব্দের বেগ-</h3>
+                <p class="reveal-item" style="font-size: 1em; line-height: 1.5;">
+                    i. তাপমাত্রার বর্গের সমানুপাতিক<br>
+                    ii. চাপের উপর নির্ভর করে না<br>
+                    iii. ঘনত্বের বর্গমূলের ব্যস্তানুপাতিক
+                </p>
+                <h3 class="reveal-item">সঠিক কোনটি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) i</p>
+                    <p class="quiz-option" data-correct="false">(খ) ii</p>
+                    <p class="quiz-option" data-correct="false">(গ) i ও iii</p>
+                    <p class="quiz-option" data-correct="true">(ঘ) ii ও iii</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২১</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ঘ) ii ও iii</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong>
+                    <br>
+                    i. শব্দের বেগ তাপমাত্রার <strong>বর্গমূলের</strong> সমানুপাতিক (v ∝ √T)। (ভুল)
+                    <br>
+                    ii. নির্দিষ্ট তাপমাত্রায় শব্দের বেগ চাপের উপর নির্ভর করে না। (সঠিক)
+                    <br>
+                    iii. শব্দের বেগ মাধ্যমের ঘনত্বের (ρ) বর্গমূলের ব্যস্তানুপাতিক (v ∝ 1/√ρ)। (সঠিক)
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২২:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২২. অবতল আয়নার-</h3>
+                <p class="reveal-item" style="font-size: 1em; line-height: 1.5;">
+                    i. ফোকাস দূরত্ব বক্রতার ব্যাসার্ধের অর্ধেক<br>
+                    ii. ফোকাস দূরত্ব অসীম হলে সমতল আয়না<br>
+                    iii. মেরু ও ফোকাসের মাঝে বস্তু রাখলে প্রতিবিম্ব অবাস্তব
+                </p>
+                <h3 class="reveal-item">সঠিক কোনটি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) i ও ii</p>
+                    <p class="quiz-option" data-correct="false">(খ) i ও iii</p>
+                    <p class="quiz-option" data-correct="false">(গ) ii ও iii</p>
+                    <p class="quiz-option" data-correct="true">(ঘ) i, ii ও iii</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২২</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ঘ) i, ii ও iii</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong>
+                    <br>
+                    i. গোলীয় দর্পণে f = r/2। (সঠিক)
+                    <br>
+                    ii. সমতল দর্পণের বক্রতার ব্যাসার্ধ অসীম (r = ∞), তাই ফোকাস দূরত্বও অসীম। (সঠিক)
+                    <br>
+                    iii. অবতল আয়নার মেরু (P) ও ফোকাসের (F) মাঝে বস্তু রাখলে অবাস্তব প্রতিবিম্ব গঠিত হয়। (সঠিক)
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২৩:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২৩. অবতল দর্পণে অবাস্তব প্রতিবিম্ব পেতে বস্তু কোথায় রাখতে হবে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) 3F এ</p>
+                    <p class="quiz-option" data-correct="false">(খ) F ও 2F এর মাঝে</p>
+                    <p class="quiz-option" data-correct="true">(গ) P ও F এর মাঝে</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) 2F ও অসীমের মাঝে</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২৩</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (গ) P ও F এর মাঝে</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> অবতল দর্পণে শুধুমাত্র একটি ক্ষেত্রেই অবাস্তব প্রতিবিম্ব গঠিত হয়: যখন বস্তুকে দর্পণের মেরু (P) এবং প্রধান ফোকাস (F)-এর মধ্যে রাখা হয়।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২৪:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২৪. 2 × 10<sup>-6</sup> F ধারকের বিভব 200V হলে সঞ্চিত চার্জ কত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) 1 × 10<sup>-4</sup> C</p>
+                    <p class="quiz-option" data-correct="true">(খ) 4 × 10<sup>-4</sup> C</p>
+                    <p class="quiz-option" data-correct="false">(গ) 4 × 10<sup>-3</sup> C</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) 1 × 10<sup>-2</sup> C</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২৪</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) 4 × 10<sup>-4</sup> C</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> ধারকের সঞ্চিত চার্জ, Q = CV
+                    <br>
+                    Q = (2 × 10<sup>-6</sup> F) × (200 V)
+                    <br>
+                    Q = 400 × 10<sup>-6</sup> C
+                    <br>
+                    Q = 4 × 10<sup>-4</sup> C।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২৫:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২৫. 10 C আহিত বস্তু 10 N বল লাভ করলে, তড়িৎক্ষেত্রের তীব্রতা কত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) 100 NC<sup>-1</sup></p>
+                    <p class="quiz-option" data-correct="false">(খ) 1 NC</p>
+                    <p class="quiz-option" data-correct="false">(গ) 100 N</p>
+                    <p class="quiz-option" data-correct="true">(ঘ) 1 NC<sup>-1</sup></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২৫</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ঘ) 1 NC<sup>-1</sup></h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> তড়িৎক্ষেত্রের তীব্রতা, E = F / q
+                    <br>
+                    E = 10 N / 10 C = 1 NC<sup>-1</sup>।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide thank-you-slide">
+            <h1 class="slide-title">ধন্যবাদ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">আপনি পরীক্ষাটি সম্পন্ন করেছেন!</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="slide-counter" id="slideCounter"></div>
+    <div class="slide-jump">
+        <input type="number" id="slideJumpInput" placeholder="স্লাইড #" min="1">
+    </div>
+    <div class="nav-buttons">
+        <button id="prevBtn">পূর্ববর্তী</button>
+        <button id="nextBtn">পরবর্তী</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slideCounter');
+        const slideJumpInput = document.getElementById('slideJumpInput');
+        let revealIndex = 0; // This will be used for auto-revealing
+
+        // ফাংশন: একটি স্লাইড রিসেট করা
+        function resetSlide(slide) {
+            // ইন্টারেক্টিভ অপশন রিসেট
+            const options = slide.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                option.classList.remove('selected-correct', 'selected-wrong', 'locked');
+            });
+            
+            // reveal-item রিসেট
+            const revealItems = slide.querySelectorAll('.reveal-item');
+            revealItems.forEach(item => item.classList.remove('is-visible'));
+        }
+
+        // ফাংশন: একটি নির্দিষ্ট স্লাইড দেখানো
+        function showSlide(index) {
+            // ইনডেক্স ঠিক রাখা
+            if (index >= totalSlides) {
+                index = 0;
+            } else if (index < 0) {
+                index = totalSlides - 1;
+            }
+            currentSlide = index;
+
+            // সব স্লাইড হাইড ও রিসেট করা
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+                resetSlide(slide); // স্লাইড বদলানোর সময় আগের স্লাইড রিসেট করা
+            });
+
+            // নতুন স্লাইড সক্রিয় করা
+            const activeSlide = slides[currentSlide];
+            activeSlide.classList.add('active');
+
+            // স্লাইডের উপাদানগুলো স্বয়ংক্রিয়ভাবে দেখানো
+            revealIndex = 0;
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            revealItems.forEach((item, i) => {
+                // একটি ছোট ডিলে দিয়ে দেখানোর ইফেক্ট
+                setTimeout(() => {
+                    item.classList.add('is-visible');
+                }, i * 100); // 100ms পর পর
+            });
+
+            // স্লাইড কাউন্টার আপডেট
+            slideCounter.textContent = `স্লাইড ${currentSlide + 1} / ${totalSlides}`;
+            // স্লাইড জাম্প ইনপুট আপডেট
+            slideJumpInput.placeholder = `স্লাইড ${currentSlide + 1}`;
+            slideJumpInput.value = '';
+            slideJumpInput.max = totalSlides;
+        }
+
+        // ফাংশন: পরবর্তী স্লাইড
+        function handleNext() {
+            // আগের মতো reveal-item চেক না করে সরাসরি পরের স্লাইডে যাবে
+            showSlide(currentSlide + 1);
+        }
+
+        // ফাংশন: পূর্ববর্তী স্লাইড
+        function handlePrev() {
+            showSlide(currentSlide - 1);
+        }
+
+        // ফাংশন: কুইজ অপশনে ক্লিক সেটআপ করা
+        function setupOptionClickHandlers() {
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                option.addEventListener('click', (e) => {
+                    const slide = e.target.closest('.slide');
+                    if (!slide || e.target.classList.contains('locked')) return;
+
+                    const allOptionsOnSlide = slide.querySelectorAll('.quiz-option');
+                    allOptionsOnSlide.forEach(opt => opt.classList.add('locked')); // সব অপশন লক করা
+
+                    const isCorrect = e.target.getAttribute('data-correct') === 'true';
+                    
+                    if (isCorrect) {
+                        e.target.classList.add('selected-correct');
+                    } else {
+                        e.target.classList.add('selected-wrong');
+                        // ভুল হলে সঠিকটি সবুজ করে দেখানো
+                        const correctOpt = slide.querySelector('[data-correct="true"]');
+                        if (correctOpt) {
+                            correctOpt.classList.add('selected-correct');
+                        }
+                    }
+                });
+            });
+        }
+
+        // নেভিগেশন বাটন সেটআপ
+        document.getElementById('nextBtn').addEventListener('click', handleNext);
+        document.getElementById('prevBtn').addEventListener('click', handlePrev);
+
+        // কিবোর্ড নেভিগেশন
+        document.addEventListener('keydown', (event) => {
+            // ইনপুট বক্সে টাইপ করার সময় নেভিগেশন বন্ধ রাখা
+            if (event.target === slideJumpInput) return;
+
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === ' ') {
+                event.preventDefault(); // স্পেসবার দিয়ে পেজ স্ক্রল বন্ধ করা
+                handleNext();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                handlePrev();
+            }
+        });
+
+        // স্লাইড জাম্প সেটআপ
+        slideJumpInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const targetSlide = parseInt(slideJumpInput.value);
+                
+                if (!isNaN(targetSlide) && targetSlide >= 1 && targetSlide <= totalSlides) {
+                    showSlide(targetSlide - 1); // 0-ভিত্তিক ইনডেক্স
+                }
+                slideJumpInput.value = ''; // ইনপুট বক্স খালি করা
+                slideJumpInput.blur(); // ফোকাস সরানো
+            }
+        });
+        
+        // --- ইনিশিয়ালাইজেশন ---
+        
+        // কুইজ অপশনগুলোর জন্য ক্লিক হ্যান্ডলার সেটআপ
+        setupOptionClickHandlers();
+        
+        // প্রথম স্লাইড দেখানো
+        showSlide(0);
+
+    </script>
+
+</body>
+</html>

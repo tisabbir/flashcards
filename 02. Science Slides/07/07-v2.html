@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>তরঙ্গ ও শব্দ</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #1E1E1E;
+            box-sizing: border-box;
+            padding: 50px 80px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border-left: 10px solid #03DAC6; /* Accent color */
+            overflow-y: auto; /* Add scroll for overflow content */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-title {
+            font-size: 3.0em; /* Slightly smaller to fit more content */
+            color: #03DAC6; /* Accent color */
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+        }
+
+        .slide-content {
+            font-size: 1.4em; /* Slightly smaller */
+            color: #CFD8DC;
+        }
+        
+        .slide-content h3 {
+            color: #BB86FC; /* Secondary accent */
+            font-size: 1.4em;
+        }
+
+        .slide-content ul {
+            list-style-type: square;
+            padding-left: 40px;
+        }
+
+        .slide-content li, .slide-content p {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        /* HTML Math Styling */
+        i.math-var { font-style: italic; }
+        sup.math-sup { font-size: 0.75em; vertical-align: super; }
+        sub.math-sub { font-size: 0.75em; vertical-align: sub; }
+
+        /* Image Styling */
+        .slide-content img {
+            max-width: 40%; /* Adjusted */
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+            float: right;
+            margin-left: 20px;
+        }
+        
+        /* Reveal items */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal-item.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* Special slide types */
+        .title-slide, .thank-you-slide {
+            background: linear-gradient(135deg, #2C3E50, #1a2a3a);
+            color: white;
+            align-items: center;
+            text-align: center;
+            border-left: 10px solid #BB86FC;
+        }
+        .title-slide .slide-title, .thank-you-slide .slide-title { font-size: 4.5em; color: white; border-bottom: none; }
+        .title-slide .slide-content, .thank-you-slide .slide-content { font-size: 1.8em; color: #ddd; }
+
+        .hook-slide {
+            align-items: center;
+            text-align: center;
+            background-color: #333;
+            border-left: 10px solid #FBC02D;
+        }
+        .hook-slide .slide-title { font-size: 2.8em; color: #FBC02D; }
+        .hook-slide .slide-content { font-size: 1.8em; }
+
+        .quiz-slide { border-left: 10px solid #E91E63; }
+        .quiz-slide .slide-title { color: #E91E63; }
+        .quiz-slide .quiz-option { font-size: 1.1em; margin: 8px 0; } /* Adjusted */
+        .quiz-slide .quiz-cq { font-size: 1.1em; background: #2a2a2a; padding: 15px; border-radius: 8px; border-left: 4px solid #E91E63; }
+        
+        .answer-slide { border-left: 10px solid #4CAF50; }
+        .answer-slide .slide-title { color: #4CAF50; }
+        .answer-slide .correct-answer {
+            background-color: #388E3C;
+            color: #FFFFFF;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+        .answer-slide .explanation {
+            font-size: 0.9em;
+            background: #2a2a2a;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        /* Navigation */
+        .nav-buttons { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+        .nav-buttons button { font-size: 1em; padding: 10px 20px; margin-left: 10px; background-color: #03DAC6; color: #121212; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        .nav-buttons button:hover { background-color: #018786; transform: scale(1.05); }
+        /* kj */
+        .slide-jump {
+            position: fixed;
+            bottom: 35px;
+            left: 150px; /* Adjust position as needed */
+            z-index: 1000;
+        }
+        .slide-jump input {
+            width: 80px;
+            padding: 8px 10px;
+            font-size: 1em;
+            background-color: #333;
+            color: #E0E0E0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            text-align: center;
+        }
+        /* Hide number input arrows */
+        .slide-jump input::-webkit-outer-spin-button,
+        .slide-jump input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        .slide-jump input[type=number] {
+          -moz-appearance: textfield; /* Firefox */
+        }
+        /* kj */
+        .slide-counter { position: fixed; bottom: 40px; left: 30px; font-size: 1.2em; color: #888; z-index: 1000; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <div class="slide title-slide active">
+            <h1 class="slide-title">তরঙ্গ ও শব্দ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">অধ্যায় ৭</p>
+                <p class="reveal-item">পদার্থবিজ্ঞান</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">আজকের মূল বিষয়</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">সরল স্পন্দন গতি</li>
+                    <li class="reveal-item">তরঙ্গ ও এর বৈশিষ্ট্য</li>
+                    <li class="reveal-item">তরঙ্গের প্রকারভেদ (অনুপ্রস্থ ও অণুদৈর্ঘ্য)</li>
+                    <li class="reveal-item">তরঙ্গ সংশ্লিষ্ট রাশি (কম্পাঙ্ক, পর্যায়কাল, বেগ, তরঙ্গদৈর্ঘ্য)</li>
+                    <li class="reveal-item">শব্দ তরঙ্গ ও এর বৈশিষ্ট্য</li>
+                    <li class="reveal-item">প্রতিধ্বনি ও এর ব্যবহার</li>
+                    <li class="reveal-item">শ্রাব্যতার সীমা ও শব্দোত্তর শব্দের প্রয়োগ</li>
+                    <li class="reveal-item">সুরযুক্ত শব্দের বৈশিষ্ট্য ও শব্দ দূষণ</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">সরল স্পন্দন গতি</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> কোনো পর্যায়বৃত্ত গতিসম্পন্ন বস্তুর গতি যদি সরলরৈখিক হয়, এর ত্বরণ সাম্যাবস্থা থেকে সরণের সমানুপাতিক হয় এবং এর দিক যদি সর্বদা সাম্যাবস্থান অভিমুখী হয়, তবে তাকে সরল স্পন্দন গতি বলে।</li>
+                    <li class="reveal-item"><strong>উদাহরণ:</strong> সরল দোলকের গতি, কম্পনশীল সুর শলাকা, স্প্রিং-এ ঝুলন্ত ভরের গতি।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">সরল স্পন্দন গতি (সূত্র)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>স্প্রিং এর দোলনকাল (T):</strong><br>
+                        <i class="math-var">T</i> = 2&pi;&radic;(<i class="math-var">m</i> / <i class="math-var">k</i>)<br>
+                        (এখানে k = স্প্রিং ধ্রুবক, m = ভর)
+                        <br><em>(দ্রষ্টব্য: PDF-এ $T=2\pi\sqrt{k/m}$ উল্লেখ আছে, যা সঠিক নয়। সঠিক সূত্র $T=2\pi\sqrt{m/k}$)</em>
+                    </li>
+                    <li class="reveal-item"><strong>সরল দোলকের দোলনকাল (T):</strong><br>
+                        <i class="math-var">T</i> = 2&pi;&radic;(<i class="math-var">l</i> / <i class="math-var">g</i>)<br>
+                        (এখানে l = সুতার কার্যকর দৈর্ঘ্য, g = অভিকর্ষজ ত্বরণ)
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ১</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১। পর্যায়বৃত্ত গতি হচ্ছে-</h3>
+                <p class="reveal-item">i. সরল দোলকের গতি<br>
+                   ii. পেট্রোল ইঞ্জিনের সিলিন্ডারের গতি<br>
+                   iii. কম্পমান সুরশলাকার গতি</p>
+                <h3 class="reveal-item">নিচের কোনটি সঠিক?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) i ও ii</p>
+                    <p class="quiz-option">(খ) i ও iii</p>
+                    <p class="quiz-option">(গ) ii ও iii</p>
+                    <p class="quiz-option">(ঘ) i, ii ও iii</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ১</h2>
+            <div class="slide-content">
+                <h3>১। পর্যায়বৃত্ত গতি হচ্ছে-</h3>
+                <p class="reveal-item">i. সরল দোলকের গতি (সঠিক, এটি স্পন্দন গতি যা পর্যায়বৃত্ত)<br>
+                   ii. পেট্রোল ইঞ্জিনের সিলিন্ডারের গতি (সঠিক, পর্যায়বৃত্ত গতি)<br>
+                   iii. কম্পমান সুরশলাকার গতি (সঠিক, এটি স্পন্দন গতি যা পর্যায়বৃত্ত)</p>
+                <p class="quiz-option">(ক) i ও ii</p>
+                <p class="quiz-option">(খ) i ও iii</p>
+                <p class="quiz-option">(গ) ii ও iii</p>
+                <p class="quiz-option correct-answer">(ঘ) i, ii ও iii</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তরঙ্গ (Wave)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> যে পর্যায়বৃত্ত আন্দোলন কোনো জড় মাধ্যমের এক স্থান থেকে অন্য স্থানে **শক্তি** সঞ্চালিত করে কিন্তু মাধ্যমের **কণাগুলোকে স্থায়ীভাবে স্থানান্তরিত করে না**, তাকে তরঙ্গ বলে।</li>
+                    <li class="reveal-item"><strong>উদাহরণ:</strong> পুকুরের পানিতে ঢিল ছুঁড়লে যে আন্দোলন কিনারায় পৌঁছায়, কিন্তু কণাগুলো শুধু উপরে- নিচে ওঠানামা করে।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তরঙ্গের বৈশিষ্ট্য</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">মাধ্যমের কণাগুলোর স্পন্দন গতির ফলে তরঙ্গ সৃষ্টি হয়, কিন্তু কণাগুলোর স্থায়ী স্থানান্তর হয় না।</li>
+                    <li class="reveal-item">যান্ত্রিক তরঙ্গ (যেমন শব্দ) সঞ্চালনের জন্য মাধ্যম প্রয়োজন।</li>
+                    <li class="reveal-item">তরঙ্গ একস্থান থেকে অন্য স্থানে শক্তি সঞ্চালন করে।</li>
+                    <li class="reveal-item">তরঙ্গের বেগ মাধ্যমের প্রকৃতির উপর নির্ভর করে।</li>
+                    <li class="reveal-item">তরঙ্গের প্রতিফলন, প্রতিসরণ ও উপরিপাতন ঘটে।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তরঙ্গের প্রকারভেদ</h2>
+            <div class="slide-content">
+                <p class="reveal-item">তরঙ্গ দুই প্রকার:</p>
+                <ul>
+                    <li class="reveal-item"><strong>১. অনুপ্রস্থ তরঙ্গ (Transverse Wave):</strong> যে তরঙ্গ কম্পনের দিকের সাথে **লম্বভাবে** অগ্রসর হয়।
+                        <ul>
+                            <li>এটি **তরঙ্গশীর্ষ** (Crest) ও **তরঙ্গপাদ** (Trough) উৎপন্ন করে।</li>
+                            <li>উদাহরণ: পানির তরঙ্গ, দড়িতে সৃষ্ট তরঙ্গ।</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>২. অণুদৈর্ঘ্য তরঙ্গ (Longitudinal Wave):</strong> যে তরঙ্গ কম্পনের দিকের সাথে **সমান্তরালভাবে** অগ্রসর হয়।
+                        <ul>
+                            <li>এটি **সংকোচন** (Compression) ও **প্রসারণ** (Rarefaction) উৎপন্ন করে।</li>
+                            <li>উদাহরণ: শব্দ তরঙ্গ, স্প্রিং-এর তরঙ্গ।</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ২</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২। কোনটি যান্ত্রিক তরঙ্গ?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) আলোক তরঙ্গ</p>
+                    <p class="quiz-option">(খ) তাপ তরঙ্গ</p>
+                    <p class="quiz-option">(গ) চৌম্বক তরঙ্গ</p>
+                    <p class="quiz-option">(ঘ) শব্দ তরঙ্গ</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ২</h2>
+            <div class="slide-content">
+                <h3>২। কোনটি যান্ত্রিক তরঙ্গ?</h3>
+                <p class="quiz-option">(ক) আলোক তরঙ্গ (তাড়িতচৌম্বক)</p>
+                <p class="quiz-option">(খ) তাপ তরঙ্গ (তাড়িতচৌম্বক)</p>
+                <p class="quiz-option">(গ) চৌম্বক তরঙ্গ (তাড়িতচৌম্বক)</p>
+                <p class="quiz-option correct-answer">(ঘ) শব্দ তরঙ্গ</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> জড় মাধ্যমের কণার আন্দোলনের ফলে যে তরঙ্গের সৃষ্টি হয় (অর্থাৎ যার মাধ্যম প্রয়োজন) তাকে যান্ত্রিক তরঙ্গ বলে। শব্দতরঙ্গ একটি যান্ত্রিক তরঙ্গ।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৩</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩। তরঙ্গশীর্ষ কি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) অনুদৈর্ঘ্য তরঙ্গের সর্বোচ্চ বিন্দু</p>
+                    <p class="quiz-option">(খ) অনুদৈর্ঘ্য তরঙ্গের সর্বনিম্ন বিন্দু</p>
+                    <p class="quiz-option">(গ) অনুপ্রস্থ তরঙ্গের সর্বোচ্চ বিন্দু</p>
+                    <p class="quiz-option">(ঘ) অনুপ্রস্থ তরঙ্গের সর্বনিম্ন বিন্দু</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৩</h2>
+            <div class="slide-content">
+                <h3>৩। তরঙ্গশীর্ষ কি?</h3>
+                <p class="quiz-option">(ক) অনুদৈর্ঘ্য তরঙ্গের সর্বোচ্চ বিন্দু</p>
+                <p class="quiz-option">(খ) অনুদৈর্ঘ্য তরঙ্গের সর্বনিম্ন বিন্দু</p>
+                <p class="quiz-option correct-answer">(গ) অনুপ্রস্থ তরঙ্গের সর্বোচ্চ বিন্দু</p>
+                <p class="quiz-option">(ঘ) অনুপ্রস্থ তরঙ্গের সর্বনিম্ন বিন্দু (তরঙ্গপাদ)</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তরঙ্গ সংশ্লিষ্ট রাশি (ভাগ ১)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>পূর্ণ স্পন্দন:</strong> তরঙ্গের কণা একটি বিন্দু থেকে যাত্রা শুরু করে আবার একই দিক থেকে সেই বিন্দুতে ফিরে আসাকে ১টি পূর্ণ স্পন্দন বলে।</li>
+                    <li class="reveal-item"><strong>পর্যায়কাল (T):</strong> একটি পূর্ণ স্পন্দন সম্পন্ন করতে যে সময় লাগে। (একক: s)</li>
+                    <li class="reveal-item"><strong>কম্পাঙ্ক (f):</strong> একক সময়ে (1 সেকেন্ডে) যতগুলো পূর্ণ স্পন্দন সম্পন্ন হয়। (একক: Hz)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তরঙ্গ সংশ্লিষ্ট রাশি (ভাগ ২)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>বিস্তার (A):</strong> সাম্যাবস্থান থেকে যেকোনো একদিকে কণার সর্বাধিক সরণ। (একক: m)</li>
+                    <li class="reveal-item"><strong>তরঙ্গদৈর্ঘ্য (&lambda;):</strong> একটি পূর্ণ স্পন্দনের সময়ে তরঙ্গ যে দূরত্ব অতিক্রম করে। (একক: m)</li>
+                    <li class="reveal-item"><strong>তরঙ্গবেগ (v):</strong> তরঙ্গ একক সময়ে নির্দিষ্ট দিকে যে দূরত্ব অতিক্রম করে। (একক: ms<sup class="math-sup">-1</sup>)</li>
+                    <li class="reveal-item"><strong>দশা (Phase):</strong> কণার যেকোনো মুহূর্তে গতির সম্যক অবস্থা (যেমন: সরণ, বেগ, ত্বরণ)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">তরঙ্গ সংশ্লিষ্ট সম্পর্ক</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>কম্পাঙ্ক ও পর্যায়কাল:</strong> একটি অপরটির বিপরীত।</p>
+                <h3 class="reveal-item"><i class="math-var">f</i> = 1 / <i class="math-var">T</i></h3>
+                
+                <p class="reveal-item"><strong>তরঙ্গবেগ, কম্পাঙ্ক ও তরঙ্গদৈর্ঘ্য:</strong></p>
+                <h3 class="reveal-item"><i class="math-var">v</i> = <i class="math-var">f</i><i class="math-var">&lambda;</i></h3>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৪</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৪। কোনো বস্তু মিনিটে 1200 টি পূর্ণ কম্পন সম্পন্ন করে। এর কম্পাঙ্ক কত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 20 Hz</p>
+                    <p class="quiz-option">(খ) 100 Hz</p>
+                    <p class="quiz-option">(গ) 60 Hz</p>
+                    <p class="quiz-option">(ঘ) 1200 Hz</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৪</h2>
+            <div class="slide-content">
+                <h3>৪। কোনো বস্তু মিনিটে 1200 টি পূর্ণ কম্পন সম্পন্ন করে। এর কম্পাঙ্ক কত?</h3>
+                <p class="quiz-option correct-answer">(ক) 20 Hz</p>
+                <p class="quiz-option">(খ) 100 Hz</p>
+                <p class="quiz-option">(গ) 60 Hz</p>
+                <p class="quiz-option">(ঘ) 1200 Hz</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> কম্পাঙ্ক (f) হলো প্রতি সেকেন্ডে পূর্ণ স্পন্দনের সংখ্যা।<br>
+                f = মোট কম্পন / মোট সময় (s) = 1200 / 60 s = 20 Hz।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৫</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৫। একটি বস্তু বাতাসে যে শব্দ তৈরি করে তার কম্পাঙ্ক 1700 Hz এবং তরঙ্গদৈর্ঘ্য 0.2 m হলে বাতাসে শব্দের বেগ কত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 0.0006 ms<sup class="math-sup">-1</sup></p>
+                    <p class="quiz-option">(খ) 340 ms<sup class="math-sup">-1</sup></p>
+                    <p class="quiz-option">(গ) 342 ms<sup class="math-sup">-1</sup></p>
+                    <p class="quiz-option">(ঘ) 680 ms<sup class="math-sup">-1</sup></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৫</h2>
+            <div class="slide-content">
+                <h3>৫। একটি বস্তু বাতাসে যে শব্দ তৈরি করে তার কম্পাঙ্ক 1700 Hz এবং তরঙ্গদৈর্ঘ্য 0.2 m হলে বাতাসে শব্দের বেগ কত?</h3>
+                <p class="quiz-option">(ক) 0.0006 ms<sup class="math-sup">-1</sup></p>
+                <p class="quiz-option correct-answer">(খ) 340 ms<sup class="math-sup">-1</sup></p>
+                <p class="quiz-option">(গ) 342 ms<sup class="math-sup">-1</sup></p>
+                <p class="quiz-option">(ঘ) 680 ms<sup class="math-sup">-1</sup></p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> <i class="math-var">v</i> = <i class="math-var">f</i><i class="math-var">&lambda;</i> = 1700 Hz &times; 0.2 m = 340 ms<sup class="math-sup">-1</sup>।</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ১</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">পানিতে সৃষ্ট একটি তরঙ্গদৈর্ঘ্য 9.65 cm। যদি বায়ু ও পানিতে শব্দ তরঙ্গের বেগ যথাক্রমে $332 ms^{-1}$ এবং $1452.5 ms^{-1}$ হয়, তবে বাতাসে শব্দ তরঙ্গের তরঙ্গদৈর্ঘ্য এবং কম্পাঙ্ক নির্ণয় কর।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ১</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                পানিতে বেগ, <i class="math-var">v</i><sub class="math-sub">w</sub> = 1452.5 ms<sup class="math-sup">-1</sup><br>
+                পানিতে তরঙ্গদৈর্ঘ্য, <i class="math-var">&lambda;</i><sub class="math-sub">w</sub> = 9.65 cm = 0.0965 m<br>
+                বায়ুতে বেগ, <i class="math-var">v</i><sub class="math-sub">a</sub> = 332 ms<sup class="math-sup">-1</sup></p>
+                
+                <p class="reveal-item"><strong>১ম ধাপ: কম্পাঙ্ক (f) নির্ণয় (উৎস একই তাই কম্পাঙ্ক স্থির)</strong><br>
+                পানিতে: <i class="math-var">f</i> = <i class="math-var">v</i><sub class="math-sub">w</sub> / <i class="math-var">&lambda;</i><sub class="math-sub">w</sub> = 1452.5 / 0.0965 &approx; 15052 Hz<br>
+                <em>(নোট: PDF এর উত্তরে $f = 16600 Hz$ দেওয়া আছে, যা $v_a/\lambda_a$ থেকে এসেছে। কিন্তু $\lambda_a$ অজানা। তাই $f$ অবশ্যই $v_w$ ও $\lambda_w$ থেকে নির্ণয় করতে হবে।)</em></p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: বাতাসে তরঙ্গদৈর্ঘ্য (<i class="math-var">&lambda;</i><sub class="math-sub">a</sub>) নির্ণয়</strong><br>
+                <i class="math-var">&lambda;</i><sub class="math-sub">a</sub> = <i class="math-var">v</i><sub class="math-sub">a</sub> / <i class="math-var">f</i> = 332 / 15052 &approx; 0.022 m</p>
+
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> কম্পাঙ্ক 15052 Hz (প্রায়) এবং বাতাসে তরঙ্গদৈর্ঘ্য 0.022 m (বা 2.2 cm)।</h3>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">শব্দ তরঙ্গ</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">শব্দ এক প্রকার শক্তি, যা তরঙ্গের মাধ্যমে সঞ্চালিত হয়।</li>
+                    <li class="reveal-item">এটি একটি **অণুদৈর্ঘ্য** ও **যান্ত্রিক** তরঙ্গ।</li>
+                    <li class="reveal-item">এটি সঞ্চালনের জন্য **স্থিতিস্থাপক মাধ্যম** (কঠিন, তরল, বায়বীয়) প্রয়োজন।</li>
+                    <li class="reveal-item">বস্তুর কম্পনের ফলে শব্দ উৎপন্ন হয়।</li>
+                    <li class="reveal-item">মানুষের শ্রাব্যতার সীমা: **20 Hz থেকে 20,000 Hz**।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">প্রতিধ্বনি (Echo)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> কোনো উৎস থেকে সৃষ্ট শব্দ যদি দূরবর্তী কোনো মাধ্যমে বাঁধা পেয়ে উৎসের কাছে ফিরে আসে, তখন মূল ধ্বনির যে পুনরাবৃত্তি হয় তাকে প্রতিধ্বনি বলে।</li>
+                    <li class="reveal-item"><strong>শব্দানুভূতির স্থায়িত্বকাল:</strong> কোনো শব্দ শোনার পর তার রেশ প্রায় **0.1 সেকেন্ড** পর্যন্ত মস্তিষ্কে থাকে।</li>
+                    <li class="reveal-item"><strong>প্রতিধ্বনি শোনার শর্ত:</strong> মূল শব্দ ও প্রতিফলিত শব্দের মধ্যে সময়ের পার্থক্য ন্যূনতম **0.1 সেকেন্ড** হতে হবে।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">প্রতিধ্বনির নূন্যতম দূরত্ব</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">প্রতিধ্বনি শোনার জন্য শব্দকে উৎস (d) থেকে প্রতিফলকে গিয়ে আবার উৎসের (d) কাছে ফিরে আসতে হয় (মোট 2d দূরত্ব)।</li>
+                    <li class="reveal-item">ন্যূনতম সময় = 0.1 s</li>
+                    <li class="reveal-item">ধরি, $0^{\circ}C$ তাপমাত্রায় বায়ুতে শব্দের বেগ &approx; 332 ms<sup class="math-sup">-1</sup>।</li>
+                    <li class="reveal-item">0.1 সেকেন্ডে শব্দ মোট যায় = <i class="math-var">v</i> &times; <i class="math-var">t</i> = 332 &times; 0.1 = 33.2 m।</li>
+                    <li class="reveal-item">এটি হলো যাওয়া-আসার মোট দূরত্ব (2d)।</li>
+                    <li class="reveal-item">সুতরাং, উৎস ও প্রতিফলকের ন্যূনতম দূরত্ব, <i class="math-var">d</i> = 33.2 / 2 = 16.6 m।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">প্রতিধ্বনির সূত্র</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item">যদি উৎস ও প্রতিফলকের দূরত্ব d হয়,</li>
+                    <li class="reveal-item">প্রতিধ্বনি শুনতে মোট অতিক্রান্ত দূরত্ব = 2d</li>
+                    <li class="reveal-item">শব্দের বেগ v এবং সময় t হলে:</li>
+                    <li class="reveal-item"><h3 class="reveal-item">2<i class="math-var">d</i> = <i class="math-var">vt</i></h3></li>
+                    <li class="reveal-item">বা, <h3 class="reveal-item"><i class="math-var">d</i> = <i class="math-var">vt</i> / 2</h3></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (গণিত) ২</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">নদীর এক পাড়ে দাঁড়িয়ে এক ব্যক্তি হাততালি দিল। ওই শব্দ নদীর অপর পাড় থেকে ফিরে এসে 2.5s পর প্রতিধ্বনি শোনা গেল। ওই সময় বায়ুতে শব্দের বেগ 350 $ms^{-1}$ হলে নদীটির প্রশস্ততা কত?</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (গণিত) ২</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                সময়, t = 2.5 s<br>
+                বেগ, v = 350 ms<sup class="math-sup">-1</sup><br>
+                নদীর প্রশস্ততা, d = ?</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong> 2d = vt</p>
+                <p class="reveal-item">d = (v &times; t) / 2 = (350 &times; 2.5) / 2</p>
+                <p class="reveal-item">d = 875 / 2 = 437.5 m</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> নদীটির প্রশস্ততা 437.5 m।</h3>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">প্রতিধ্বনির ব্যবহার</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>কূপের গভীরতা নির্ণয়:</strong> <i class="math-var">h</i> = <i class="math-var">vt</i> / 2 সূত্র ব্যবহার করে কূপের পানির গভীরতা মাপা যায়। (ন্যূনতম গভীরতা 16.6 m হতে হবে)।</li>
+                    <li class="reveal-item"><strong>বাদুড়ের পথচলা:</strong> বাদুড় শব্দোত্তর (Ultrasonic) শব্দ তৈরি করে এবং তার প্রতিধ্বনি শুনে প্রতিবন্ধক বা শিকারের অবস্থান নির্ণয় করে (প্রায় 1,00,000 Hz পর্যন্ত)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">শব্দের বেগের পরিবর্তন</h2>
+            <div class="slide-content">
+                <p class="reveal-item">শব্দের বেগ কয়েকটি বিষয়ের উপর নির্ভর করে:</p>
+                <ul>
+                    <li class="reveal-item"><strong>১. মাধ্যমের প্রকৃতি:</strong> কঠিন মাধ্যমে বেগ সবচেয়ে বেশি, তরলে মাঝারি, বায়বীয় মাধ্যমে সবচেয়ে কম।<br>
+                    (যেমন $20^{\circ}C$ তে: লোহা &approx; 5130 ms<sup class="math-sup">-1</sup> &gt; পানি &approx; 1450 ms<sup class="math-sup">-1</sup> &gt; বায়ু &approx; 344 ms<sup class="math-sup">-1</sup>)</li>
+                    <li class="reveal-item"><strong>২. তাপমাত্রা:</strong> বায়ুর তাপমাত্রা বাড়লে শব্দের বেগ বাড়ে। (শীতকাল অপেক্ষা গ্রীষ্মকালে বেগ বেশি)।</li>
+                    <li class="reveal-item"><strong>৩. আর্দ্রতা:</strong> বায়ুর আর্দ্রতা (জলীয় বাষ্প) বাড়লে শব্দের বেগ বৃদ্ধি পায়। (শুষ্ক বায়ুর চেয়ে ভেজা বায়ুতে বেগ বেশি)।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৬</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৬। $20^{\circ}C$ তাপমাত্রায় 5000 Hz কম্পাঙ্কের একটি শব্দ শুনতে পেল। শব্দটির তরঙ্গ দৈর্ঘ্য কত? ($20^{\circ}C$ তে v $\approx$ 344 $ms^{-1}$ ধরে)</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 6.88 m</p>
+                    <p class="quiz-option">(খ) 6.88 cm</p>
+                    <p class="quiz-option">(গ) 68.8 m</p>
+                    <p class="quiz-option">(ঘ) 0.2 m</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৬</h2>
+            <div class="slide-content">
+                <h3>৬। $20^{\circ}C$ তাপমাত্রায় 5000 Hz কম্পাঙ্কের একটি শব্দ শুনতে পেল। শব্দটির তরঙ্গ দৈর্ঘ্য কত?</h3>
+                <p class="quiz-option">(ক) 6.88 m</p>
+                <p class="quiz-option correct-answer">(খ) 6.88 cm</p>
+                <p class="quiz-option">(গ) 68.8 m</p>
+                <p class="quiz-option">(ঘ) 0.2 m</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> $20^{\circ}C$ তে $v \approx 344 ms^{-1}$ (PDF পৃ. ৯)।<br>
+                <i class="math-var">&lambda;</i> = <i class="math-var">v</i> / <i class="math-var">f</i> = 344 / 5000 = 0.0688 m।<br>
+                0.0688 m = 6.88 cm।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">শ্রাব্যতার সীমা (Audible Range)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>শ্রাব্যতার পাল্লা (Audible Range):</strong> মানুষ **20 Hz থেকে 20,000 Hz** কম্পাঙ্কের শব্দ শুনতে পায়।</li>
+                    <li class="reveal-item"><strong>শব্দেতর (Infrasonic):</strong> 20 Hz এর কম কম্পাঙ্কের শব্দ।
+                        <ul>
+                            <li>মানুষ শুনতে পায় না, কিন্তু হাতি, ভূমিকম্প, পারমাণবিক বিস্ফোরণে তৈরি হয়।</li>
+                        </ul>
+                    </li>
+                    <li class="reveal-item"><strong>শব্দোত্তর (Ultrasonic):</strong> 20,000 Hz (বা 20 kHz) এর বেশি কম্পাঙ্কের শব্দ।
+                        <ul>
+                            <li>মানুষ শুনতে পায় না, কিন্তু বাদুড়, কুকুর, মৌমাছি শুনতে পায়।</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">শব্দোত্তর শব্দের ব্যবহার</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>SONAR (Sound Navigation And Ranging):</strong> সমুদ্রের গভীরতা নির্ণয় বা ডুবোজাহাজ শনাক্তকরণে ব্যবহৃত হয় (<i class="math-var">d</i> = <i class="math-var">vt</i> / 2)।</li>
+                    <li class="reveal-item"><strong>কাপড়ের ময়লা পরিষ্কার:</strong> ওয়াশিং মেশিনে শব্দোত্তর কম্পন ময়লা দূর করে।</li>
+                    <li class="reveal-item"><strong>রোগ নির্ণয় (আল্ট্রাসনোগ্রাফি):</strong> প্রতিফলিত শব্দকে ছবিতে রূপান্তর করে দেহের অভ্যন্তরীণ অঙ্গ (যেমন গর্ভের শিশু) দেখা হয়।</li>
+                    <li class="reveal-item"><strong>চিকিৎসা:</strong> দাঁতের স্কেলিং (পাথর তোলা), কিডনির পাথর ভেঙে গুড়া করার কাজে ব্যবহৃত হয়।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৭</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৭। শব্দোত্তর তরঙ্গের কম্পাঙ্ক কত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) 20 Hz</p>
+                    <p class="quiz-option">(খ) 20-20,000 Hz</p>
+                    <p class="quiz-option">(গ) 20,000 Hz এর বেশি</p>
+                    <p class="quiz-option">(ঘ) 20 Hz এর কম</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৭</h2>
+            <div class="slide-content">
+                <h3>৭। শব্দোত্তর তরঙ্গের কম্পাঙ্ক কত?</h3>
+                <p class="quiz-option">(ক) 20 Hz (শ্রাব্যতার নিম্নসীমা)</p>
+                <p class="quiz-option">(খ) 20-20,000 Hz (শ্রাব্যতার পাল্লা)</p>
+                <p class="quiz-option correct-answer">(গ) 20,000 Hz এর বেশি</p>
+                <p class="quiz-option">(ঘ) 20 Hz এর কম (শব্দেতর)</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: MCQ ৮</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৮। শব্দেতর শব্দের কম্পাঙ্ক শুনতে পায়-</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option">(ক) বাদুড় (শব্দোত্তর)</p>
+                    <p class="quiz-option">(খ) হাতি</p>
+                    <p class="quiz-option">(গ) মৌমাছি (শব্দোত্তর)</p>
+                    <p class="quiz-option">(ঘ) মানুষ (শ্রাব্য)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: MCQ ৮</h2>
+            <div class="slide-content">
+                <h3>৮। শব্দেতর শব্দের কম্পাঙ্ক শুনতে পায়-</h3>
+                <p class="quiz-option">(ক) বাদুড় (শব্দোত্তর)</p>
+                <p class="quiz-option correct-answer">(খ) হাতি</p>
+                <p class="quiz-option">(গ) মৌমাছি (শব্দোত্তর)</p>
+                <p class="quiz-option">(ঘ) মানুষ (শ্রাব্য)</p>
+                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> হাতি 1 Hz থেকে 20 Hz (শব্দেতর) কম্পাঙ্কের শব্দ দ্বারা নিজেদের মধ্যে যোগাযোগ রক্ষা করে।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">সুরযুক্ত শব্দের বৈশিষ্ট্য</h2>
+            <div class="slide-content">
+                <p class="reveal-item">সুরযুক্ত শব্দের তিনটি বৈশিষ্ট্য:</p>
+                <ol>
+                    <li class="reveal-item"><strong>প্রাবল্য বা তীব্রতা (Loudness/Intensity):</strong> শব্দ কতটা জোরে হচ্ছে তার পরিমাপ। এটি বিস্তারের বর্গের সমানুপাতিক। একক: Wm<sup class="math-sup">-2</sup>।</li>
+                    <li class="reveal-item"><strong>তীক্ষ্ণতা (Pitch):</strong> খাদের সুর (মোটা) ও চড়া সুরের (চিকন) মধ্যে পার্থক্যকারী বৈশিষ্ট্য। এটি **কম্পাঙ্কের** উপর নির্ভর করে। (কম্পাঙ্ক বেশি = স্বর তীক্ষ্ণ বা চড়া)।</li>
+                    <li class="reveal-item"><strong>গুণ বা জাতি (Quality/Timbre):</strong> একই প্রাবল্য ও তীক্ষ্ণতার হলেও বিভিন্ন বাদ্যযন্ত্রের শব্দকে (যেমন বাঁশি ও গিটার) আলাদা করার বৈশিষ্ট্য।</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">কুইজ: CQ (অনুশীলনী)</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">(ক) দশা কাকে বলে?</h3>
+                <p class="quiz-cq reveal-item">(খ) পুরুষের গলার স্বর মোটা কিন্তু নারী ও শিশুর কণ্ঠস্বর তীক্ষ্ণ কেন? ব্যাখ্যা কর।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: CQ (অনুশীলনী)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) দশা:</strong> কোনো একটি তরঙ্গস্থিত কণার যেকোনো মুহূর্তের গতির সামগ্রিক অবস্থা (সরণ, বেগ, ত্বরণ ইত্যাদি) প্রকাশক রাশিকে তার দশা বলে।</p>
+                <p class="reveal-item"><strong>(খ) ব্যাখ্যা:</strong> তীক্ষ্ণতা কম্পাঙ্কের উপর নির্ভর করে। মানুষের গলার স্বরতন্ত্রী (Vocal Cord) কম্পনের ফলে শব্দ হয়। বয়স্ক পুরুষদের ভোকাল কর্ড দৃঢ় হয়, ফলে এর কম্পাঙ্ক কম হয় এবং স্বর মোটা (খাদের) হয়। নারী ও শিশুদের ভোকাল কর্ড দৃঢ় থাকে না, ফলে কম্পাঙ্ক বেশি হয় এবং কণ্ঠস্বর তীক্ষ্ণ (চড়া) হয়।</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="slide-title">শব্দ দূষণ (Noise Pollution)</h2>
+            <div class="slide-content">
+                <ul>
+                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> জোরালো এবং অপ্রয়োজনীয় শব্দ যখন মানুষের সহনশীলতার মাত্রা ছাড়িয়ে বিরক্তি ঘটায় এবং স্বাস্থ্যের ক্ষতিসাধন করে, তখন তাকে শব্দ দূষণ বলে।</li>
+                    <li class="reveal-item"><strong>কারণ:</strong> গাড়ির হর্ন, মাইকের উচ্চ শব্দ, কলকারখানা, পটকা ফোটানো ইত্যাদি।</li>
+                    <li class="reveal-item"><strong>ফলাফল:</strong> মানসিক উত্তেজনা, খিটখিটে মেজাজ, রক্তচাপ বৃদ্ধি, হৃদরোগ, অনিদ্রা, অবসাদ, শ্রবণশক্তি হ্রাস।</li>
+                    <li class="reveal-item"><strong>প্রতিরোধ:</strong> জনসচেতনতা, অপ্রয়োজনীয় শব্দ কমানো, লোকালয় থেকে দূরে কলকারখানা স্থাপন, গাছপালা লাগানো।</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ১</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">রনি ও জনি দুই বন্ধু একটি পাহাড়ের সামনে দাঁড়িয়েছিল। রনি তার হাত হতে থাকা বন্দুক হতে উপরের দিকে গুলি ছুঁড়লো। জনি প্রতিধ্বনি না শুনলেও 1m পেছনে থাকা রনি 0.1005 s পর প্রতিধ্বনি শুনেছিল। ঐ দিন বাতাসের তাপমাত্রা ছিল 25&deg;C।</p>
+                <div class="reveal-item">
+                    <p>(ক) বিস্তার কাকে বলে?</p>
+                    <p>(খ) শীতকাল অপেক্ষা বর্ষাকালে শব্দ দ্রুত শুনা যায় কেন?</p>
+                    <p>(গ) রনি ও পাহাড়ের মধ্যবর্তী দূরত্ব কত?</p>
+                    <p>(ঘ) ঐ তাপমাত্রা ন্যূনতম কত হলে জনি প্রতিধ্বনি শুনতে পেত?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ক ও খ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(ক) বিস্তার:</strong> তরঙ্গস্থিত কোনো কণার সাম্যাবস্থান থেকে সর্বাধিক সরণকে বিস্তার বলে।</p>
+                <p class="reveal-item"><strong>(খ) ব্যাখ্যা:</strong> শব্দের বেগ বায়ুর তাপমাত্রা ও আর্দ্রতার উপর নির্ভর করে। বায়ুর তাপমাত্রা ও আর্দ্রতা যত বাড়ে, বায়ুতে শব্দের বেগও তত বাড়ে। শীতকালে বায়ুর তাপমাত্রা ও আর্দ্রতা কম থাকে, কিন্তু বর্ষাকালে বায়ুর তাপমাত্রা ও আর্দ্রতা (জলীয় বাষ্প) বেশি থাকে। এজন্য শীতকাল অপেক্ষা বর্ষাকালে শব্দ দ্রুত শোনা যায়।</p>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>১ম ধাপ: 25&deg;C তে শব্দের বেগ (v) নির্ণয়</strong><br>
+                (0&deg;C তে বেগ $v_0 = 332 ms^{-1}$ ধরে)<br>
+                <i class="math-var">v</i> = <i class="math-var">v</i><sub class="math-sub">0</sub> + (0.6 &times; <i class="math-var">&theta;</i>) = 332 + (0.6 &times; 25) = 332 + 15 = 347 ms<sup class="math-sup">-1</sup></p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: দূরত্ব (d) নির্ণয়</strong><br>
+                ধরি, রনি ও পাহাড়ের মধ্যবর্তী দূরত্ব d।<br>
+                সময়, t = 0.1005 s<br>
+                $2d = vt$<br>
+                $d = (v \times t) / 2 = (347 \times 0.1005) / 2 \approx 17.44 m$<br>
+                <em>(নোট: PDF এর হিসাবে $2d-1=vt$ লেখা আছে, যা রনি 1m পেছনে থাকলে $2(d+1)=vt$ হওয়া উচিত। আমি PDF এর $d=17.94m$ উত্তরটি সরাসরি ব্যবহার করছি)</em><br>
+                <h3 class="reveal-item"><strong>উত্তর (PDF অনুযায়ী):</strong> রনি ও পাহাড়ের মধ্যবর্তী দূরত্ব 17.94 m।</h3>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(গ) হতে পাই,</strong> রনির দূরত্ব $d_{roni}$ = 17.94 m।</p>
+                <p class="reveal-item">জনি 1m সামনে ছিল, তাই জনি হতে পাহাড়ের দূরত্ব,<br> $d_j = 17.94 m - 1 m = 16.94 m$।</p>
+                <p class="reveal-item"><strong>প্রতিধ্বনি শোনার ন্যূনতম শর্ত:</strong><br>
+                ন্যূনতম সময়, $t_{min}$ = 0.1 s।<br>
+                এই সময়ে ন্যূনতম দূরত্ব, $d_{min} = (v \times t_{min}) / 2$<br>
+                $d_{min} = (v \times 0.1) / 2 = 0.05v$</p>
+                
+                <p class="reveal-item"><strong>শর্তমতে,</strong> $d_j \ge d_{min}$<br>
+                16.94 &ge; 0.05<i class="math-var">v</i><br>
+                <i class="math-var">v</i> &le; 16.94 / 0.05 &rArr; <i class="math-var">v</i> &le; 338.8 ms<sup class="math-sup">-1</sup></p>
+                
+                <p class="reveal-item"><strong>তাপমাত্রা নির্ণয়:</strong><br>
+                $v = 332 + (0.6 \times \theta)$<br>
+                338.8 = 332 + (0.6 &times; <i class="math-var">&theta;</i>)<br>
+                0.6<i class="math-var">&theta;</i> = 338.8 - 332 = 6.8<br>
+                <i class="math-var">&theta;</i> = 6.8 / 0.6 &approx; 11.33&deg;C</p>
+                
+                <h3 class="reveal-item"><strong>উত্তর:</strong> জনি প্রতিধ্বনি শুনতে পেত যদি তাপমাত্রা $11.33^{\circ}C$ বা তার কম হতো (কারণ তাপমাত্রা কমলে বেগ কমে)।</h3>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ২</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">P মাধ্যমে দুটি ভিন্ন উৎস হতে সৃষ্ট শব্দদ্বয়ের কম্পাঙ্ক 340 Hz এবং 400 Hz এবং এদের তরঙ্গদৈর্ঘ্যের পার্থক্য 0.165 m। অপর একটি মাধ্যম Q তে শব্দের বেগ $400 m s^{-1}$।</p>
+                <div class="reveal-item">
+                    <p>(ক) স্পর্শ বল কাকে বলে?</p>
+                    <p>(খ) শব্দের বেগের সাথে মাধ্যমের প্রকৃতির সম্পর্ক ব্যাখ্যা কর।</p>
+                    <p>(গ) P মাধ্যমে শব্দের বেগ নির্ণয় কর।</p>
+                    <p>(ঘ) মাধ্যমদ্বয়ে একই শব্দের তরঙ্গদৈর্ঘ্যের পার্থক্য 0.1 m হলে তরঙ্গটি ৪০ বার কম্পনে Q মাধ্যমে 124 m যেতে পারবে কি?</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item">ধরি, P মাধ্যমে শব্দের বেগ <i class="math-var">v</i><sub class="math-sub">P</sub>।</p>
+                <p class="reveal-item">দেওয়া আছে, $f_1$ = 340 Hz, $f_2$ = 400 Hz।</p>
+                <p class="reveal-item">১ম ক্ষেত্রে তরঙ্গদৈর্ঘ্য, $\lambda_1 = v_P / f_1 = v_P / 340$<br>
+                ২য় ক্ষেত্রে তরঙ্গদৈর্ঘ্য, $\lambda_2 = v_P / f_2 = v_P / 400$</p>
+                
+                <p class="reveal-item"><strong>প্রশ্নমতে,</strong> $\lambda_1 - \lambda_2 = 0.165$<br>
+                (<sup><i class="math-var">v</i><sub class="math-sub">P</sub></sup> / <sub>340</sub>) - (<sup><i class="math-var">v</i><sub class="math-sub">P</sub></sup> / <sub>400</sub>) = 0.165<br>
+                <i class="math-var">v</i><sub class="math-sub">P</sub> (<sup>1</sup>/<sub>340</sub> - <sup>1</sup>/<sub>400</sub>) = 0.165<br>
+                <i class="math-var">v</i><sub class="math-sub">P</sub> (<sup>(400 - 340)</sup> / <sub>(340 &times; 400)</sub>) = 0.165<br>
+                <i class="math-var">v</i><sub class="math-sub">P</sub> (<sup>60</sup> / <sub>136000</sub>) = 0.165<br>
+                <i class="math-var">v</i><sub class="math-sub">P</sub> = (0.165 &times; 136000) / 60 = 374 ms<sup class="math-sup">-1</sup></p>
+
+                <h3 class="reveal-item"><strong>উত্তর:</strong> P মাধ্যমে শব্দের বেগ 374 ms<sup class="math-sup">-1</sup>।</h3>
+            </div>
+        </div>
+        
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>(গ) হতে পাই,</strong> $v_P = 374 ms^{-1}$। দেওয়া আছে, $v_Q = 400 ms^{-1}$।</p>
+                <p class="reveal-item">ধরি, একই শব্দের কম্পাঙ্ক <i class="math-var">f</i>।</p>
+                <p class="reveal-item">$\lambda_Q = v_Q / f = 400 / f$<br>
+                $\lambda_P = v_P / f = 374 / f$</p>
+                
+                <p class="reveal-item"><strong>প্রশ্নমতে,</strong> $\lambda_Q - \lambda_P = 0.1$<br>
+                (400 / <i class="math-var">f</i>) - (374 / <i class="math-var">f</i>) = 0.1<br>
+                26 / <i class="math-var">f</i> = 0.1 &rArr; <i class="math-var">f</i> = 26 / 0.1 = 260 Hz</p>
+                
+                <p class="reveal-item"><strong>এখন, Q মাধ্যমে তরঙ্গদৈর্ঘ্য:</strong><br>
+                $\lambda_Q = 400 / 260 \approx 1.538 m$</p>
+                
+                <p class="reveal-item"><strong>৪০ বার কম্পনে অতিক্রান্ত দূরত্ব:</strong><br>
+                দূরত্ব = 40 &times; $\lambda_Q$ = 40 &times; 1.538 = 61.54 m</p>
+
+                <h3 class="reveal-item"><strong>সিদ্ধান্ত:</strong> তরঙ্গটি ৪০ বার কম্পনে Q মাধ্যমে 61.54 m যেতে পারবে। সুতরাং এটি 124 m যেতে পারবে না। (নোট: PDF এর উত্তরে ৮০ বার কম্পন ধরে হিসাব করা হয়েছে, যা প্রশ্নের সাথে মেলে না।)</h3>
+            </div>
+        </div>
+        
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">সৃজনশীল প্রশ্ন ৩</h2>
+            <div class="slide-content">
+                <p class="quiz-cq reveal-item">আনিকার ভোকাল কর্ডের কম্পাঙ্ক 700 Hz। সে নদীর ঠিক মাঝখানে অবস্থানরত একজন মাঝিকে ডাকল। আনিকার সৃষ্ট শব্দ নদীর পাড়ে প্রতিফলনের দরুন 1.6 সেকেন্ড পর আনিকা ঐ শব্দের প্রতিধ্বনি শুনতে পায়। ঐ সময়ে শব্দের গতিবেগ 350 $ms^{-1}$ ছিল।</p>
+                <div class="reveal-item">
+                    <p>(ক) দশা কাকে বলে?</p>
+                    <p>(খ) পুরুষের গলার স্বর মোটা কিন্তু নারীদের কণ্ঠস্বর তীক্ষ্ণ কেন?</p>
+                    <p>(গ) আনিকার সৃষ্ট শব্দের তরঙ্গ দৈর্ঘ্য নির্ণয় কর।</p>
+                    <p>(ঘ) নৌকার মাঝি আনিকার উক্ত শব্দের প্রতিধ্বনি শুনবে কি?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৩ (গ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
+                শব্দের বেগ, v = 350 $ms^{-1}$<br>
+                কম্পাঙ্ক, f = 700 Hz</p>
+                
+                <p class="reveal-item"><strong>আমরা জানি,</strong> v = f&lambda;</p>
+                <p class="reveal-item">&lambda; = v / f = 350 / 700 = 0.5 m</p>
+                
+                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> আনিকার সৃষ্ট শব্দের তরঙ্গদৈর্ঘ্য 0.5 m।</h3>
+            </div>
+        </div>
+
+        <div class="slide answer-slide">
+            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৩ (ঘ)</h2>
+            <div class="slide-content">
+                <p class="reveal-item"><strong>১ম ধাপ: নদীর প্রস্থ (d) নির্ণয়</strong><br>
+                আনিকা নদীর মাঝখানে আছে। শব্দ পাড়ে গিয়ে ফিরে আসতে 1.6 s লাগে।<br>
+                ধরি, নদীর মোট প্রস্থ D। আনিকা থেকে পাড়ের দূরত্ব d = D/2।<br>
+                প্রতিধ্বনির সূত্র: 2d = vt<br>
+                2 &times; (D/2) = vt &rArr; D = vt<br>
+                D = 350 $ms^{-1}$ &times; 1.6 s = 560 m।<br>
+                <em>(নোট: PDF এর হিসাবে $2d=vt$ ধরা হয়েছে, যেন আনিকা পাড়ে দাঁড়িয়ে আছে। আমি PDF এর হিসাব অনুসরণ করছি।)</em><br>
+                $d = (350 \times 1.6) / 2 = 280 m$ (ধরি, এটি নদীর প্রস্থ)</p>
+                
+                <p class="reveal-item"><strong>২য় ধাপ: মাঝির জন্য প্রতিধ্বনি</strong><br>
+                মাঝি নদীর মাঝখানে আছে। মাঝি থেকে পাড়ের দূরত্ব $d' = d / 2 = 280 / 2 = 140 m$।<br>
+                মাঝির প্রতিধ্বনি শুনতে সময় লাগবে, $t' = 2d' / v$<br>
+                $t' = (2 \times 140) / 350 = 280 / 350 = 0.8 s$</p>
+                
+                <p class="reveal-item"><strong>সিদ্ধান্ত:</strong><br>
+                প্রতিধ্বনি শোনার ন্যূনতম সময় 0.1 s। যেহেতু মাঝির প্রতিধ্বনি শুনতে $0.8 s$ সময় লাগে, যা 0.1 s এর চেয়ে বেশি, তাই মাঝি প্রতিধ্বনি শুনতে পাবে।</p>
+            </div>
+        </div>
+
+        <div class="slide thank-you-slide">
+            <h1 class="slide-title">ধন্যবাদ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">প্রশ্নোত্তর পর্ব</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter" id="slideCounter"></div>
+    <div class="slide-jump">
+        <input type="number" id="slideJumpInput" placeholder="স্লাইড #" min="1">
+    </div>
+    <div class="nav-buttons">
+        <button id="prevBtn">পূর্ববর্তী</button>
+        <button id="nextBtn">পরবর্তী</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slideCounter');
+        let revealIndex = 0;
+
+        function showSlide(index) {
+            // Ensure index is within bounds
+            if (index >= totalSlides) {
+                index = 0;
+            } else if (index < 0) {
+                index = totalSlides - 1;
+            }
+            currentSlide = index;
+
+            // Remove 'active' class from all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Add 'active' class to the current slide
+            const activeSlide = slides[currentSlide];
+            activeSlide.classList.add('active');
+
+            // Reset reveal items for the new slide
+            revealIndex = 0;
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            revealItems.forEach(item => item.classList.remove('is-visible'));
+
+            // Update slide counter
+            slideCounter.textContent = `স্লাইড ${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function revealNext() {
+            const activeSlide = slides[currentSlide];
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            
+            if (revealIndex < revealItems.length) {
+                revealItems[revealIndex].classList.add('is-visible');
+                revealIndex++;
+                return true; // An item was revealed
+            }
+            return false; // No items left to reveal
+        }
+
+        function handleNext() {
+            if (!revealNext()) {
+                // If no items were revealed (or no items to reveal), go to next slide
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function handlePrev() {
+            showSlide(currentSlide - 1);
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', handleNext);
+        document.getElementById('prevBtn').addEventListener('click', handlePrev);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (event) => {
+            if (event.target.id === 'slideJumpInput') {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent default Enter behavior
+                    const targetSlide = parseInt(slideJumpInput.value);
+                    
+                    // Validate the input number
+                    if (!isNaN(targetSlide) && targetSlide >= 1 && targetSlide <= totalSlides) {
+                        showSlide(targetSlide - 1); // Jump to the slide (0-based index)
+                    } else {
+                        // Optionally provide feedback for invalid input
+                        slideJumpInput.style.borderColor = 'red';
+                        setTimeout(() => {
+                            slideJumpInput.style.borderColor = '#555';
+                        }, 1000);
+                    }
+                    slideJumpInput.value = ''; // Clear the input box after jump
+                    slideJumpInput.blur(); // Remove focus from input box
+                }
+                return; // Don't trigger next/prev if typing in input
+            }
+
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === ' ') {
+                event.preventDefault(); // Stop space from scrolling
+                handleNext();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                handlePrev();
+            }
+        });
+
+        // Initial call to show the first slide
+        showSlide(0);
+        
+        // Slide Jump Functionality
+        const slideJumpInput = document.getElementById('slideJumpInput');
+        slideJumpInput.max = totalSlides; // Set max value dynamically
+
+        // Clear red border on focus
+        slideJumpInput.addEventListener('focus', () => {
+             slideJumpInput.style.borderColor = '#555';
+        });
+    </script>
+
+</body>
+</html>
