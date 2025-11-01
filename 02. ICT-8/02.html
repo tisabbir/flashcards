@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আইসিটি কুইজ (অধ্যায় ২)</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #1E1E1E;
+            box-sizing: border-box;
+            padding: 50px 80px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border-left: 10px solid #03DAC6; /* Accent color */
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide-title {
+            font-size: 3.2em;
+            color: #03DAC6; /* Accent color */
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+
+        .slide-content {
+            font-size: 1.6em;
+            color: #CFD8DC;
+        }
+        
+        .slide-content h3 {
+            color: #BB86FC; /* Secondary accent */
+            font-size: 1.5em;
+        }
+
+        .slide-content ul {
+            list-style-type: square;
+            padding-left: 40px;
+        }
+
+        .slide-content li, .slide-content p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        /* HTML Math Styling */
+        sup, .math-sup { font-size: 0.75em; vertical-align: super; }
+        sub, .math-sub { font-size: 0.75em; vertical-align: sub; }
+
+        /* Reveal items */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .reveal-item.is-visible { opacity: 1; transform: translateY(0); }
+
+        /* Special slide types */
+        .title-slide, .thank-you-slide {
+            background: linear-gradient(135deg, #2C3E50, #1a2a3a);
+            color: white;
+            align-items: center;
+            text-align: center;
+            border-left: 10px solid #BB86FC;
+        }
+        .title-slide .slide-title, .thank-you-slide .slide-title { font-size: 4.5em; color: white; border-bottom: none; }
+        .title-slide .slide-content, .thank-you-slide .slide-content { font-size: 1.8em; color: #ddd; }
+
+        .quiz-slide { border-left: 10px solid #E91E63; }
+        .quiz-slide .slide-title { color: #E91E63; }
+        
+        /* New Interactive Quiz Option Styles */
+        .quiz-option {
+            font-size: 1.1em !important;
+            margin: 10px 0 !important;
+            padding: 12px 15px;
+            border: 2px solid #444;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        .quiz-option:hover {
+            border-color: #03DAC6;
+            background-color: #2a2a2a;
+        }
+        .quiz-option.selected-correct {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border-color: #4CAF50;
+        }
+        .quiz-option.selected-wrong {
+            background-color: #f44336; /* Red */
+            color: white;
+            border-color: #f44336;
+        }
+        .quiz-option.locked {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .quiz-slide .quiz-cq { font-size: 1.2em; background: #2a2a2a; padding: 15px; border-radius: 8px; border-left: 4px solid #E91E63; }
+        
+        /* New Explanation Slide Style */
+        .explanation-slide { border-left: 10px solid #faad14; /* Amber */ }
+        .explanation-slide .slide-title { color: #faad14; }
+        .explanation-slide .explanation-text {
+            font-size: 1.2em;
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #faad14;
+        }
+        .explanation-slide .correct-answer-text {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #4CAF50; /* Green */
+            margin-bottom: 15px;
+        }
+
+        /* Navigation */
+        .nav-buttons { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
+        .nav-buttons button { font-size: 1em; padding: 10px 20px; margin-left: 10px; background-color: #03DAC6; color: #121212; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        .nav-buttons button:hover { background-color: #018786; transform: scale(1.05); }
+        
+        .slide-jump {
+            position: fixed;
+            bottom: 35px;
+            left: 150px; /* Adjust position as needed */
+            z-index: 1000;
+        }
+        .slide-jump input {
+            width: 80px;
+            padding: 8px 10px;
+            font-size: 1em;
+            background-color: #333;
+            color: #E0E0E0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            text-align: center;
+        }
+        /* Hide number input arrows */
+        .slide-jump input::-webkit-outer-spin-button,
+        .slide-jump input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        .slide-jump input[type=number] {
+          -moz-appearance: textfield; /* Firefox */
+        }
+        
+        .slide-counter { position: fixed; bottom: 40px; left: 30px; font-size: 1.2em; color: #888; z-index: 1000; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <div class="slide title-slide active">
+            <h1 class="slide-title">আইসিটি কুইজ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">বিষয়: তথ্য ও যোগাযোগ প্রযুক্তি</p>
+                <p class="reveal-item">অধ্যায়: দ্বিতীয় (কম্পিউটার নেটওয়ার্ক)</p>
+                <p class="reveal-item">© মো. তারেকুল ইসলাম সাব্বির</p>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১. দুই বা ততোধিক কম্পিউটারকে যোগাযোগের কোনো মাধ্যম দিয়ে একসাথে জুড়ে দিলে যদি তারা তথ্য বিনিময় করতে পারে, তাকে কী বলে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) কম্পিউটার টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(খ) কম্পিউটার প্রটোকল</p>
+                    <p class="quiz-option" data-correct="true">(গ) কম্পিউটার নেটওয়ার্ক</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) কম্পিউটার সিস্টেম</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (গ) কম্পিউটার নেটওয়ার্ক</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "দুই বা ততোধিক কম্পিউটারকে যোগাযোগের কোনো মাধ্যম দিয়ে একসাথে জুড়ে দিলে যদি তারা নিজেদের ভেতর তথ্য কিংবা উপাত্ত আদান-প্রদান করতে পারে- তাহলেই আমরা সেটাকে কম্পিউটার নেটওয়ার্ক বলতে পারি।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২. নেটওয়ার্কে যে শক্তিশালী কম্পিউটারটি অন্যান্য কম্পিউটারকে নানা রকম সেবা দিয়ে থাকে, তাকে কী বলে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) ক্লায়েন্ট</p>
+                    <p class="quiz-option" data-correct="true">(খ) সার্ভার</p>
+                    <p class="quiz-option" data-correct="false">(গ) ইউজার</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) এডাপ্টার</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) সার্ভার</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "সার্ভার হচ্ছে শক্তিশালী কম্পিউটার যেটি নেটওয়ার্কের অন্য কম্পিউটারকে নানা রকম সেবা দিয়ে থাকে।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৩:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩. সার্ভার থেকে যে কম্পিউটার কোনো ধরনের তথ্য বা সেবা নেয়, তাকে কী বলা হয়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) ক্লায়েন্ট</p>
+                    <p class="quiz-option" data-correct="false">(খ) ইউজার</p>
+                    <p class="quiz-option" data-correct="false">(গ) রিসোর্স</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) মিডিয়া</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৩</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) ক্লায়েন্ট</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "যে সব কম্পিউটার সার্ভার থেকে কোনো ধরনের তথ্য নেয় তাকে ক্লায়েন্ট বলে।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৪:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৪. কম্পিউটার নেটওয়ার্কে যে বস্তু বা মাধ্যম ব্যবহার করে কম্পিউটারগুলো জুড়ে দেওয়া হয় (যেমন- অপটিক্যাল ফাইবার), তাকে কী বলে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) মিডিয়া</p>
+                    <p class="quiz-option" data-correct="false">(খ) প্রটোকল</p>
+                    <p class="quiz-option" data-correct="false">(গ) রিসোর্স</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) নেটওয়ার্ক এডাপ্টার</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৪</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) মিডিয়া</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "যে বস্তু ব্যবহার করে কম্পিউটারগুলো জুড়ে দেওয়া হয় সেটা হচ্ছে মিডিয়া। বৈদ্যুতিক তার... অপটিক্যাল ফাইবার ইত্যাদি মিডিয়া হতে পারে।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৫:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৫. কম্পিউটারকে নেটওয়ার্কের সাথে যুক্ত করার জন্য কম্পিউটারের সাথে যে কার্ডটি লাগাতে হয়, তার নাম কী?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) মিডিয়া কার্ড</p>
+                    <p class="quiz-option" data-correct="false">(খ) রিসোর্স কার্ড</p>
+                    <p class="quiz-option" data-correct="true">(গ) নেটওয়ার্ক ইন্টারফেস কার্ড (NIC)</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) সার্ভার কার্ড</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৫</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (গ) নেটওয়ার্ক ইন্টারফেস কার্ড (NIC)</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "সেটি করার জন্য কম্পিউটারের সাথে একটি নেটওয়ার্ক ইন্টারফেস কার্ড (NIC) লাগাতে হয়।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৬:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৬. ক্লায়েন্টের কাছে ব্যবহারের জন্য যে সকল সুযোগ-সুবিধা দেওয়া হয় (যেমন- প্রিন্টার বা সফটওয়্যার), সেগুলোকে একত্রে কী বলে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) প্রটোকল</p>
+                    <p class="quiz-option" data-correct="true">(খ) রিসোর্স</p>
+                    <p class="quiz-option" data-correct="false">(গ) মিডিয়া</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) ক্লায়েন্ট</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৬</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) রিসোর্স</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "ক্লায়েন্টের কাছে ব্যবহারের জন্য যে সকল সুযোগ-সুবিধা দেওয়া হয়, তার সবই হচ্ছে রিসোর্স। কম্পিউটারের সাথে যদি একটি প্রিন্টার...লাগানো হয় সেটি হচ্ছে রিসোর্স।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৭:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৭. ভিন্ন ভিন্ন কম্পিউটারের মধ্যে তথ্য আদান-প্রদানের জন্য যে নির্দিষ্ট নিয়ম-কানুন মেনে চলতে হয়, তাকে কী বলে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) প্রটোকল</p>
+                    <p class="quiz-option" data-correct="false">(খ) টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(গ) মিডিয়া</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) নেটওয়ার্কিং</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৭</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) প্রটোকল</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "ভিন্ন ভিন্ন কম্পিউটারকে একসাথে যুক্ত করতে হলে...যোগাযোগ করার জন্য কিছু নির্দিষ্ট নিয়ম মেনে চলতে হয়। ...এই নিয়মগুলোই হচ্ছে প্রটোকল।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৮:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৮. ইন্টারনেটে ওয়েব পেজ ব্রাউজ করার জন্য ব্যবহৃত প্রটোকল http-এর পূর্ণরূপ কী?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) Hyperlink Transfer Protocol</p>
+                    <p class="quiz-option" data-correct="true">(খ) Hypertext Transfer Protocol</p>
+                    <p class="quiz-option" data-correct="false">(গ) Hypertext Transmission Protocol</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) Hyperlink Transmission Protocol</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৮</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) Hypertext Transfer Protocol</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "...ইন্টারনেটে ওয়েব পেজব্রাউজ করার জন্য প্রটোকল হলো hypertext transfer protocol (http)।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৯:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৯. স্কুল, কলেজ বা বিশ্ববিদ্যালয়ে সাধারণত কোন ধরনের কম্পিউটার নেটওয়ার্ক ব্যবহার করা হয়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) PAN (Personal Area Network)</p>
+                    <p class="quiz-option" data-correct="true">(খ) LAN (Local Area Network)</p>
+                    <p class="quiz-option" data-correct="false">(গ) MAN (Metropolitan Area Network)</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) WAN (Wide Area Network)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৯</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) LAN (Local Area Network)</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "স্কুল, কলেজ, বিশ্ববিদ্যালয় বা বিভিন্ন প্রতিষ্ঠানে যে সকল নেটওয়ার্ক ব্যবহার করতে দেখা যায়, এগুলো সবই লোকাল এরিয়া নেটওয়ার্ক বা LAN।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১০:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১০. সচরাচর একটি শহরের মধ্যে যে নেটওয়ার্ক তৈরি করা হয়, তাকে কী বলে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) LAN</p>
+                    <p class="quiz-option" data-correct="true">(খ) MAN</p>
+                    <p class="quiz-option" data-correct="false">(গ) WAN</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) PAN</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১০</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) MAN</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "সচরাচর একটি শহরের মধ্যে যে নেটওয়ার্ক তৈরি করা হয় তা হলো MAN।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১১:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১১. কোন টপোলজিতে একটি মূল ব্যাকবোন বা মূল লাইনের সাথে সবগুলো কম্পিউটারকে জুড়ে দেওয়া হয়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) রিং টপোলজি</p>
+                    <p class="quiz-option" data-correct="true">(খ) বাস টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(গ) স্টার টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) ট্রি টপোলজি</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১১</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) বাস টপোলজি</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "এই টপোলজিতে একটা মূল ব্যাকবোন বা মূল লাইনের সাথে সবগুলো কম্পিউটারকে জুড়ে দেওয়া হয়।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১২:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১২. বাস টপোলজির প্রধান অসুবিধা কী?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) একটি কম্পিউটার নষ্ট হলে নেটওয়ার্ক অকেজো হয়ে যায়</p>
+                    <p class="quiz-option" data-correct="true">(খ) মূল ব্যাকবোন নষ্ট হলে সম্পূর্ণ নেটওয়ার্ক অকেজো হয়ে যায়</p>
+                    <p class="quiz-option" data-correct="false">(গ) কেন্দ্রীয় হাব নষ্ট হলে নেটওয়ার্ক অকেজো হয়ে যায়</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) তথ্য একটি নির্দিষ্ট দিকে প্রবাহিত হয়</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১২</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) মূল ব্যাকবোন নষ্ট হলে সম্পূর্ণ নেটওয়ার্ক অকেজো হয়ে যায়</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "মনে রাখতে হবে মূল বাস/ব্যাকবোন নষ্ট হয়ে গেলে সম্পূর্ণ নেটওয়ার্ক অকেজো হয়ে যায়।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১৩:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১৩. কোন টপোলজিতে প্রত্যেকটা কম্পিউটার অন্য ঠিক দুটি কম্পিউটারের সাথে যুক্ত থাকে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) স্টার টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(খ) মেশ টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(গ) বাস টপোলজি</p>
+                    <p class="quiz-option" data-correct="true">(ঘ) রিং টপোলজি</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১৩</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ঘ) রিং টপোলজি</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "...এই টপোলজিতে প্রত্যেকটা কম্পিউটার অন্য দুটো কম্পিউটারের সাথে যুক্ত।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১৪:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১৪. কোন টপোলজিতে একটিমাত্র কম্পিউটার নষ্ট হয়ে গেলে সম্পূর্ণ নেটওয়ার্ক বিকল হয়ে যেতে পারে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) স্টার টপোলজি</p>
+                    <p class="quiz-option" data-correct="true">(খ) রিং টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(গ) মেশ টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) হাইব্রিড টপোলজি</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১৪</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) রিং টপোলজি</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "উল্লেখযোগ্য এক্ষেত্রে (রিং টপোলজিতে) কোনো একটি কম্পিউটার নষ্ট হয়ে গেলে সম্পূর্ণ নেটওয়ার্ক বিকল হয়ে যাবে।" (বাস টপোলজিতেও মূল লাইন নষ্ট হলে এটি হয়, কিন্তু কম্পিউটার নষ্ট হলে হয় না)।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১৫:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১৫. কোন টপোলজিতে সবগুলো কম্পিউটার একটি কেন্দ্রীয় হাব বা সুইচের সাথে যুক্ত থাকে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) বাস টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(খ) রিং টপোলজি</p>
+                    <p class="quiz-option" data-correct="true">(গ) স্টার টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) মেশ টপোলজি</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১৫</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (গ) স্টার টপোলজি</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "কোনো নেটওয়ার্কের সবগুলো কম্পিউটার যদি একটি কেন্দ্রীয় হাব (hub)/সুইচ (switch)-এর সাথে যুক্ত থাকে, তাহলে সেটিকে বলে স্টার টপোলজি।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১৬:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১৬. স্টার টপোলজির প্রধান দুর্বলতা কোনটি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) একটি কম্পিউটার নষ্ট হলে পুরো নেটওয়ার্ক অচল হয়</p>
+                    <p class="quiz-option" data-correct="true">(খ) কেন্দ্রীয় হাব/সুইচ নষ্ট হলে পুরো নেটওয়ার্ক অচল হয়</p>
+                    <p class="quiz-option" data-correct="false">(গ) মূল ব্যাকবোন নষ্ট হলে পুরো নেটওয়ার্ক অচল হয়</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) তথ্য প্রেরণে অনেক সময় লাগে</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১৬</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) কেন্দ্রীয় হাব/সুইচ নষ্ট হলে পুরো নেটওয়ার্ক অচল হয়</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "...কোনোভাবে কেন্দ্রীয় হাব/সুইচ নষ্ট হলে পুরো নেটওয়ার্কটিই অচল হয়ে পড়বে।" (বিকল্প 'ক' ভুল, কারণ স্টার টপোলজিতে একটি কম্পিউটার নষ্ট হলে বাকি নেটওয়ার্ক সচল থাকে)।
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১৭:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১৭. কোন টপোলজিটি দেখতে গাছের কাণ্ড থেকে বের হওয়া ডালের মতো এবং এটি মূলত অনেকগুলো স্টার টপোলজির সমন্বয়ে গঠিত?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) ট্রি টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(খ) হাইব্রিড টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(গ) মেশ টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) বাস টপোলজি</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১৭</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) ট্রি টপোলজি</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "ট্রি মানে হচ্ছে গাছ। কাজেই এই টপোলজিটাকে গাছের মতো দেখানোর কথা। ...এই টপোলজিতে একটি মজার বিষয় হলো এখানে অনেকগুলো স্টার টপোলজিকে একত্র করা!"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১৮:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১৮. যে টপোলজিতে কম্পিউটারগুলো একটি আরেকটির সাথে একাধিক পথে যুক্ত থাকতে পারে, তাকে কী বলে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) স্টার টপোলজি</p>
+                    <p class="quiz-option" data-correct="true">(খ) মেশ টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(গ) হাইব্রিড টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) কমপ্লিট মেশ</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১৮</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) মেশ টপোলজি</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "মেশ টপোলজি: এই টপোলজিতে কম্পিউটারগুলো একটি আরেকটির সাথে যুক্ত থাকে এবং একাধিক পথে যুক্ত হতে পারে।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ১৯:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">১৯. যদি কোনো নেটওয়ার্কের প্রতিটি কম্পিউটারই সরাসরি নেটওয়ার্কভুক্ত অন্য সবগুলো কম্পিউটারের সাথে যুক্ত থাকে, তবে তাকে কী বলে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) হাইব্রিড টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(খ) স্টার টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(গ) মেশ টপোলজি</p>
+                    <p class="quiz-option" data-correct="true">(ঘ) কমপ্লিট মেশ</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ১৯</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ঘ) কমপ্লিট মেশ</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "...যদি এমন হয় যে একটি নেটওয়ার্কের প্রতিটি কম্পিউটারই সরাসরি নেটওয়ার্কভুক্ত অন্য সবগুলো কম্পিউটারের সাথে যুক্ত থাকে, তাহলে সেটিকে বলে কমপ্লিট মেশ।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২০:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২০. বিমানের যাত্রীদের জন্য বর্তমানে কোন ধরনের টিকিটের প্রচলন হয়েছে, যার জন্য টিকিট হাতে করে নিতে হয় না?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) ই-মেইল</p>
+                    <p class="quiz-option" data-correct="false">(খ) ই-পাসপোর্ট</p>
+                    <p class="quiz-option" data-correct="true">(গ) ই-টিকিট</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) ই-বুক</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২০</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (গ) ই-টিকিট</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "...এখন সারা পৃথিবীতে ই-টিকিটের প্রচলন হয়েছে এবং বিমানের কোনো যাত্রীকে আর বিমানের টিকিট হাতে করে নিতে হয় না।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২১:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২১. কোনটি এমন একটি জনপ্রিয় সেবা যার মাধ্যমে ব্যবহারকারীরা নিজেদের ব্যক্তিগত ফাইল নিজের কম্পিউটারে না রেখে অন্য কোথাও সংরক্ষণ করতে পারেন?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) ফেসবুক</p>
+                    <p class="quiz-option" data-correct="false">(খ) জিমেইল</p>
+                    <p class="quiz-option" data-correct="true">(গ) ড্রপবক্স</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) ই-টিকিট</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২১</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (গ) ড্রপবক্স</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "...একজন মানুষ তার ব্যক্তিগত সবকিছুই নিজের কম্পিউটারে না রেখে অন্য কোথাও রেখে দিতে পারে... এরকম একটি জনপ্রিয় সেবার নাম ড্রপবক্স (Dropbox)..."
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২২:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২২. তথ্যপ্রযুক্তির নানা ধরনের সেবা (যেমন সার্ভার, সফটওয়্যার) কোনো প্রতিষ্ঠান থেকে নেটওয়ার্কের মাধ্যমে গ্রহণ করা এবং ব্যবহার অনুযায়ী মূল্য পরিশোধ করার ধারণাকে কী বলে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) সামাজিক নেটওয়ার্ক</p>
+                    <p class="quiz-option" data-correct="true">(খ) ক্লাউড কম্পিউটিং</p>
+                    <p class="quiz-option" data-correct="false">(গ) আউটসোর্সিং</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) রিসোর্স শেয়ারিং</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২২</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) ক্লাউড কম্পিউটিং</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "সাধারণভাবে এটিকে বলা হয় ক্লাউড কম্পিউটিং। ...যেকোনো ব্যবহারকারী... যেকোনো ধরনের সেবা গ্রহণ করতে পারে। ...এবং যতটুকু সেবা গ্রহণ করবে, ঠিক ততটুকু সেবার জন্য মূল্য দিবে।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২৩:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২৩. পাঠ্যবই অনুযায়ী, hotmail, yahoo বা gmail ব্যবহার করে ই-মেইল পাঠানো কোন ধরনের সেবার উদাহরণ?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) ক্লাউড কম্পিউটিং</p>
+                    <p class="quiz-option" data-correct="false">(খ) সামাজিক নেটওয়ার্ক</p>
+                    <p class="quiz-option" data-correct="false">(গ) টপোলজি</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) প্রটোকল</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২৩</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) ক্লাউড কম্পিউটিং</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "তোমরা কিংবা তোমাদের পরিচিত কেউ যদি hotmail, yahoo বা gmail ব্যবহার করে কোনো ই-মেইল পাঠিয়ে থাকো তাহলে সেটি ক্লাউড কম্পিউটিং ব্যবহার করে করা হয়েছে।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২৪:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২৪. পাঠ্যবই অনুযায়ী, নতুন পৃথিবীর সম্পদ কোনটি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) কম্পিউটার</p>
+                    <p class="quiz-option" data-correct="true">(খ) তথ্য</p>
+                    <p class="quiz-option" data-correct="false">(গ) শক্তিশালী নেটওয়ার্ক</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) ক্লাউড কম্পিউটিং</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২৪</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) তথ্য</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "নতুন পৃথিবীতে সম্পদ হচ্ছে তথ্য।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২৫:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২৫. কোন নেটওয়ার্ক যন্ত্রটি তার সাথে সংযুক্ত সকল কম্পিউটারে তথ্য পাঠিয়ে দেয়, এমনকি প্রেরক কম্পিউটারকেও তথ্য ফেরত পাঠায়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) হাব</p>
+                    <p class="quiz-option" data-correct="false">(খ) সুইচ</p>
+                    <p class="quiz-option" data-correct="false">(গ) রাউটার</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) মডেম</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২৫</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) হাব</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "...হাব তার সাথে সংযুক্ত সকল কম্পিউটারে ঐ তথ্য বা উপাত্ত পাঠিয়ে দেয়। এমনকি যে কম্পিউটার থেকে তথ্য পাঠানো হলো, তাকেও হাব আবার ঐ তথ্য পাঠিয়ে দেয়।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২৬:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২৬. কোন নেটওয়ার্ক যন্ত্রটি তার সাথে যুক্ত প্রত্যেকটি আইসিটি যন্ত্রকে পৃথকভাবে শনাক্ত করতে পারে, কিন্তু হাব তা পারে না?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) মডেম</p>
+                    <p class="quiz-option" data-correct="false">(খ) রাউটার</p>
+                    <p class="quiz-option" data-correct="true">(গ) সুইচ</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) ল্যান কার্ড</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২৬</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (গ) সুইচ</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "হাবের সাথে সুইচের প্রধান পার্থক্য হলো সুইচ তারের সাথে যুক্ত প্রত্যেকটি আইসিটি যন্ত্রকে পৃথকভাবে শনাক্ত করতে পারে কিন্তু হাব তা পারে না।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২৭:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২৭. সুইচ তার সাথে সংযুক্ত প্রতিটি যন্ত্রকে শনাক্ত করার জন্য যে সুনির্দিষ্ট ঠিকানা বরাদ্দ করে, তাকে কী বলে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) IP Address</p>
+                    <p class="quiz-option" data-correct="true">(খ) MAC Address</p>
+                    <p class="quiz-option" data-correct="false">(গ) HTTP Address</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) Node Address</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২৭</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) MAC Address</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "সুইচ তার সাথে সংযুক্ত প্রত্যেকটি আইসিটি যন্ত্রের একটি করে ঠিকানা বরাদ্দ করে... এ বরাদ্দকৃত ঠিকানাকে তথ্য ও যোগাযোগ প্রযুক্তির ভাষায় MAC (Media Access Control) address নামে ডাকা হয়।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২৮:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২৮. কোন যন্ত্রটির প্রধান কাজ ডেটা বা উপাত্তকে পথ নির্দেশনা (Route) দেওয়া?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) হাব</p>
+                    <p class="quiz-option" data-correct="false">(খ) সুইচ</p>
+                    <p class="quiz-option" data-correct="true">(গ) রাউটার</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) মডেম</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২৮</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (গ) রাউটার</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "Router শব্দটি এসেছে Route শব্দ থেকে। ...রাউটার এর প্রধান কাজ ডেটা বা উপাত্তকে পথ নির্দেশনা দেওয়া।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ২৯:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">২৯. রাউটার সাধারণত কোন ধরনের দুটি নেটওয়ার্ককে সংযুক্ত করতে ব্যবহৃত হয়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) একই প্রোটোকলের অধীনে কার্যরত</p>
+                    <p class="quiz-option" data-correct="false">(খ) ভিন্ন ভিন্ন প্রোটোকলের অধীনে কার্যরত</p>
+                    <p class="quiz-option" data-correct="false">(গ) একই শহরে অবস্থিত</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) ভিন্ন ভিন্ন টপোলজির</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ২৯</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) একই প্রোটোকলের অধীনে কার্যরত</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "একই প্রোটোকলের... অধীনে কার্যরত দুটি নেটওয়াকর্কে সংযুক্ত করার জন্য রাউটার ব্যবহৃত হয়।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৩০:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩০. একটি ডেটা প্যাকেট কোনো রাউটারে পৌঁছালে রাউটার সেটির জন্য কীসের পথনির্দেশ দেয়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) সবচেয়ে কম দূরত্বের পথ</p>
+                    <p class="quiz-option" data-correct="true">(খ) সবচেয়ে সহজ এবং দ্রুত গন্তব্যে পৌঁছানোর পথ</p>
+                    <p class="quiz-option" data-correct="false">(গ) সবচেয়ে কম বাধাগ্রস্ত পথ</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) সবচেয়ে নিরাপদ পথ</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৩০</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) সবচেয়ে সহজ এবং দ্রুত গন্তব্যে পৌঁছানোর পথ</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "...পরবর্তী কোন পথে অগ্রসর হলে ডেটা সহজে এবং দ্রুত গন্তব্যে পৌঁছাবে তার পথনির্দেশ দেয় ঐ রাউটার।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৩১:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩১. 'Modem' শব্দটি কোন দুটি শব্দের অংশবিশেষের সমন্বয়ে তৈরি হয়েছে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) Modulator ও Demodulator</p>
+                    <p class="quiz-option" data-correct="false">(খ) Module ও Demodule</p>
+                    <p class="quiz-option" data-correct="false">(গ) Mobile ও Demodulator</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) Modulate ও Demodulate</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৩১</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) Modulator ও Demodulator</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "Modulator-এর Mo এবং Demodulator হতে Dem এই অংশ দুটির সমন্বয়ে Modem শব্দটি তৈরি হয়েছে।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৩২:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩২. মডেমের প্রধান কাজ কী?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) কম্পিউটার হতে প্রাপ্ত ডিজিটাল সিগনালকে নেটওয়ার্ক সিগনালে রূপান্তর করা এবং এর বিপরীত কাজটি করা</p>
+                    <p class="quiz-option" data-correct="false">(খ) নেটওয়ার্কের নির্দিষ্ট ঠিকানায় তথ্য প্রেরণ করা</p>
+                    <p class="quiz-option" data-correct="false">(গ) নেটওয়ার্কের সকল কম্পিউটারে তথ্য প্রেরণ করা</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) দুটি ভিন্ন নেটওয়ার্কের মধ্যে সংযোগ ঘটানো</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৩২</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) কম্পিউটার হতে প্রাপ্ত ডিজিটাল সিগনালকে নেটওয়ার্ক সিগনালে রূপান্তর করা এবং এর বিপরীত কাজটি করা</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "মডেম এমন একটি নেটওয়ার্ক যন্ত্র (network device), যা কম্পিউটার হতে প্রাপ্ত ডিজিটাল সিগনালকে রূপান্তর করে network কে প্রেরণ করে। আবার নেটওয়ার্ক হতে প্রাপ্ত সিগনালকে রূপান্তর করে কম্পিউটারে প্রেরণ করে।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৩৩:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩৩. DSL কী ধরনের যন্ত্রের উদাহরণ?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) হাব</p>
+                    <p class="quiz-option" data-correct="false">(খ) সুইচ</p>
+                    <p class="quiz-option" data-correct="true">(গ) মডেম</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) ল্যান কার্ড</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৩৩</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (গ) মডেম</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "...বর্তমানে এর পরিবর্তে দ্রুতগতির কেবল বা DSL (Digital Subscribers Line) মডেম ব্যবহার হচ্ছে।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৩৪:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩৪. দুটি বা অধিকসংখ্যক কম্পিউটারকে একসাথে যুক্ত করতে কোন যন্ত্রটি অবশ্যই প্রয়োজন হয় এবং এটি ইন্টারপ্রেটারের মতো কাজ করে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) মডেম</p>
+                    <p class="quiz-option" data-correct="false">(খ) রাউটার</p>
+                    <p class="quiz-option" data-correct="true">(গ) ল্যান কার্ড</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) হাব</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৩৪</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (গ) ল্যান কার্ড</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "দুটো বা অধিকসংখ্যক কম্পিউটারকে একসাথে যুক্ত করতে যে যন্ত্রটি অবশ্যই প্রয়োজন হয়, তা হলো ল্যানকার্ড। ...এক্ষেত্রে ল্যান কার্ডের ভূমিকা ইন্টারপ্রেটারের মতো।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৩৫:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩৫. পৃথিবীকে ঘিরে একবার ঘুরতে জিও স্টেশনারি স্যাটেলাইটের কত সময় লাগে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) ৩৬ ঘণ্টা</p>
+                    <p class="quiz-option" data-correct="true">(খ) ২৪ ঘণ্টা</p>
+                    <p class="quiz-option" data-correct="false">(গ) ১২ মে</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) ৫ ৭ দিন</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৩৫</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) ২৪ ঘণ্টা</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "...স্যাটেলাইটকেও যদি ঠিক চব্বিশ ঘণ্টায় একবার পৃথিবীকে ঘুরিয়ে আনা যায় তাহলে পৃথিবী থেকে মনে হবে সেটি বুঝি আকাশের কোনো এক জায়গায় স্থির হয়ে আছে। এ ধরনের স্যাটেলাইটকে বলে জিও স্টেশনারি স্যাটেলাইট।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৩৬:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩৬. জিও স্টেশনারি স্যাটেলাইটকে পৃথিবী থেকে প্রায় কত কিলোমিটার উপরে স্থাপন করতে হয়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) ৩৬ কিলোমিটার</p>
+                    <p class="quiz-option" data-correct="false">(খ) ৩৬০০ কিলোমিটার</p>
+                    <p class="quiz-option" data-correct="true">(গ) ৩৬ হাজার কিলোমিটার</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) ২৪ হাজার কিলোমিটার</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৩৬</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (গ) ৩৬ হাজার কিলোমিটার</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "এটি প্রায় ৩৬ হাজার কিলোমিটার উপরে একটি নির্দিষ্ট কক্ষ পথে রাখতে হয়।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৩৭:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩৭. বঙ্গবন্ধু স্যাটেলাইট-১ উৎক্ষেপণের মাধ্যমে বাংলাদেশ স্যাটেলাইট প্রেরণকারী দেশের তালিকায় কততম স্থান লাভ করে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) ১ম</p>
+                    <p class="quiz-option" data-correct="false">(খ) ৪র্থ</p>
+                    <p class="quiz-option" data-correct="false">(গ) ৫ম</p>
+                    <p class="quiz-option" data-correct="true">(ঘ) ৫৭তম</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৩৭</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ঘ) ৫৭তম</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "স্যাটেলাইট প্রেরণকারী দেশের তালিকায় বাংলাদেশের অবস্থান ৫৭তম।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৩৮:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩৮. স্যাটেলাইটের মাধ্যমে টেলিফোনে কথা বললে কথাটি সামান্য দেরিতে শোনা যায়, এর কারণ কী?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) সিগন্যালটি ওয়্যারলেস হওয়ায়</p>
+                    <p class="quiz-option" data-correct="true">(খ) সিগন্যালটিকে অনেক বড় দূরত্ব অতিক্রম করতে হয়</p>
+                    <p class="quiz-option" data-correct="false">(গ) সিগন্যাল পাঠাতে বড় এন্টেনার দরকার হয়</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) সিগন্যালটি মহাকাশে বাধা পায়</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৩৮</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) সিগন্যালটিকে অনেক বড় দূরত্ব অতিক্রম করতে হয়</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "ওয়্যারলেস সিগনাল দ্রুত বেগে গেলেও এই বিশাল দূরত্ব (স্যাটেলাইট পৃথিবী থেকে অনেক উঁচুতে থাকে) অতিক্রম করতে একটু সময় নেয়।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৩৯:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৩৯. অপটিক্যাল ফাইবার কী দিয়ে তৈরি?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) বৈদ্যুতিক তার</p>
+                    <p class="quiz-option" data-correct="true">(খ) অত্যন্ত সরু প্লাস্টিক বা কাচের তন্তু</p>
+                    <p class="quiz-option" data-correct="false">(গ) কো-এক্সিয়াল তার</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) সাবমেরিন ক্যাবল</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৩৯</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) অত্যন্ত সরু প্লাস্টিক বা কাচের তন্তু</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "অপটিক্যাল ফাইবার অত্যন্ত সরু এক ধরনের প্লাস্টিক কাচের তন্তু।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৪০:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৪০. অপটিক্যাল ফাইবারের মধ্য দিয়ে কোন সিগন্যাল পাঠানো হয়?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) বৈদ্যুতিক সিগন্যাল</p>
+                    <p class="quiz-option" data-correct="true">(খ) আলোক সিগন্যাল</p>
+                    <p class="quiz-option" data-correct="false">(গ) ওয়্যারলেস সিগন্যাল</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) ডিজিটাল সিগন্যাল</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৪০</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) আলোক সিগন্যাল</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "অপটিক্যাল ফাইবার দিয়ে আলোক সিগন্যাল পাঠানো হয়। ...আলোক সিগন্যালকে অপটিক্যাল ফাইবারের মধ্য দিয়ে পাঠানো হয়।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৪১:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৪১. অপটিক্যাল ফাইবারে তথ্য পরিবহনের সময় কোন বৈজ্ঞানিক ঘটনাটি ঘটে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="true">(ক) পূর্ণ অভ্যন্তরীণ প্রতিফলন</p>
+                    <p class="quiz-option" data-correct="false">(খ) আলোর প্রতিসরণ</p>
+                    <p class="quiz-option" data-correct="false">(গ) সিগন্যাল মডুলেশন</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) সিগন্যাল ডিমডুলেশন</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৪১</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (ক) পূর্ণ অভ্যন্তরীণ প্রতিফলন</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "তোমরা নিশ্চয়ই এতদিনে পূর্ণ অভ্যন্তরীণ প্রতিফলন সম্পর্কে জেনেছ। এই পূর্ণ অভ্যন্তরীণ প্রতিফলনের মাধ্যমে আলোক সিগন্যাল অপটিক্যাল ফাইবারের মধ্য দিয়ে পাঠানো হয়।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৪২:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৪২. মহাদেশ থেকে মহাদেশে তথ্য প্রেরণের জন্য সমুদ্রের তলদেশ দিয়ে নেওয়া অপটিক্যাল ফাইবারকে কী বলে?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) ওয়াইড এরিয়া নেটওয়ার্ক (WAN)</p>
+                    <p class="quiz-option" data-correct="true">(খ) সাবমেরিন ক্যাবল</p>
+                    <p class="quiz-option" data-correct="false">(গ) জিও স্টেশনারি ফাইবার</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) SEA-ME-WE-4</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৪২</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) সাবমেরিন ক্যাবল</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "...এটিকে সমুদ্রের তলদেশ দিয়ে নেওয়া হয়। এই ধরনের ফাইবারকে বলে সাবমেরিন ক্যাবল।"
+                </div>
+            </div>
+        </div>
+
+        <div class="slide quiz-slide">
+            <h2 class="slide-title">প্রশ্ন ৪৩:</h2>
+            <div class="slide-content">
+                <h3 class="reveal-item">৪৩. অপটিক্যাল ফাইবারের ভেতর দিয়ে আলোর বেগ স্যাটেলাইট সিগন্যালের বেগের তুলনায় এক-তৃতীয়াংশ কম হওয়া সত্ত্বেও মোট যোগাযোগ দ্রুত হয় কেন?</h3>
+                <div class="reveal-item">
+                    <p class="quiz-option" data-correct="false">(ক) অপটিক্যাল ফাইবারে সিগন্যাল বাধাগ্রস্ত হয় না</p>
+                    <p class="quiz-option" data-correct="true">(খ) স্যাটেলাইটের মতো বিশাল উচ্চতায় (৩৬,০০০ কিমি) গিয়ে ফিরে আসতে হয় না</p>
+                    <p class="quiz-option" data-correct="false">(গ) অপটিক্যাল ফাইবার পূর্ণ অভ্যন্তরীণ প্রতিফলন ব্যবহার করে</p>
+                    <p class="quiz-option" data-correct="false">(ঘ) অপটিক্যাল ফাইবার কাচ বা প্লাস্টিকের তৈরি</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide explanation-slide">
+            <h2 class="slide-title">উত্তর ও ব্যাখ্যা: ৪৩</h2>
+            <div class="slide-content">
+                <h3 class="correct-answer-text">সঠিক উত্তর: (খ) স্যাটেলাইটের মতো বিশাল উচ্চতায় (৩৬,০০০ কিমি) গিয়ে ফিরে আসতে হয় না</h3>
+                <div class="explanation-text reveal-item">
+                    <strong>ব্যাখ্যা:</strong> "কারণ তখন প্রায় ৩৬ হাজার কিলোমিটার দূরের স্যাটেলাইটে সিগন্যালটি গিয়ে আবার ফিরে আসতে হয় না।"
+                </div>
+            </div>
+        </div>
+
+
+        <div class="slide thank-you-slide">
+            <h1 class="slide-title">ধন্যবাদ</h1>
+            <div class="slide-content">
+                <p class="reveal-item">আপনি কুইজটি সম্পন্ন করেছেন!</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="slide-counter" id="slideCounter"></div>
+    <div class="slide-jump">
+        <input type="number" id="slideJumpInput" placeholder="স্লাইড #" min="1">
+    </div>
+    <div class="nav-buttons">
+        <button id="prevBtn">পূর্ববর্তী</button>
+        <button id="nextBtn">পরবর্তী</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideCounter = document.getElementById('slideCounter');
+        const slideJumpInput = document.getElementById('slideJumpInput');
+        let revealIndex = 0; // This will be used for auto-revealing
+
+        // ফাংশন: একটি স্লাইড রিসেট করা
+        function resetSlide(slide) {
+            // ইন্টারেক্টিভ অপশন রিসেট
+            const options = slide.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                option.classList.remove('selected-correct', 'selected-wrong', 'locked');
+            });
+            
+            // reveal-item রিসেট
+            const revealItems = slide.querySelectorAll('.reveal-item');
+            revealItems.forEach(item => item.classList.remove('is-visible'));
+        }
+
+        // ফাংশন: একটি নির্দিষ্ট স্লাইড দেখানো
+        function showSlide(index) {
+            // ইনডেক্স ঠিক রাখা
+            if (index >= totalSlides) {
+                index = 0;
+            } else if (index < 0) {
+                index = totalSlides - 1;
+            }
+            currentSlide = index;
+
+            // সব স্লাইড হাইড ও রিসেট করা
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+                resetSlide(slide); // স্লাইড বদলানোর সময় আগের স্লাইড রিসেট করা
+            });
+
+            // নতুন স্লাইড সক্রিয় করা
+            const activeSlide = slides[currentSlide];
+            activeSlide.classList.add('active');
+
+            // স্লাইডের উপাদানগুলো স্বয়ংক্রিয়ভাবে দেখানো
+            revealIndex = 0;
+            const revealItems = activeSlide.querySelectorAll('.reveal-item');
+            revealItems.forEach((item, i) => {
+                // একটি ছোট ডিলে দিয়ে দেখানোর ইফেক্ট
+                setTimeout(() => {
+                    item.classList.add('is-visible');
+                }, i * 100); // 100ms পর পর
+            });
+
+            // স্লাইড কাউন্টার আপডেট
+            slideCounter.textContent = `স্লাইড ${currentSlide + 1} / ${totalSlides}`;
+            // স্লাইড জাম্প ইনপুট আপডেট
+            slideJumpInput.placeholder = `স্লাইড ${currentSlide + 1}`;
+            slideJumpInput.value = '';
+            slideJumpInput.max = totalSlides;
+        }
+
+        // ফাংশন: পরবর্তী স্লাইড
+        function handleNext() {
+            // আগের মতো reveal-item চেক না করে সরাসরি পরের স্লাইডে যাবে
+            showSlide(currentSlide + 1);
+        }
+
+        // ফাংশন: পূর্ববর্তী স্লাইড
+        function handlePrev() {
+            showSlide(currentSlide - 1);
+        }
+
+        // ফাংশন: কুইজ অপশনে ক্লিক সেটআপ করা
+        function setupOptionClickHandlers() {
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                option.addEventListener('click', (e) => {
+                    const slide = e.target.closest('.slide');
+                    if (!slide || e.target.classList.contains('locked')) return;
+
+                    const allOptionsOnSlide = slide.querySelectorAll('.quiz-option');
+                    allOptionsOnSlide.forEach(opt => opt.classList.add('locked')); // সব অপশন লক করা
+
+                    const isCorrect = e.target.getAttribute('data-correct') === 'true';
+                    
+                    if (isCorrect) {
+                        e.target.classList.add('selected-correct');
+                    } else {
+                        e.target.classList.add('selected-wrong');
+                        // ভুল হলে সঠিকটি সবুজ করে দেখানো
+                        const correctOpt = slide.querySelector('[data-correct="true"]');
+                        if (correctOpt) {
+                            correctOpt.classList.add('selected-correct');
+                        }
+                    }
+                });
+            });
+        }
+
+        // নেভিগেশন বাটন সেটআপ
+        document.getElementById('nextBtn').addEventListener('click', handleNext);
+        document.getElementById('prevBtn').addEventListener('click', handlePrev);
+
+        // কিবোর্ড নেভিগেশন
+        document.addEventListener('keydown', (event) => {
+            // ইনপুট বক্সে টাইপ করার সময় নেভিগেশন বন্ধ রাখা
+            if (event.target === slideJumpInput) return;
+
+            if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === ' ') {
+                event.preventDefault(); // স্পেসবার দিয়ে পেজ স্ক্রল বন্ধ করা
+                handleNext();
+            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+                event.preventDefault();
+                handlePrev();
+            }
+        });
+
+        // স্লাইড জাম্প সেটআপ
+        slideJumpInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const targetSlide = parseInt(slideJumpInput.value);
+                
+                if (!isNaN(targetSlide) && targetSlide >= 1 && targetSlide <= totalSlides) {
+                    showSlide(targetSlide - 1); // 0-ভিত্তিক ইনডেক্স
+                }
+                slideJumpInput.value = ''; // ইনপুট বক্স খালি করা
+                slideJumpInput.blur(); // ফোকাস সরানো
+            }
+        });
+        
+        // --- ইনিশিয়ালাইজেশন ---
+        
+        // কুইজ অপশনগুলোর জন্য ক্লিক হ্যান্ডলার সেটআপ
+        setupOptionClickHandlers();
+        
+        // প্রথম স্লাইড দেখানো
+        showSlide(0);
+
+    </script>
+
+</body>
+</html>

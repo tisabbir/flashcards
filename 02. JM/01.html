@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রোকেয়া-মুজিবুল স্মৃতি বৃত্তি পরীক্ষা - ২০২৫ ফলাফল</title>
+    <style>
+        /* --- Global Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        /* --- Header --- */
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: #0056b3; /* Primary Blue */
+            margin: 0;
+            font-size: 2.2rem;
+        }
+
+        header h2 {
+            color: #4a4a4a;
+            margin: 10px 0 0;
+            font-size: 1.5rem;
+            font-weight: 400;
+        }
+
+        /* --- Section Styling --- */
+        section {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        section h2 {
+            color: #0056b3;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+
+        /* --- Summary Cards --- */
+        #summary .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .summary-card {
+            background: #fdfdfd;
+            border: 1px solid #e0e0e0;
+            border-left: 5px solid #007bff; /* Accent color */
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .summary-card .number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #0056b3;
+            margin: 0;
+        }
+
+        .summary-card .label {
+            font-size: 1.1rem;
+            color: #555;
+            margin: 5px 0 0;
+        }
+
+        /* --- Merit List Table --- */
+        .table-container {
+            overflow-x: auto; /* For mobile responsiveness */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        thead th {
+            background-color: #0056b3;
+            color: #ffffff;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Highlighting Classes */
+        .highlight-school {
+            color: #0056b3;
+            font-weight: 600;
+        }
+
+        .top-student {
+            background-color: #fffacD; /* Light yellow for top 3 */
+            font-weight: 700;
+        }
+
+        /* --- Graphs Section --- */
+        .graph-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        @media (min-width: 992px) {
+            .graph-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .bar-chart {
+            width: 100%;
+        }
+
+        .bar-chart h3 {
+            text-align: center;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .bar-wrapper {
+            margin-bottom: 15px;
+        }
+
+        .bar-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #444;
+        }
+
+        .bar-bg {
+            background: #e0e0e0;
+            border-radius: 5px;
+            height: 30px;
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 30px;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            border-radius: 5px 0 0 5px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            color: white;
+            font-weight: 600;
+            padding-right: 10px;
+            white-space: nowrap;
+            box-sizing: border-box; /* Important for padding */
+            transition: width 0.8s ease-out;
+        }
+
+        /* Specific bar colors for talent pool */
+        .bar.talent-other { background: linear-gradient(90deg, #28a745, #218838); } /* Green */
+        .bar.talent-sandwip { background: linear-gradient(90deg, #ffc107, #e0a800); } /* Yellow */
+        .bar.talent-unqualified { background: linear-gradient(90deg, #dc3545, #c82333); } /* Red */
+        
+        .bar.talent-sandwip span { color: #333; } /* Dark text for yellow bar */
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <header>
+            <h1>জেএএম সংস্থা কর্তৃক পরিচালিত</h1>
+            <h2>রোকেয়া - মুজিবুল স্মৃতি বৃত্তি পরীক্ষা - ২০২৫ ফলাফল</h2>
+        </header>
+
+        <main>
+            <section id="summary">
+                <h2>ফলাফলের সারসংক্ষেপ</h2>
+                <div class="card-container">
+                    <div class="summary-card" style="border-color: #007bff;">
+                        <p class="number">20</p>
+                        <p class="label">মোট মেধাতালিকা</p>
+                    </div>
+                    <div class="summary-card" style="border-color: #28a745;">
+                        <p class="number">15</p>
+                        <p class="label">সন্দ্বীপ আনন্দ পাঠশালা (মেধাতালিকা)</p>
+                    </div>
+                    <div class="summary-card" style="border-color: #ffc107;">
+                        <p class="number">21</p>
+                        <p class="label">ট্যালেন্টপুল (কোটা)</p>
+                    </div>
+                    <div class="summary-card" style="border-color: #dc3545;">
+                        <p class="number">6</p>
+                        <p class="label">অনুত্তীর্ণ স্কুল (ট্যালেন্টপুল)</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="merit-list">
+                <h2>মেধাতালিকা (১৯ + ১ = ২০ জন)</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>রোল</th>
+                                <th>শিক্ষার্থীর নাম</th>
+                                <th>বালক/বালিকা</th>
+                                <th>প্রতিষ্ঠানের নাম</th>
+                                <th>প্রাপ্ত নাম্বার</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="top-student">
+                                <td>৪৩৭</td>
+                                <td>নাইমুল ইসলাম তমিম</td>
+                                <td>বালক</td>
+                                <td class="highlight-school">সন্দ্বীপ আনন্দ পাঠশালা</td>
+                                <td>৮৬</td>
+                            </tr>
+                            <tr class="top-student">
+                                <td>৪০৫</td>
+                                <td>তাসনিম মো: মাওলা</td>
+                                <td>বালক</td>
+                                <td class="highlight-school">সন্দ্বীপ আনন্দ পাঠশালা</td>
+                                <td>৮২</td>
+                            </tr>
+                            <tr class="top-student">
+                                <td>৪০৮</td>
+                                <td>মো: হাসিন মাহতাব</td>
+                                <td>বালক</td>
+                                <td class="highlight-school">সন্দ্বীপ আনন্দ পাঠশালা</td>
+                                <td>৮২</td>
+                            </tr>
+                            <tr>
+                                <td>১০৯</td>
+                                <td>সামিয়া তাসনিম ভুঁইয়া</td>
+                                <td>বালিকা</td>
+                                <td>মুছাপুর হাজী আবদুল বাতেন উচ্চ বিদ্যালয়</td>
+                                <td>৮১</td>
+                            </tr>
+                            <tr>
+                                <td>৫০৯</td>
+                                <td>আলম আরাফাত</td>
+                                <td>বালক</td>
+                                <td>সাউথ সন্দ্বীপ বহুমুখী উচ্চ বিদ্যালয়</td>
+                                <td>৮০</td>
+                            </tr>
+                            <tr>
+                                <td>৫২০</td>
+                                <td>তৌফিকা আফরোজ তানহা</td>
+                                <td>বালিকা</td>
+                                <td class="highlight-school">সন্দ্বীপ আনন্দ পাঠশালা</td>
+                                <td>৮০</td>
+                            </tr>
+                            <tr>
+                                <td>৪২৪</td>
+                                <td>মুনতাহা নাজনীন</td>
+                                <td>বালিকা</td>
+                                <td class="highlight-school">সন্দ্বীপ আনন্দ পাঠশালা</td>
+                                <td>৮০</td>
+                            </tr>
+                            <tr>
+                                <td>১০২</td>
+                                <td>মো: সিয়াম হোসেন</td>
+                                <td>বালক</td>
+                                <td>মুছাপুর হাজী আবদুল বাতেন উচ্চ বিদ্যালয়</td>
+                                <td>৭৮</td>
+                            </tr>
+                            <tr>
+                                <td>৪২১</td>
+                                <td>রেনেসা তাসনীম</td>
+                                <td>বালিকা</td>
+                                <td class="highlight-school">সন্দ্বীপ আনন্দ পাঠশালা</td>
+                                <td>৭৯</td>
+                            </tr>
+                            <tr>
+                                <td>৪০৫</td>
+                                <td>নাফিস আরেফিন</td>
+                                <td>বালক</td>
+                                <td class="highlight-school">সন্দ্বীপ আনন্দ পাঠশালা</td>
+                                <td>৭৯</td>
+                            </tr>
+                            <tr>
+                                <td>৪৪১</td>
+                                <td>মো: আব্দুর রহমান</td>
+                                <td>বালক</td>
+                                <td class="highlight-school">সন্দ্বীপ আনন্দ পাঠশালা</td>
+                                <td>৭৬</td>
+                            </tr>
+                            <tr>
+                                <td>৪২৭</td>
+                                <td>সাদিয়া সুলতানা</td>
+                                <td>বালিকা</td>
+                                <td class="highlight-school">সন্দ্বীপ আনন্দ পাঠশালা</td>
+                                <td>৭৪</td>
+                            </tr>
+                            <tr>
+                                <td>৩৫২</td>
+                                <td>মো: আবির আরহাম শুভ</td>
+                                <td>বালক</td>
+                                <td>সাউথ সন্দ্বীপ বহুমুখী উচ্চ বিদ্যালয়</td>
+                                <td>৭৩</td>
+                            </tr>
+                            <tr>
+                                <td>৪২২</td>
+                                <td>মরিয়ম তারান্নুম সিফাহিয়্যা</td>
+                                <td>বালিকা</td>
+                                <td class="highlight-school">সন্দ্বীপ আনন্দ পাঠশালা</td>
+                                <td>৭২</td>
+                            </tr>
+                            <tr>
+                                <td>৪২১</td>
+                                <td>মেহেরজান আইফা</td>
+                                <td>বালিকা</td>
+                                <td class="highlight-school">সন্দ্বীপ আনন্দ পাঠশালা</td>
+                                <td>৭২</td>
+                            </tr>
+                            <tr>
+                                <td>২০৮</td>
+                                <td>কাজী মাহরু মাহবুবা</td>
+                                <td>বালিকা</td>
+                                <td>কাজী আমজাদ উদ্দিন আদর্শ উচ্চ বিদ্যালয়</td>
+                                <td>৭২</td>
+                            </tr>
+                            <tr>
+                                <td>২০৩</td>
+                                <td>মো: জোবায়ের আহমদ</td>
+                                <td>বালক</td>
+                                <td class="highlight-school">সন্দ্বীপ আনন্দ পাঠশালা</td>
+                                <td>৭১</td>
+                            </tr>
+                            <tr>
+                                <td>৪৪০</td>
+                                <td>সালমানুর ইসলাম ইভান</td>
+                                <td>বালক</td>
+                                <td class="highlight-school">সন্দ্বীপ আনন্দ পাঠশালা</td>
+                                <td>৭১</td>
+                            </tr>
+                            <tr>
+                                <td>৪৪৭</td>
+                                <td>সাদিকা আফরোজ</td>
+                                <td>বালিকা</td>
+                                <td class="highlight-school">সন্দ্বীপ আনন্দ পাঠশালা</td>
+                                <td>৭০</td>
+                            </tr>
+                            <tr>
+                                <td>(তথ্য নেই)</td>
+                                <td>আইফা আমিন নোভা</td>
+                                <td>বালিকা</td>
+                                <td class="highlight-school">সন্দ্বীপ আনন্দ পাঠশালা</td>
+                                <td>৬৬</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="visuals">
+                <h2>গ্রাফিক্যাল বিশ্লেষণ</h2>
+                <div class="graph-container">
+                    
+                    <div class="bar-chart">
+                        <h3>মেধাতালিকা: প্রতিষ্ঠানভিত্তিক</h3>
+                        
+                        <div class="bar-wrapper">
+                            <div class="bar-label">সন্দ্বীপ আনন্দ পাঠশালা (১৫ জন)</div>
+                            <div class="bar-bg">
+                                <div class="bar" style="width: 75%;"><span>15</span></div>
+                            </div>
+                        </div>
+
+                        <div class="bar-wrapper">
+                            <div class="bar-label">মুছাপুর হাজী আ: বাতেন উ: বি: (২ জন)</div>
+                            <div class="bar-bg">
+                                <div class="bar" style="width: 10%;"><span>2</span></div>
+                            </div>
+                        </div>
+
+                        <div class="bar-wrapper">
+                            <div class="bar-label">সাউথ সন্দ্বীপ বহুমুখী উ: বি: (২ জন)</div>
+                            <div class="bar-bg">
+                                <div class="bar" style="width: 10%;"><span>2</span></div>
+                            </div>
+                        </div>
+
+                        <div class="bar-wrapper">
+                            <div class="bar-label">কাজী আমজাদ উদ্দিন আ: উ: বি: (১ জন)</div>
+                            <div class="bar-bg">
+                                <div class="bar" style="width: 5%;"><span>1</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bar-chart">
+                        <h3>ট্যালেন্টপুল বিশ্লেষণ</h3>
+
+                        <div class="bar-wrapper">
+                            <div class="bar-label">নির্বাচিত (অন্যান্য স্কুল) (২০ জন)</div>
+                            <div class="bar-bg">
+                                <div class="bar talent-other" style="width: 74.07%;"><span>20</span></div>
+                            </div>
+                        </div>
+
+                        <div class="bar-wrapper">
+                            <div class="bar-label">নির্বাচিত (সন্দ্বীপ আনন্দ পাঠশালা) (১ জন)</div>
+                            <div class="bar-bg">
+                                <div class="bar talent-sandwip" style="width: 3.7%;"><span>1</span></div>
+                            </div>
+                        </div>
+
+                        <div class="bar-wrapper">
+                            <div class="bar-label">অনুত্তীর্ণ স্কুল (৬ জন)</div>
+                            <div class="bar-bg">
+                                <div class="bar talent-unqualified" style="width: 22.22%;"><span>6</span></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+        </main>
+        
+    </div> </body>
+</html>
