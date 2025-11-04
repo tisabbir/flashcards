@@ -1,1307 +1,2126 @@
 <!DOCTYPE html>
 <html lang="bn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>আলোর প্রতিসরণ</title>
-    
+
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #121212;
-            color: #E0E0E0;
-        }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #121212;
+        color: #e0e0e0;
+      }
 
-        .presentation-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-        }
+      .presentation-container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+      }
 
-        .slide {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: #1E1E1E;
-            box-sizing: border-box;
-            padding: 50px 80px;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.6s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-            border-left: 10px solid #03DAC6; /* Accent color */
-            overflow-y: auto; /* Add scroll for overflow content */
-        }
+      .simulation-slide {
+        border-left: 10px solid #2196f3;
+      }
+      .simulation-slide .slide-title {
+        color: #2196f3;
+      }
+      .simulation-slide a {
+        font-size: 1.2em;
+        color: #90caf9;
+        text-decoration: none;
+        background: #2a2a2a;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background 0.3s;
+      }
+      .simulation-slide a:hover {
+        background: #333;
+      }
+      .slide {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #1e1e1e;
+        box-sizing: border-box;
+        padding: 50px 80px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.6s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        border-left: 10px solid #03dac6; /* Accent color */
+        overflow-y: auto; /* Add scroll for overflow content */
+      }
 
-        .slide.active {
-            opacity: 1;
-            visibility: visible;
-        }
+      .slide.active {
+        opacity: 1;
+        visibility: visible;
+      }
 
-        .slide-title {
-            font-size: 3.0em; /* Slightly smaller to fit more content */
-            color: #03DAC6; /* Accent color */
-            margin-bottom: 25px;
-            padding-bottom: 10px;
-        }
+      .slide-title {
+        font-size: 3em; /* Slightly smaller to fit more content */
+        color: #03dac6; /* Accent color */
+        margin-bottom: 25px;
+        padding-bottom: 10px;
+      }
 
-        .slide-content {
-            font-size: 1.4em; /* Slightly smaller */
-            color: #CFD8DC;
-        }
-        
-        .slide-content h3 {
-            color: #BB86FC; /* Secondary accent */
-            font-size: 1.4em;
-        }
+      .slide-content {
+        font-size: 1.4em; /* Slightly smaller */
+        color: #cfd8dc;
+      }
 
-        .slide-content ul {
-            list-style-type: square;
-            padding-left: 40px;
-        }
+      .slide-content h3 {
+        color: #bb86fc; /* Secondary accent */
+        font-size: 1.4em;
+      }
 
-        .slide-content li, .slide-content p {
-            margin-bottom: 12px;
-            line-height: 1.5;
-        }
-        
-        /* HTML Math Styling */
-        i.math-var { font-style: italic; }
-        sup.math-sup { font-size: 0.75em; vertical-align: super; }
-        sub.math-sub { font-size: 0.75em; vertical-align: sub; }
+      .slide-content ul {
+        list-style-type: square;
+        padding-left: 40px;
+      }
 
-        /* Image Styling */
-        .slide-content img {
-            max-width: 40%; /* Adjusted */
-            height: auto;
-            border-radius: 8px;
-            margin-top: 20px;
-            float: right;
-            margin-left: 20px;
-        }
-        
-        /* Reveal items */
-        .reveal-item {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-        }
-        .reveal-item.is-visible { opacity: 1; transform: translateY(0); }
+      .slide-content li,
+      .slide-content p {
+        margin-bottom: 12px;
+        line-height: 1.5;
+      }
 
-        /* Special slide types */
-        .title-slide, .thank-you-slide {
-            background: linear-gradient(135deg, #2C3E50, #1a2a3a);
-            color: white;
-            align-items: center;
-            text-align: center;
-            border-left: 10px solid #BB86FC;
-        }
-        .title-slide .slide-title, .thank-you-slide .slide-title { font-size: 4.5em; color: white; border-bottom: none; }
-        .title-slide .slide-content, .thank-you-slide .slide-content { font-size: 1.8em; color: #ddd; }
+      /* HTML Math Styling */
+      i.math-var {
+        font-style: italic;
+      }
+      sup.math-sup {
+        font-size: 0.75em;
+        vertical-align: super;
+      }
+      sub.math-sub {
+        font-size: 0.75em;
+        vertical-align: sub;
+      }
 
-        .hook-slide {
-            align-items: center;
-            text-align: center;
-            background-color: #333;
-            border-left: 10px solid #FBC02D;
-        }
-        .hook-slide .slide-title { font-size: 2.8em; color: #FBC02D; }
-        .hook-slide .slide-content { font-size: 1.8em; }
+      /* Image Styling */
+      .slide-content img {
+        max-width: 40%; /* Adjusted */
+        height: auto;
+        border-radius: 8px;
+        margin-top: 20px;
+        float: right;
+        margin-left: 20px;
+      }
 
-        .quiz-slide { border-left: 10px solid #E91E63; }
-        .quiz-slide .slide-title { color: #E91E63; }
-        .quiz-slide .quiz-option { font-size: 1.1em; margin: 8px 0; } /* Adjusted */
-        .quiz-slide .quiz-cq { font-size: 1.1em; background: #2a2a2a; padding: 15px; border-radius: 8px; border-left: 4px solid #E91E63; }
-        
-        .answer-slide { border-left: 10px solid #4CAF50; }
-        .answer-slide .slide-title { color: #4CAF50; }
-        .answer-slide .correct-answer {
-            background-color: #388E3C;
-            color: #FFFFFF;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 1.1em;
-        }
-        .answer-slide .explanation {
-            font-size: 0.9em;
-            background: #2a2a2a;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
+      /* Reveal items */
+      .reveal-item {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      }
+      .reveal-item.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
 
-        /* Navigation */
-        .nav-buttons { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
-        .nav-buttons button { font-size: 1em; padding: 10px 20px; margin-left: 10px; background-color: #03DAC6; color: #121212; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
-        .nav-buttons button:hover { background-color: #018786; transform: scale(1.05); }
-        /* kj */
-        .slide-jump {
-            position: fixed;
-            bottom: 35px;
-            left: 150px; /* Adjust position as needed */
-            z-index: 1000;
-        }
-        .slide-jump input {
-            width: 80px;
-            padding: 8px 10px;
-            font-size: 1em;
-            background-color: #333;
-            color: #E0E0E0;
-            border: 1px solid #555;
-            border-radius: 4px;
-            text-align: center;
-        }
-        /* Hide number input arrows */
-        .slide-jump input::-webkit-outer-spin-button,
-        .slide-jump input::-webkit-inner-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-        }
-        .slide-jump input[type=number] {
-          -moz-appearance: textfield; /* Firefox */
-        }
-        /* kj */
-        .slide-counter { position: fixed; bottom: 40px; left: 30px; font-size: 1.2em; color: #888; z-index: 1000; }
-        
+      /* Special slide types */
+      .title-slide,
+      .thank-you-slide {
+        background: linear-gradient(135deg, #2c3e50, #1a2a3a);
+        color: white;
+        align-items: center;
+        text-align: center;
+        border-left: 10px solid #bb86fc;
+      }
+      .title-slide .slide-title,
+      .thank-you-slide .slide-title {
+        font-size: 4.5em;
+        color: white;
+        border-bottom: none;
+      }
+      .title-slide .slide-content,
+      .thank-you-slide .slide-content {
+        font-size: 1.8em;
+        color: #ddd;
+      }
+
+      .hook-slide {
+        align-items: center;
+        text-align: center;
+        background-color: #333;
+        border-left: 10px solid #fbc02d;
+      }
+      .hook-slide .slide-title {
+        font-size: 2.8em;
+        color: #fbc02d;
+      }
+      .hook-slide .slide-content {
+        font-size: 1.8em;
+      }
+
+      .quiz-slide {
+        border-left: 10px solid #e91e63;
+      }
+      .quiz-slide .slide-title {
+        color: #e91e63;
+      }
+      .quiz-slide .quiz-option {
+        font-size: 1.1em;
+        margin: 8px 0;
+      } /* Adjusted */
+      .quiz-slide .quiz-cq {
+        font-size: 1.1em;
+        background: #2a2a2a;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #e91e63;
+      }
+
+      .answer-slide {
+        border-left: 10px solid #4caf50;
+      }
+      .answer-slide .slide-title {
+        color: #4caf50;
+      }
+      .answer-slide .correct-answer {
+        background-color: #388e3c;
+        color: #ffffff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 1.1em;
+      }
+      .answer-slide .explanation {
+        font-size: 0.9em;
+        background: #2a2a2a;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+
+      /* Navigation */
+      .nav-buttons {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 1000;
+      }
+      .nav-buttons button {
+        font-size: 1em;
+        padding: 10px 20px;
+        margin-left: 10px;
+        background-color: #03dac6;
+        color: #121212;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+      }
+      .nav-buttons button:hover {
+        background-color: #018786;
+        transform: scale(1.05);
+      }
+      /* kj */
+      .slide-jump {
+        position: fixed;
+        bottom: 35px;
+        left: 150px; /* Adjust position as needed */
+        z-index: 1000;
+      }
+      .slide-jump input {
+        width: 80px;
+        padding: 8px 10px;
+        font-size: 1em;
+        background-color: #333;
+        color: #e0e0e0;
+        border: 1px solid #555;
+        border-radius: 4px;
+        text-align: center;
+      }
+      /* Hide number input arrows */
+      .slide-jump input::-webkit-outer-spin-button,
+      .slide-jump input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      .slide-jump input[type="number"] {
+        -moz-appearance: textfield; /* Firefox */
+      }
+      /* kj */
+      .slide-counter {
+        position: fixed;
+        bottom: 40px;
+        left: 30px;
+        font-size: 1.2em;
+        color: #888;
+        z-index: 1000;
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="presentation-container">
-        
-        <div class="slide title-slide active">
-            <h1 class="slide-title">আলোর প্রতিসরণ</h1>
-            <div class="slide-content">
-                <p class="reveal-item">অধ্যায় ৯</p>
-                <p class="reveal-item">পদার্থবিজ্ঞান</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">আজকের মূল বিষয়</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item">প্রতিসরণ ও প্রতিসরণের সূত্র</li>
-                    <li class="reveal-item">প্রতিসরণাঙ্ক (পরম ও আপেক্ষিক)</li>
-                    <li class="reveal-item">ক্রান্তি কোণ ও পূর্ণ অভ্যন্তরীণ প্রতিফলন</li>
-                    <li class="reveal-item">প্রতিসরণের ব্যবহার (মরীচিকা, অপটিক্যাল ফাইবার)</li>
-                    <li class="reveal-item">লেন্স ও লেন্সের ক্ষমতা</li>
-                    <li class="reveal-item">চোখের ত্রুটি ও তার প্রতিকার</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">আলোর প্রতিসরণ</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> আলোক রশ্মি এক স্বচ্ছ মাধ্যম থেকে অন্য স্বচ্ছ মাধ্যমে তীর্যকভাবে প্রবেশ করলে দুই মাধ্যমের বিভেদতলে এর দিক পরিবর্তন হয়। এই দিক পরিবর্তনের ঘটনাকে আলোর প্রতিসরণ বলে।</li>
-                    <li class="reveal-item"><strong>নিয়ম ১:</strong> আলো **ঘন** মাধ্যম থেকে **হালকা** মাধ্যমে গেলে প্রতিসরিত রশ্মি অভিলম্ব থেকে **দূরে সরে যায়**।</li>
-                    <li class="reveal-item"><strong>নিয়ম ২:</strong> আলো **হালকা** মাধ্যম থেকে **ঘন** মাধ্যমে গেলে প্রতিসরিত রশ্মি অভিলম্বের **কাছে আসে**।</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">প্রতিসরণের সূত্র</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item"><strong>প্রথম সূত্র:</strong> আপতিত রশ্মি, আপতন বিন্দুতে বিভেদতলের উপর অঙ্কিত অভিলম্ব এবং প্রতিসরিত রশ্মি একই সমতলে থাকে।</li>
-                    <li class="reveal-item"><strong>দ্বিতীয় সূত্র (স্নেলের সূত্র):</strong> একজোড়া নির্দিষ্ট মাধ্যম এবং নির্দিষ্ট রঙের আলোর জন্য আপতন কোণের সাইন (sin) ও প্রতিসরণ কোণের সাইনের (sin) অনুপাত সর্বদা ধ্রুব থাকে।
-                        <br>
-                        <i class="math-var">n</i><sub class="math-sub">1</sub>sin<i class="math-var">&theta;</i><sub class="math-sub">1</sub> = <i class="math-var">n</i><sub class="math-sub">2</sub>sin<i class="math-var">&theta;</i><sub class="math-sub">2</sub>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: MCQ ১</h2>
-            <div class="slide-content">
-                <h3 class="reveal-item">১। আলো তির্যকভাবে হালকা মাধ্যম হতে ঘন মাধ্যমে প্রবেশ করলে প্রতিসরিত রশ্মির কী ঘটে?</h3>
-                <div class="reveal-item">
-                    <p class="quiz-option">(ক) অভিলম্ব থেকে দূরে সরে যায়</p>
-                    <p class="quiz-option">(খ) অভিলম্বের দিকে বেঁকে যায়</p>
-                    <p class="quiz-option">(গ) অভিলম্ব বরাবর চলে যায়</p>
-                    <p class="quiz-option">(ঘ) আপতিত রশ্মি বরাবর চলে যায়</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: MCQ ১</h2>
-            <div class="slide-content">
-                <h3>১। আলো তির্যকভাবে হালকা মাধ্যম হতে ঘন মাধ্যমে প্রবেশ করলে প্রতিসরিত রশ্মির কী ঘটে?</h3>
-                <p class="quiz-option">(ক) অভিলম্ব থেকে দূরে সরে যায়</p>
-                <p class="quiz-option correct-answer">(খ) অভিলম্বের দিকে বেঁকে যায়</p>
-                <p class="quiz-option">(গ) অভিলম্ব বরাবর চলে যায়</p>
-                <p class="quiz-option">(ঘ) আপতিত রশ্মি বরাবর চলে যায়</p>
-            </div>
-        </div>
-        
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: MCQ ২</h2>
-            <div class="slide-content">
-                <h3 class="reveal-item">২। আলো ঘন মাধ্যম হতে হালকা মাধ্যমে প্রতিসৃত হলে-</h3>
-                <div class="reveal-item">
-                    <p class="quiz-option">(ক) i &gt; r</p>
-                    <p class="quiz-option">(খ) i = r</p>
-                    <p class="quiz-option">(গ) i &ge; r</p>
-                    <p class="quiz-option">(ঘ) i &lt; r</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: MCQ ২</h2>
-            <div class="slide-content">
-                <h3>২। আলো ঘন মাধ্যম হতে হালকা মাধ্যমে প্রতিসৃত হলে-</h3>
-                <p class="quiz-option">(ক) i &gt; r</p>
-                <p class="quiz-option">(খ) i = r</p>
-                <p class="quiz-option">(গ) i &ge; r</p>
-                <p class="quiz-option correct-answer">(ঘ) i &lt; r</p>
-                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> আলো ঘন থেকে হালকা মাধ্যমে গেলে অভিলম্ব থেকে দূরে সরে যায়, ফলে প্রতিসরণ কোণ (<i class="math-var">r</i>) আপতন কোণ (<i class="math-var">i</i>) অপেক্ষা বড় হয়।</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">প্রতিসরণাঙ্ক (&eta;)</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> দুটি মাধ্যমের আপতন কোণের sin ও প্রতিসরণ কোণের sin এর অনুপাতকে (স্নেলের সূত্রের ধ্রুবক) প্রথম মাধ্যমের সাপেক্ষে দ্বিতীয় মাধ্যমের প্রতিসরণাঙ্ক বলে।</li>
-                    <li class="reveal-item">প্রতিসরণাঙ্ক দুই প্রকার:
-                        <ol>
-                            <li>পরম প্রতিসরণাঙ্ক</li>
-                            <li>আপেক্ষিক প্রতিসরণাঙ্ক</li>
-                        </ol>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">পরম প্রতিসরণাঙ্ক</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> শূন্য মাধ্যমের সাপেক্ষে অন্য কোনো মাধ্যমের প্রতিসরণাঙ্ককে ঐ মাধ্যমের পরম প্রতিসরণাঙ্ক বলে।</li>
-                    <li class="reveal-item">একে <i class="math-var">&eta;</i><sub class="math-sub">মাধ্যম</sub> দিয়ে প্রকাশ করা হয়।</li>
-                    <li class="reveal-item"><strong>কিছু মান:</strong>
-                        <ul>
-                            <li>শূন্য মাধ্যম: 1.00</li>
-                            <li>বাতাস: 1.00023 (প্রায় 1.00)</li>
-                            <li>পানি: 1.33</li>
-                            <li>কাচ: 1.52</li>
-                            <li>হীরা: 2.42</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">আপেক্ষিক প্রতিসরণাঙ্ক</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> কোনো আলোক রশ্মি যখন এক স্বচ্ছ মাধ্যম থেকে অন্য স্বচ্ছ মাধ্যমে তীর্যকভাবে প্রবেশ করে, তখন এক মাধ্যমের সাপেক্ষে অন্য মাধ্যমের প্রতিসরণাঙ্ককে আপেক্ষিক প্রতিসরাঙ্ক বলে।</li>
-                    <li class="reveal-item">যেমন: বায়ুর সাপেক্ষে পানির প্রতিসরণাঙ্ক, <sub class="math-sub">a</sub><i class="math-var">&eta;</i><sub class="math-sub">w</sub> = 1.33।</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: MCQ ৩</h2>
-            <div class="slide-content">
-                <h3 class="reveal-item">৩। কোনটির প্রতিসরণাঙ্ক সবচেয়ে বেশি?</h3>
-                <div class="reveal-item">
-                    <p class="quiz-option">(ক) বায়ু</p>
-                    <p class="quiz-option">(খ) পানি</p>
-                    <p class="quiz-option">(গ) হীরা</p>
-                    <p class="quiz-option">(ঘ) কাঁচ</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: MCQ ৩</h2>
-            <div class="slide-content">
-                <h3>৩। কোনটির প্রতিসরণাঙ্ক সবচেয়ে বেশি?</h3>
-                <p class="quiz-option">(ক) বায়ু</p>
-                <p class="quiz-option">(খ) পানি</p>
-                <p class="quiz-option correct-answer">(গ) হীরা</p>
-                <p class="quiz-option">(ঘ) কাঁচ</p>
-                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> হীরার পরম প্রতিসরণাঙ্ক 2.42, যা প্রদত্ত মাধ্যমগুলোর মধ্যে সর্বোচ্চ।</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">প্রতিসরণাঙ্ক ও আলোর বেগ</h2>
-            <div class="slide-content">
-                <p class="reveal-item">আপেক্ষিক প্রতিসরণাঙ্ক হলো মাধ্যম দুটির পরম প্রতিসরণাঙ্কের অনুপাত বা মাধ্যম দুটিতে আলোর বেগের অনুপাত।</p>
-                <h3 class="reveal-item"><sub class="math-sub">a</sub><i class="math-var">&eta;</i><sub class="math-sub">w</sub> = <sup><i class="math-var">&eta;</i><sub class="math-sub">w</sub></sup> / <sub><i class="math-var">&eta;</i><sub class="math-sub">a</sub></sub> = <sup><i class="math-var">c</i><sub class="math-sub">a</sub></sup> / <sub><i class="math-var">c</i><sub class="math-sub">w</sub></sub></h3>
-                <ul>
-                    <li class="reveal-item"><i class="math-var">&eta;</i><sub class="math-sub">w</sub> = পানির পরম প্রতিসরণাঙ্ক</li>
-                    <li class="reveal-item"><i class="math-var">&eta;</i><sub class="math-sub">a</sub> = বায়ুর পরম প্রতিসরণাঙ্ক</li>
-                    <li class="reveal-item"><i class="math-var">c</i><sub class="math-sub">a</sub> = বাতাসে আলোর বেগ</li>
-                    <li class="reveal-item"><i class="math-var">c</i><sub class="math-sub">w</sub> = পানিতে আলোর বেগ</li>
-                </ul>
-                <p class="reveal-item"><strong>বিপরীত সম্পর্ক:</strong> <sub class="math-sub">g</sub><i class="math-var">&eta;</i><sub class="math-sub">w</sub> = <sup>1</sup> / <sub><sub class="math-sub">w</sub><i class="math-var">&eta;</i><sub class="math-sub">g</sub></sub></p>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: CQ (গণিত) ১</h2>
-            <div class="slide-content">
-                <p class="quiz-cq reveal-item">পানির পরম প্রতিসরণাঙ্ক 1.33 এবং কাচের পরম প্রতিসরণাঙ্ক 1.52 হলে পানির সাপেক্ষে কাচের প্রতিসরণাঙ্ক কত?</p>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: CQ (গণিত) ১</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
-                পানির প্রতিসরণাঙ্ক, <i class="math-var">&eta;</i><sub class="math-sub">w</sub> = 1.33<br>
-                কাচের প্রতিসরণাঙ্ক, <i class="math-var">&eta;</i><sub class="math-sub">g</sub> = 1.52</p>
-                
-                <p class="reveal-item"><strong>আমরা জানি,</strong><br>
-                পানির সাপেক্ষে কাচের প্রতিসরণাঙ্ক,<br>
-                <sub class="math-sub">w</sub><i class="math-var">&eta;</i><sub class="math-sub">g</sub> = <sup><i class="math-var">&eta;</i><sub class="math-sub">g</sub></sup> / <sub><i class="math-var">&eta;</i><sub class="math-sub">w</sub></sub></p>
-                
-                <p class="reveal-item"><strong>হিসাব:</strong><br>
-                <sub class="math-sub">w</sub><i class="math-var">&eta;</i><sub class="math-sub">g</sub> = <sup>1.52</sup> / <sub>1.33</sub> &approx; 1.14</p>
-                
-                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> 1.14 (এর কোনো একক নেই)।</h3>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: CQ (গণিত) ২</h2>
-            <div class="slide-content">
-                <p class="quiz-cq reveal-item">বায়ু সাপেক্ষে কাচের প্রতিসরণাঙ্ক 1.52 এবং বায়ু মাধ্যমে আপতন কোণ 40&deg; হলে কাচে প্রতিসরণ কোণ কত?</p>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: CQ (গণিত) ২</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
-                আপতন কোণ, <i class="math-var">i</i> = 40&deg;<br>
-                প্রতিসরণাঙ্ক, <sub class="math-sub">a</sub><i class="math-var">&eta;</i><sub class="math-sub">g</sub> = 1.52</p>
-                
-                <p class="reveal-item"><strong>আমরা জানি,</strong> <sub class="math-sub">a</sub><i class="math-var">&eta;</i><sub class="math-sub">g</sub> = <sup>sin <i class="math-var">i</i></sup> / <sub>sin <i class="math-var">r</i></sub></p>
-                
-                <p class="reveal-item">sin <i class="math-var">r</i> = <sup>sin <i class="math-var">i</i></sup> / <sub><sub class="math-sub">a</sub><i class="math-var">&eta;</i><sub class="math-sub">g</sub></sub> = <sup>sin 40&deg;</sup> / <sub>1.52</sub></p>
-                <p class="reveal-item">sin <i class="math-var">r</i> = <sup>0.643</sup> / <sub>1.52</sub> &approx; 0.423</p>
-                <p class="reveal-item"><i class="math-var">r</i> = sin<sup class="math-sup">-1</sup>(0.423) &approx; 25&deg;</p>
-                
-                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> প্রতিসরণ কোণ 25&deg;।</h3>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: CQ (গণিত) ৩</h2>
-            <div class="slide-content">
-                <p class="quiz-cq reveal-item">বায়ুর সাপেক্ষে পানির প্রতিসরণাঙ্ক 1.33। বায়ু মাধ্যমে আপতন কোণ 30&deg; হলে প্রতিসরণ কোণ নির্ণয় কর।</p>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: CQ (গণিত) ৩</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
-                আপতন কোণ, <i class="math-var">i</i> = 30&deg;<br>
-                প্রতিসরণাঙ্ক, <sub class="math-sub">a</sub><i class="math-var">&eta;</i><sub class="math-sub">w</sub> = 1.33</p>
-                
-                <p class="reveal-item"><strong>আমরা জানি,</strong> <sub class="math-sub">a</sub><i class="math-var">&eta;</i><sub class="math-sub">w</sub> = <sup>sin <i class="math-var">i</i></sup> / <sub>sin <i class="math-var">r</i></sub></p>
-                
-                <p class="reveal-item">sin <i class="math-var">r</i> = <sup>sin <i class="math-var">i</i></sup> / <sub><sub class="math-sub">a</sub><i class="math-var">&eta;</i><sub class="math-sub">w</sub></sub> = <sup>sin 30&deg;</sup> / <sub>1.33</sub></p>
-                <p class="reveal-item">sin <i class="math-var">r</i> = <sup>0.50</sup> / <sub>1.33</sub> &approx; 0.376</p>
-                <p class="reveal-item"><i class="math-var">r</i> = sin<sup class="math-sup">-1</sup>(0.376) &approx; 22.08&deg;</p>
-                
-                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> প্রতিসরণ কোণ 22.08&deg;।</h3>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">ক্রান্তি কোণ (Critical Angle)</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item"><strong>শর্ত:</strong> আলোক রশ্মিকে অবশ্যই **ঘন মাধ্যম** থেকে **হালকা মাধ্যমে** যেতে হবে।</li>
-                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> ঘন মাধ্যমে আপতন কোণের যে মানের জন্য প্রতিসরণ কোণের মান 90&deg; হয় (অর্থাৎ প্রতিসরিত রশ্মি বিভেদতল ঘেঁষে চলে যায়), সেই আপতন কোণকে ক্রান্তি কোণ বা সংকট কোণ (<i class="math-var">&theta;</i><sub class="math-sub">c</sub>) বলে।</li>
-                    <li class="reveal-item"><strong>সূত্র:</strong> sin <i class="math-var">&theta;</i><sub class="math-sub">c</sub> = <sup><i class="math-var">n</i><sub class="math-sub">হালকা</sub></sup> / <sub><i class="math-var">n</i><sub class="math-sub">ঘন</sub></sub> = <sup>1</sup> / <sub><sub class="math-sub">হালকা</sub><i class="math-var">&eta;</i><sub class="math-sub">ঘন</sub></sub></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">পূর্ণ অভ্যন্তরীণ প্রতিফলন</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item"><strong>শর্ত ১:</strong> আলোক রশ্মিকে অবশ্যই **ঘন** মাধ্যম থেকে **হালকা** মাধ্যমে যেতে হবে।</li>
-                    <li class="reveal-item"><strong>শর্ত ২:</strong> আপতন কোণ (<i class="math-var">i</i>) অবশ্যই ক্রান্তি কোণ (<i class="math-var">&theta;</i><sub class="math-sub">c</sub>) -এর চেয়ে **বড়** হতে হবে।</li>
-                    <li class="reveal-item"><strong>ঘটনা:</strong> আপতন কোণ ক্রান্তি কোণের চেয়ে বড় হলে, আলোকরশ্মি প্রতিসরিত না হয়ে সম্পূর্ণরূপে প্রথম মাধ্যমেই (ঘন মাধ্যমে) প্রতিফলিত হয়ে ফিরে আসে। একে পূর্ণ অভ্যন্তরীণ প্রতিফলন বলে।</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: MCQ ৪</h2>
-            <div class="slide-content">
-                <h3 class="reveal-item">৪। কোনটি পূর্ণ অভ্যন্তরীণ প্রতিফলন হওয়ার শর্ত?</h3>
-                <div class="reveal-item">
-                    <p class="quiz-option">(ক) আপতন কোণ = ক্রান্তি কোণ</p>
-                    <p class="quiz-option">(খ) আপতন কোণ &gt; ক্রান্তি কোণ</p>
-                    <p class="quiz-option">(গ) আপতন কোণ &lt; ক্রান্তি কোণ</p>
-                    <p class="quiz-option">(ঘ) আপতন কোণ &gt; প্রতিসরণ কোণ</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: MCQ ৪</h2>
-            <div class="slide-content">
-                <h3>৪। কোনটি পূর্ণ অভ্যন্তরীণ প্রতিফলন হওয়ার শর্ত?</h3>
-                <p class="quiz-option">(ক) আপতন কোণ = ক্রান্তি কোণ (90&deg; কোণে প্রতিসরণ হয়)</p>
-                <p class="quiz-option correct-answer">(খ) আপতন কোণ &gt; ক্রান্তি কোণ</p>
-                <p class="quiz-option">(গ) আপতন কোণ &lt; ক্রান্তি কোণ (প্রতিসরণ হয়)</p>
-                <p class="quiz-option">(ঘ) আপতন কোণ &gt; প্রতিসরণ কোণ</p>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: MCQ ৫</h2>
-            <div class="slide-content">
-                <h3 class="reveal-item">৫। আপতন কোণ ক্রান্তিকোণের চেয়ে বড় হলে-</h3>
-                <div class="reveal-item">
-                    <p>i. আলো সম্পূর্ণরূপে শোষিত হয়</p>
-                    <p>ii. আলো সম্পূর্ণরূপে প্রতিফলিত হয়</p>
-                    <p>iii. আলো সম্পূর্ণরূপে একই মাধ্যমে ফিরে আসে</p>
-                </div>
-                <h3 class="reveal-item">নিচের কোনটি সঠিক?</h3>
-                <div class="reveal-item">
-                    <p class="quiz-option">(ক) i ও ii</p>
-                    <p class="quiz-option">(খ) ii ও iii</p>
-                    <p class="quiz-option">(গ) i ও iii</p>
-                    <p class="quiz-option">(ঘ) i, ii ও iii</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: MCQ ৫</h2>
-            <div class="slide-content">
-                <h3>৫। আপতন কোণ ক্রান্তিকোণের চেয়ে বড় হলে-</h3>
-                <p class="reveal-item">
-                    i. আলো সম্পূর্ণরূপে শোষিত হয় (ভুল)<br>
-                    ii. আলো সম্পূর্ণরূপে প্রতিফলিত হয় (সঠিক)<br>
-                    iii. আলো সম্পূর্ণরূপে একই মাধ্যমে ফিরে আসে (সঠিক)
-                </p>
-                <h3 class="reveal-item">নিচের কোনটি সঠিক?</h3>
-                <p class="quiz-option">(ক) i ও ii</p>
-                <p class="quiz-option correct-answer">(খ) ii ও iii</p>
-                <p class="quiz-option">(গ) i ও iii</p>
-                <p class="quiz-option">(ঘ) i, ii ও iii</p>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: CQ (গণিত) ৪</h2>
-            <div class="slide-content">
-                <p class="quiz-cq reveal-item">কাচ (n=1.5) ও পানির (n=1.33) মধ্যকার সংকট কোণ কত?</p>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: CQ (গণিত) ৪</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
-                ঘন মাধ্যম (কাচ), <i class="math-var">n</i><sub class="math-sub">g</sub> = 1.5<br>
-                হালকা মাধ্যম (পানি), <i class="math-var">n</i><sub class="math-sub">w</sub> = 1.33</p>
-                
-                <p class="reveal-item"><strong>আমরা জানি,</strong><br>
-                sin <i class="math-var">&theta;</i><sub class="math-sub">c</sub> = <sup><i class="math-var">n</i><sub class="math-sub">হালকা</sub></sup> / <sub><i class="math-var">n</i><sub class="math-sub">ঘন</sub></sub> = <sup><i class="math-var">n</i><sub class="math-sub">w</sub></sup> / <sub><i class="math-var">n</i><sub class="math-sub">g</sub></sub></p>
-                
-                <p class="reveal-item">sin <i class="math-var">&theta;</i><sub class="math-sub">c</sub> = <sup>1.33</sup> / <sub>1.5</sub> &approx; 0.887</p>
-                <p class="reveal-item"><i class="math-var">&theta;</i><sub class="math-sub">c</sub> = sin<sup class="math-sup">-1</sup>(0.887) &approx; 62.5&deg;</p>
-                
-                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> সংকট কোণ 62.5&deg; (প্রায়)।</h3>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: CQ (গণিত) ৫</h2>
-            <div class="slide-content">
-                <p class="quiz-cq reveal-item">বায়ুর সাপেক্ষে কোনো মাধ্যমের ক্রান্তি কোণ 45&deg; হলে ঐ মাধ্যমের প্রতিসরণাঙ্ক কত?</p>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: CQ (গণিত) ৫</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
-                ক্রান্তি কোণ, <i class="math-var">&theta;</i><sub class="math-sub">c</sub> = 45&deg;<br>
-                হালকা মাধ্যম (বায়ু), <i class="math-var">n</i><sub class="math-sub">a</sub> &approx; 1</p>
-                
-                <p class="reveal-item"><strong>আমরা জানি,</strong><br>
-                sin <i class="math-var">&theta;</i><sub class="math-sub">c</sub> = <sup><i class="math-var">n</i><sub class="math-sub">a</sub></sup> / <sub><i class="math-var">n</i><sub class="math-sub">medium</sub></sub></p>
-                
-                <p class="reveal-item"><i class="math-var">n</i><sub class="math-sub">medium</sub> = <sup><i class="math-var">n</i><sub class="math-sub">a</sub></sup> / <sub>sin <i class="math-var">&theta;</i><sub class="math-sub">c</sub></sub> = <sup>1</sup> / <sub>sin 45&deg;</sub></p>
-                <p class="reveal-item"><i class="math-var">n</i><sub class="math-sub">medium</sub> = <sup>1</sup> / <sub>(1/&radic;2)</sub> = &radic;2 &approx; 1.414</p>
-                
-                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> প্রতিসরণাঙ্ক 1.414।</h3>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">পূর্ণ অভ্যন্তরীণ প্রতিফলনের ব্যবহার</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item"><strong>মরীচিকা (Mirage):</strong> মরুভূমিতে বা গরম রাস্তায় পূর্ণ অভ্যন্তরীণ প্রতিফলনের জন্য দৃষ্টির ভ্রমকে মরীচিকা বলে।</li>
-                    <li class="reveal-item"><strong>রংধনু (Rainbow):</strong> বৃষ্টির কণা বা জলীয় বাষ্পের মধ্যে সূর্যের আলোর প্রতিসরণ, বিচ্ছুরণ এবং পূর্ণ অভ্যন্তরীণ প্রতিফলনের ফলে রংধনু সৃষ্টি হয়।</li>
-                    <li class="reveal-item"><strong>অপটিক্যাল ফাইবার (Optical Fiber):</strong> খুব সরু কাঁচ বা প্লাস্টিকের নল, যার মধ্য দিয়ে পূর্ণ অভ্যন্তরীণ প্রতিফলনের মাধ্যমে আলোকরশ্মি (তথ্য) পাঠানো হয়। এটি চিকিৎসা ও যোগাযোগে ব্যবহৃত হয়।</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: MCQ ৬</h2>
-            <div class="slide-content">
-                <h3 class="reveal-item">৬। মরুভূমিতে নিচের বায়ু-</h3>
-                <div class="reveal-item">
-                    <p class="quiz-option">(ক) উত্তপ্ত ও হালকা হয়</p>
-                    <p class="quiz-option">(খ) উত্তপ্ত ও ঘন হয়</p>
-                    <p class="quiz-option">(গ) ঠান্ডা ও হালকা হয়</p>
-                    <p class="quiz-option">(ঘ) ঠান্ডা ও ঘন হয়</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: MCQ ৬</h2>
-            <div class="slide-content">
-                <h3>৬। মরুভূমিতে নিচের বায়ু-</h3>
-                <p class="quiz-option correct-answer">(ক) উত্তপ্ত ও হালকা হয়</p>
-                <p class="quiz-option">(খ) উত্তপ্ত ও ঘন হয়</p>
-                <p class="quiz-option">(গ) ঠান্ডা ও হালকা হয়</p>
-                <p class="quiz-option">(ঘ) ঠান্ডা ও ঘন হয়</p>
-                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> মরুভূমিতে বালু উত্তপ্ত থাকায় ভূপৃষ্ঠ সংলগ্ন বায়ুস্তর উত্তপ্ত ও হালকা হয়, এবং উপরের বায়ু তুলনামূলক ঠান্ডা ও ঘন থাকে।</p>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: MCQ ৭</h2>
-            <div class="slide-content">
-                <h3 class="reveal-item">৭। অপটিক্যাল ফাইবার কী?</h3>
-                <div class="reveal-item">
-                    <p class="quiz-option">(ক) কাঠ</p>
-                    <p class="quiz-option">(খ) সরু কাচ</p>
-                    <p class="quiz-option">(গ) মোটা কাচ</p>
-                    <p class="quiz-option">(ঘ) খুব সরু ও নমনীয় কাচ তন্তু</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: MCQ ৭</h2>
-            <div class="slide-content">
-                <h3>৭। অপটিক্যাল ফাইবার কী?</h3>
-                <p class="quiz-option">(ক) কাঠ</p>
-                <p class="quiz-option">(খ) সরু কাচ</p>
-                <p class="quiz-option">(গ) মোটা কাচ</p>
-                <p class="quiz-option correct-answer">(ঘ) খুব সরু ও নমনীয় কাচ তন্তু</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">লেন্স (Lens)</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> দুইটি গোলীয় পৃষ্ঠ দ্বারা সীমাবদ্ধ কোনো স্বচ্ছ প্রতিসারক মাধ্যমকে লেন্স বলে।</li>
-                    <li class="reveal-item"><strong>প্রকারভেদ:</strong>
-                        <ol>
-                            <li><strong>উত্তল লেন্স (Convex):</strong> মধ্যভাগ পুরু, প্রান্তভাগ সরু। একে **অভিসারী লেন্স** বলে (আলোকরশ্মিকে মিলিত করে)।</li>
-                            <li><strong>অবতল লেন্স (Concave):</strong> মধ্যভাগ সরু, প্রান্তভাগ পুরু। একে **অপসারী লেন্স** বলে (আলোকরশ্মিকে ছড়িয়ে দেয়)।</li>
-                        </ol>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="slide">
-            <h2 class="slide-title">লেন্স সংক্রান্ত সংজ্ঞা</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item"><strong>বক্রতার কেন্দ্র (C):</strong> লেন্সের পৃষ্ঠগুলো যে গোলকের অংশ, সেই গোলকের কেন্দ্র। (দুটি পৃষ্ঠের জন্য $C_1, C_2$)।</li>
-                    <li class="reveal-item"><strong>প্রধান অক্ষ:</strong> বক্রতার কেন্দ্র দুটি যোগ করলে যে সরলরেখা পাওয়া যায়।</li>
-                    <li class="reveal-item"><strong>আলোক কেন্দ্র (O):</strong> লেন্সের প্রধান অক্ষের উপরস্থ একটি বিন্দু, যার মধ্য দিয়ে আলোকরশ্মি গেলে প্রতিসরণের পর কোনো দিক পরিবর্তন করে না (সোজাসুজি চলে যায়)।</li>
-                    <li class="reveal-item"><strong>প্রধান ফোকাস (F):</strong> প্রধান অক্ষের সমান্তরাল রশ্মি প্রতিসরণের পর প্রধান অক্ষের যে বিন্দুতে মিলিত হয় (উত্তল) বা যে বিন্দু থেকে অপসৃত হচ্ছে বলে মনে হয় (অবতল)।</li>
-                    <li class="reveal-item"><strong>ফোকাস দূরত্ব (f):</strong> আলোক কেন্দ্র (O) থেকে প্রধান ফোকাস (F) পর্যন্ত দূরত্ব।</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: MCQ ৮</h2>
-            <div class="slide-content">
-                <h3 class="reveal-item">৮। অবতল লেন্সকে কী লেন্স বলা হয়?</h3>
-                <div class="reveal-item">
-                    <p class="quiz-option">(ক) অভিসারী লেন্স</p>
-                    <p class="quiz-option">(খ) অপসারী লেন্স</p>
-                    <p class="quiz-option">(গ) সমতল লেন্স</p>
-                    <p class="quiz-option">(ঘ) সমতলোত্তল লেন্স</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: MCQ ৮</h2>
-            <div class="slide-content">
-                <h3>৮। অবতল লেন্সকে কী লেন্স বলা হয়?</h3>
-                <p class="quiz-option">(ক) অভিসারী লেন্স (উত্তল লেন্সকে বলে)</p>
-                <p class="quiz-option correct-answer">(খ) অপসারী লেন্স</p>
-                <p class="quiz-option">(গ) সমতল লেন্স</p>
-                <p class="quiz-option">(ঘ) সমতলোত্তল লেন্স</p>
-                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> অবতল লেন্স সমান্তরাল আলোকরশ্মিকে ছড়িয়ে দেয় বা অপসারী করে, তাই একে অপসারী লেন্স বলে।</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">লেন্সে প্রতিবিম্ব অঙ্কনের নিয়ম</h2>
-            <div class="slide-content">
-                <ol>
-                    <li class="reveal-item">আলোক কেন্দ্র (O) দিয়ে আপতিত রশ্মি সোজাসুজি চলে যায়।</li>
-                    <li class="reveal-item">প্রধান অক্ষের সমান্তরাল রশ্মি প্রতিসরণের পর প্রধান ফোকাস (F) দিয়ে যায় (বা F থেকে আসছে বলে মনে হয়)।</li>
-                    <li class="reveal-item">প্রধান ফোকাস (F) দিয়ে আপতিত রশ্মি প্রতিসরণের পর প্রধান অক্ষের সমান্তরাল হয়ে যায়।</li>
-                </ol>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">উত্তল লেন্সে প্রতিবিম্ব</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item"><strong>বস্তু অসীমে:</strong> বিম্ব F-এ (বাস্তব, উল্টো, অত্যন্ত খর্বিত)।</li>
-                    <li class="reveal-item"><strong>বস্তু 2F-এর বাইরে:</strong> বিম্ব F ও 2F-এর মাঝে (বাস্তব, উল্টো, খর্বিত)।</li>
-                    <li class="reveal-item"><strong>বস্তু 2F-এ:</strong> বিম্ব 2F-এ (বাস্তব, উল্টো, সমান)।</li>
-                    <li class="reveal-item"><strong>বস্তু F ও 2F-এর মাঝে:</strong> বিম্ব 2F-এর বাইরে (বাস্তব, উল্টো, বিবর্ধিত)।</li>
-                    <li class="reveal-item"><strong>বস্তু F-এ:</strong> বিম্ব অসীমে (বাস্তব, উল্টো, অত্যন্ত বিবর্ধিত)।</li>
-                    <li class="reveal-item"><strong>বস্তু F ও O-এর মাঝে:</strong> বিম্ব বস্তুর পেছনে (অবাস্তব, সোজা, বিবর্ধিত)।</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">অবতল লেন্সে প্রতিবিম্ব</h2>
-            <div class="slide-content">
-                <p class="reveal-item">অবতল লেন্সে সর্বদা, সকল অবস্থানে বস্তুর জন্য প্রতিবিম্ব:</p>
-                <ul>
-                    <li class="reveal-item"><strong>অবাস্তব</strong></li>
-                    <li class="reveal-item"><strong>সোজা</strong></li>
-                    <li class="reveal-item"><strong>খর্বিত (ছোট)</strong></li>
-                    <li class="reveal-item"><strong>অবস্থান:</strong> ফোকাস (F) এবং আলোক কেন্দ্র (O) এর মধ্যে গঠিত হয়।</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: MCQ ৯</h2>
-            <div class="slide-content">
-                <h3 class="reveal-item">৯। উত্তল লেন্সের লক্ষ্যবস্তু অসীমে হলে এর প্রতিবিম্বের আকৃতি কিরূপ হবে?</h3>
-                <div class="reveal-item">
-                    <p class="quiz-option">(ক) খর্বিত</p>
-                    <p class="quiz-option">(খ) আকারে সমান</p>
-                    <p class="quiz-option">(গ) বিবর্ধিত</p>
-                    <p class="quiz-option">(ঘ) অত্যন্ত খর্বিত</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: MCQ ৯</h2>
-            <div class="slide-content">
-                <h3>৯। উত্তল লেন্সের লক্ষ্যবস্তু অসীমে হলে এর প্রতিবিম্বের আকৃতি কিরূপ হবে?</h3>
-                <p class="quiz-option">(ক) খর্বিত</p>
-                <p class="quiz-option">(খ) আকারে সমান</p>
-                <p class="quiz-option">(গ) বিবর্ধিত</p>
-                <p class="quiz-option correct-answer">(ঘ) অত্যন্ত খর্বিত</p>
-                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> অসীম থেকে আসা সমান্তরাল রশ্মিগুচ্ছ উত্তল লেন্সে প্রতিসরণের পর প্রধান ফোকাসে মিলিত হয়, ফলে একটি বিন্দুর মতো (অত্যন্ত খর্বিত) বিম্ব গঠিত হয়।</p>
-            </div>
-        </div>
-        
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: CQ (গণিত) ৬</h2>
-            <div class="slide-content">
-                <p class="quiz-cq reveal-item">একটি উত্তল লেন্সের ফোকাস দূরত্ব 20 cm। লেন্স হতে কত দূরে বস্তু রাখলে দ্বিগুণ বিবর্ধিত প্রতিবিম্ব পাওয়া যাবে?</p>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: CQ (গণিত) ৬</h2>
-            <div class="slide-content">
-                <p class="reveal-item">দেওয়া আছে, f = +20 cm, বিবর্ধন m = 2।</p>
-                <p class="reveal-item"><strong>১. বাস্তব বিম্বের ক্ষেত্রে (m = -2):</strong><br>
-                m = -v/u &rArr; -2 = -v/u &rArr; v = 2u<br>
-                <sup>1</sup>/<sub>u</sub> + <sup>1</sup>/<sub>v</sub> = <sup>1</sup>/<sub>f</sub> &rArr; <sup>1</sup>/<sub>u</sub> + <sup>1</sup>/<sub>2u</sub> = <sup>1</sup>/<sub>20</sub><br>
-                <sup>(2+1)</sup>/<sub>2u</sub> = <sup>1</sup>/<sub>20</sub> &rArr; <sup>3</sup>/<sub>2u</sub> = <sup>1</sup>/<sub>20</sub><br>
-                2u = 60 &rArr; <strong>u = 30 cm</strong></p>
-                
-                <p class="reveal-item"><strong>২. অবাস্তব বিম্বের ক্ষেত্রে (m = +2):</strong><br>
-                m = -v/u &rArr; 2 = -v/u &rArr; v = -2u<br>
-                <sup>1</sup>/<sub>u</sub> + <sup>1</sup>/<sub>v</sub> = <sup>1</sup>/<sub>f</sub> &rArr; <sup>1</sup>/<sub>u</sub> + <sup>1</sup>/<sub>(-2u)</sub> = <sup>1</sup>/<sub>20</sub><br>
-                <sup>(2-1)</sup>/<sub>2u</sub> = <sup>1</sup>/<sub>20</sub> &rArr; <sup>1</sup>/<sub>2u</sub> = <sup>1</sup>/<sub>20</sub><br>
-                2u = 20 &rArr; <strong>u = 10 cm</strong></p>
-                
-                <h3 class="reveal-item"><strong>উত্তর:</strong> 30 cm দূরে (বাস্তব বিম্বের জন্য) অথবা 10 cm দূরে (অবাস্তব বিম্বের জন্য)।</h3>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">চোখ ও স্পষ্ট দর্শন</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item"><strong>উপযোজন (Accommodation):</strong> চোখের লেন্সের ফোকাস দূরত্ব নিয়ন্ত্রণ করার ক্ষমতাকে উপযোজন বলে।</li>
-                    <li class="reveal-item"><strong>স্পষ্ট দর্শনের ন্যূনতম দূরত্ব:</strong> যে ন্যূনতম দূরত্ব পর্যন্ত চোখ বিনা শ্রান্তিতে স্পষ্ট দেখতে পায়। স্বাভাবিক চোখের জন্য এর মান <strong>25 cm</strong>। একে নিকট বিন্দু বলে।</li>
-                    <li class="reveal-item"><strong>দর্শনানুভূতির স্থায়িত্বকাল:</strong> চোখের সামনে থেকে বস্তু সরানোর পর 0.03 সেকেন্ড (বা 0.1s) পর্যন্ত এর অনুভূতি মস্তিষ্কে থেকে যায়।</li>
-                    <li class="reveal-item"><strong>স্বাভাবিক দৃষ্টির পাল্লা:</strong> 25 cm থেকে অসীম পর্যন্ত।</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: MCQ ১০</h2>
-            <div class="slide-content">
-                <h3 class="reveal-item">১০। স্বাভাবিক বয়ষ্ক ব্যক্তির স্পষ্ট দর্শনের ন্যূনতম দূরত্ব কত?</h3>
-                <div class="reveal-item">
-                    <p class="quiz-option">(ক) 50 সে. মি.</p>
-                    <p class="quiz-option">(খ) 25 সে. মি.</p>
-                    <p class="quiz-option">(গ) 15 সে. মি.</p>
-                    <p class="quiz-option">(ঘ) 5 সে. মি.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: MCQ ১০</h2>
-            <div class="slide-content">
-                <h3>১০। স্বাভাবিক বয়ষ্ক ব্যক্তির স্পষ্ট দর্শনের ন্যূনতম দূরত্ব কত?</h3>
-                <p class="quiz-option">(ক) 50 সে. মি.</p>
-                <p class="quiz-option correct-answer">(খ) 25 সে. মি.</p>
-                <p class="quiz-option">(গ) 15 সে. মি.</p>
-                <p class="quiz-option">(ঘ) 5 সে. মি.</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">চোখের ত্রুটি: হ্রস্ব দৃষ্টি (Myopia)</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item"><strong>লক্ষণ:</strong> এই ত্রুটিগ্রস্ত চোখ দূরের জিনিস ভালোভাবে দেখতে পায় না, কিন্তু কাছের জিনিস স্পষ্ট দেখতে পায়।</li>
-                    <li class="reveal-item"><strong>কারণ:</strong>
-                        <ol>
-                            <li>অক্ষিগোলকের ব্যাসার্ধ বেড়ে যাওয়া।</li>
-                            <li>চোখের লেন্সের ফোকাস দূরত্ব কমে যাওয়া (অভিসারী ক্ষমতা বেড়ে যাওয়া)।</li>
-                        </ol>
-                    </li>
-                    <li class="reveal-item"><strong>ফল:</strong> দূরের বস্তু থেকে আসা আলোকরশ্মি রেটিনার **সামনে** মিলিত হয়।</li>
-                    <li class="reveal-item"><strong>প্রতিকার:</strong> উপযুক্ত ফোকাস দূরত্বের **অবতল লেন্স** (Concave Lens) ব্যবহার করা।</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: MCQ ১১</h2>
-            <div class="slide-content">
-                <h3 class="reveal-item">১১। জহির শ্রেণিকক্ষের পেছনে বসে ব্লাকবোর্ডের লেখা স্পষ্ট দেখতে পায় না। এক্ষেত্রে জহিরের চোখের কি ধরনের ত্রুটি হয়েছে?</h3>
-                <div class="reveal-item">
-                    <p class="quiz-option">(ক) দীর্ঘ দৃষ্টি</p>
-                    <p class="quiz-option">(খ) হ্রস্ব দৃষ্টি</p>
-                    <p class="quiz-option">(গ) চালসে</p>
-                    <p class="quiz-option">(ঘ) দূরবন্ধ দৃষ্টি</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: MCQ ১১</h2>
-            <div class="slide-content">
-                <h3>১১। জহির শ্রেণিকক্ষের পেছনে বসে ব্লাকবোর্ডের লেখা স্পষ্ট দেখতে পায় না। এক্ষেত্রে জহিরের চোখের কি ধরনের ত্রুটি হয়েছে?</h3>
-                <p class="quiz-option">(ক) দীর্ঘ দৃষ্টি</p>
-                <p class="quiz-option correct-answer">(খ) হ্রস্ব দৃষ্টি</p>
-                <p class="quiz-option">(গ) চালসে</p>
-                <p class="quiz-option">(ঘ) দূরবন্ধ দৃষ্টি</p>
-                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> যে চোখ দূরের জিনিস স্পষ্ট দেখতে পায় না, তাকে হ্রস্ব দৃষ্টি বা ক্ষীণদৃষ্টি বলে।</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">চোখের ত্রুটি: দীর্ঘ দৃষ্টি (Hypermetropia)</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item"><strong>লক্ষণ:</strong> এই ত্রুটিগ্রস্ত চোখ দূরের জিনিস দেখতে পায়, কিন্তু কাছের জিনিস (যেমন 25 cm দূরের) স্পষ্ট দেখতে পায় না।</li>
-                    <li class="reveal-item"><strong>কারণ:</strong>
-                        <ol>
-                            <li>অক্ষিগোলকের ব্যাসার্ধ কমে যাওয়া।</li>
-                            <li>চোখের লেন্সের ফোকাস দূরত্ব বেড়ে যাওয়া (অভিসারী ক্ষমতা কমে যাওয়া)।</li>
-                        </ol>
-                    </li>
-                    <li class="reveal-item"><strong>ফল:</strong> কাছের বস্তু থেকে আসা আলোকরশ্মি রেটিনার **পেছনে** মিলিত হয়।</li>
-                    <li class="reveal-item"><strong>প্রতিকার:</strong> উপযুক্ত ফোকাস দূরত্বের **উত্তল লেন্স** (Convex Lens) ব্যবহার করা।</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: MCQ ১২</h2>
-            <div class="slide-content">
-                <h3 class="reveal-item">১২। দূরদৃষ্টির জন্য চোখের সামনে লক্ষ্যবস্তুর বিম্ব রেটিনার কোথায় গঠিত হয়?</h3>
-                <div class="reveal-item">
-                    <p class="quiz-option">(ক) সামনে</p>
-                    <p class="quiz-option">(খ) সমতলে</p>
-                    <p class="quiz-option">(গ) পেছনে</p>
-                    <p class="quiz-option">(ঘ) বিম্ব গঠিত হয় না</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: MCQ ১২</h2>
-            <div class="slide-content">
-                <h3>১২। দূরদৃষ্টির জন্য চোখের সামনে লক্ষ্যবস্তুর বিম্ব রেটিনার কোথায় গঠিত হয়?</h3>
-                <p class="quiz-option">(ক) সামনে</p>
-                <p class="quiz-option">(খ) সমতলে</p>
-                <p class="quiz-option correct-answer">(গ) পেছনে</p>
-                <p class="quiz-option">(ঘ) বিম্ব গঠিত হয় না</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 class="slide-title">লেন্সের ক্ষমতা (Power of Lens)</h2>
-            <div class="slide-content">
-                <ul>
-                    <li class="reveal-item"><strong>সংজ্ঞা:</strong> কোনো লেন্সের অভিসারী বা অপসারী করার সামর্থ্যকে তার ক্ষমতা বলে। এটি ফোকাস দূরত্বের ব্যস্তানুপাতিক।</li>
-                    <li class="reveal-item"><strong>সূত্র:</strong> <i class="math-var">P</i> = <sup>1</sup> / <sub><i class="math-var">f</i> (মিটারে)</sub></li>
-                    <li class="reveal-item"><strong>একক:</strong> ডায়াপ্টার (D)।</li>
-                    <li class="reveal-item">1 ডায়াপ্টার: 1 মিটার ফোকাস দূরত্ববিশিষ্ট কোনো লেন্সের ক্ষমতাকে 1 ডায়াপ্টার বলে।</li>
-                    <li class="reveal-item"><strong>চিহ্ন:</strong>
-                        <ul>
-                            <li>উত্তল লেন্সের ক্ষমতা (+) ধনাত্মক।</li>
-                            <li>অবতল লেন্সের ক্ষমতা (-) ঋণাত্মক।</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: MCQ ১৩</h2>
-            <div class="slide-content">
-                <h3 class="reveal-item">১৩। +2 D দ্বারা কোনটি বুঝায়?</h3>
-                <div class="reveal-item">
-                    <p class="quiz-option">(ক) লেন্সটি অবতল</p>
-                    <p class="quiz-option">(খ) লেন্সটির ফোকাস দূরত্ব 2 মিটার</p>
-                    <p class="quiz-option">(গ) লেন্সটির ফোকাস দূরত্ব 6 সে. মি.</p>
-                    <p class="quiz-option">(ঘ) লেন্সটির ফোকাস দূরত্ব 50 সে. মি.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: MCQ ১৩</h2>
-            <div class="slide-content">
-                <h3>১৩। +2 D দ্বারা কোনটি বুঝায়?</h3>
-                <p class="quiz-option">(ক) লেন্সটি অবতল</p>
-                <p class="quiz-option">(খ) লেন্সটির ফোকাস দূরত্ব 2 মিটার</p>
-                <p class="quiz-option">(গ) লেন্সটির ফোকাস দূরত্ব 6 সে. মি.</p>
-                <p class="quiz-option correct-answer">(ঘ) লেন্সটির ফোকাস দূরত্ব 50 সে. মি.</p>
-                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> P = +2 D (উত্তল লেন্স)।<br> f = 1/P = 1/2 m = 0.5 m = 50 cm।</p>
-            </div>
-        </div>
-        
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: MCQ ১৪</h2>
-            <div class="slide-content">
-                <h3 class="reveal-item">১৪। কোন ব্যক্তি চশমা হিসেবে 20 cm ফোকাস দূরত্বের অবতল লেন্স ব্যবহার করে, ঐ লেন্সের ক্ষমতা কত?</h3>
-                <div class="reveal-item">
-                    <p class="quiz-option">(ক) -5 D</p>
-                    <p class="quiz-option">(খ) 5 D</p>
-                    <p class="quiz-option">(গ) 0.05 D</p>
-                    <p class="quiz-option">(ঘ) -0.05 D</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: MCQ ১৪</h2>
-            <div class="slide-content">
-                <h3>১৪। কোন ব্যক্তি চশমা হিসেবে 20 cm ফোকাস দূরত্বের অবতল লেন্স ব্যবহার করে, ঐ লেন্সের ক্ষমতা কত?</h3>
-                <p class="quiz-option correct-answer">(ক) -5 D</p>
-                <p class="quiz-option">(খ) 5 D</p>
-                <p class="quiz-option">(গ) 0.05 D</p>
-                <p class="quiz-option">(ঘ) -0.05 D</p>
-                <p class="reveal-item explanation"><strong>ব্যাখ্যা:</strong> অবতল লেন্স, তাই f = -20 cm = -0.2 m।<br> P = 1/f = 1 / (-0.2) = -5 D।</p>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: CQ (গণিত) ৭</h2>
-            <div class="slide-content">
-                <p class="quiz-cq reveal-item">শাকিল একটি বস্তুর বিম্ব গঠন করার জন্য 20 cm ফোকাস দূরত্বের একটি উত্তল লেন্স ব্যবহার করল। লেন্সটির ক্ষমতা কত?</p>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: CQ (গণিত) ৭</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
-                লেন্সটি উত্তল, তাই ফোকাস দূরত্ব, f = +20 cm = +0.2 m</p>
-                
-                <p class="reveal-item"><strong>আমরা জানি,</strong><br>
-                ক্ষমতা, P = <sup>1</sup>/<sub><i class="math-var">f</i> (মিটারে)</sub></p>
-                
-                <p class="reveal-item">P = <sup>1</sup> / <sub>0.2</sub> = +5 D</p>
-                
-                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> লেন্সটির ক্ষমতা +5 D।</h3>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: CQ (গণিত) ৮</h2>
-            <div class="slide-content">
-                <p class="quiz-cq reveal-item">নাহিদের দাদুর ব্যবহৃত চশমার ক্ষমতা +2.25 D। ব্যবহৃত চশমার ফোকাস দূরত্ব নির্ণয় কর।</p>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: CQ (গণিত) ৮</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
-                চশমার ক্ষমতা, P = +2.25 D</p>
-                
-                <p class="reveal-item"><strong>আমরা জানি,</strong><br>
-                f = <sup>1</sup>/<sub>P</sub></p>
-                
-                <p class="reveal-item">f = <sup>1</sup> / <sub>2.25</sub> = 0.44 m</p>
-                <p class="reveal-item">f = 0.44 &times; 100 = 44 cm</p>
-                
-                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> ফোকাস দূরত্ব 44 cm (এটি একটি উত্তল লেন্স)।</h3>
-            </div>
-        </div>
-        
-        <div class="slide">
-            <h2 class="slide-title">লেন্সের সাধারণ সূত্র</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>লেন্সের সূত্র:</strong></p>
-                <h3 class="reveal-item"><sup>1</sup>/<sub><i class="math-var">u</i></sub> + <sup>1</sup>/<sub><i class="math-var">v</i></sub> = <sup>1</sup>/<sub><i class="math-var">f</i></sub></h3>
-                
-                <p class="reveal-item"><strong>রৈখিক বিবর্ধন (m):</strong></p>
-                <h3 class="reveal-item"><i class="math-var">m</i> = <sup>বিম্বের দৈর্ঘ্য</sup> / <sub>বস্তুর দৈর্ঘ্য</sub> = - <sup><i class="math-var">v</i></sup> / <sub><i class="math-var">u</i></sub></h3>
-                
-                <p class="reveal-item"><strong>চিহ্নের প্রথা:</strong></p>
-                <ul>
-                    <li><i class="math-var">u</i> (বস্তুর দূরত্ব) সর্বদা ধনাত্মক (+)।</li>
-                    <li><i class="math-var">f</i> (ফোকাস দূরত্ব) উত্তলের জন্য (+), অবতলের জন্য (-)।</li>
-                    <li><i class="math-var">v</i> (বিম্বের দূরত্ব) বাস্তব বিম্বের জন্য (+), অবাস্তব বিম্বের জন্য (-)।</li>
-                    <li><i class="math-var">m</i> (বিবর্ধন) সোজা বিম্বের জন্য (+), উল্টো বিম্বের জন্য (-)।</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">কুইজ: CQ (গণিত) ৯</h2>
-            <div class="slide-content">
-                <p class="quiz-cq reveal-item">একটি উত্তল লেন্স থেকে 24 cm দূরে অবস্থিত একটি বস্তুর বাস্তব বিম্ব লক্ষ্যবস্তুর দ্বিগুণ। লেন্সটির ফোকাস দূরত্ব নির্ণয় কর।</p>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: CQ (গণিত) ৯</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
-                বস্তুর দূরত্ব, u = +24 cm<br>
-                বিম্ব বাস্তব (তাই উল্টো), বিবর্ধন, m = -2</p>
-                
-                <p class="reveal-item"><strong>১ম ধাপ: v নির্ণয়</strong><br>
-                m = -v/u &rArr; -2 = -v/24 &rArr; v = 48 cm</p>
-                
-                <p class="reveal-item"><strong>২য় ধাপ: f নির্ণয়</strong><br>
-                <sup>1</sup>/<sub>f</sub> = <sup>1</sup>/<sub>u</sub> + <sup>1</sup>/<sub>v</sub> = <sup>1</sup>/<sub>24</sub> + <sup>1</sup>/<sub>48</sub><br>
-                <sup>1</sup>/<sub>f</sub> = <sup>(2 + 1)</sup> / <sub>48</sub> = <sup>3</sup> / <sub>48</sub> = <sup>1</sup> / <sub>16</sub></p>
-                
-                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> f = 16 cm।</h3>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">সৃজনশীল প্রশ্ন ১</h2>
-            <div class="slide-content">
-                <p class="quiz-cq reveal-item">আলোকরশ্মি a মাধ্যম (<i class="math-var">c</i><sub class="math-sub">a</sub> = 3&times;10<sup class="math-sup">8</sup> ms<sup class="math-sup">-1</sup>) থেকে b মাধ্যমে প্রবেশ করায় এর বেগ এক-তৃতীয়াংশ হ্রাস পেল।</p>
-                <div class="reveal-item">
-                    <p>(ক) প্রতিসরণাঙ্ক কাকে বলে?</p>
-                    <p>(খ) মানুষের দুটি চোখ থাকার সুবিধা ব্যাখ্যা কর।</p>
-                    <p>(গ) b মাধ্যমে প্রতিসরণ কোণের মান 35&deg; হলে আপতন কোণের মান নির্ণয় কর।</p>
-                    <p>(ঘ) আপতন কোণের মান পরিবর্তন না করে যদি প্রতিসরণ কোণের মান 5&deg; বৃদ্ধি করা হয়, তাহলে b মাধ্যমে আলোর বেগের কীরূপ পরিবর্তন আনতে হবে?</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ক ও খ)</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>(ক) প্রতিসরণাঙ্ক:</strong> একজোড়া নির্দিষ্ট মাধ্যম এবং নির্দিষ্ট বর্ণের আলোকরশ্মির জন্য আপতন কোণের সাইন এবং প্রতিসরণ কোণের সাইনের অনুপাত একটি ধ্রুব সংখ্যা। এই ধ্রুব সংখ্যাকে প্রথম মাধ্যম সাপেক্ষে দ্বিতীয় মাধ্যমের প্রতিসরণাঙ্ক বলে।</p>
-                <p class="reveal-item"><strong>(খ) দুটি চোখের সুবিধা:</strong> দুটি চোখ দিয়ে বস্তু দেখলে দুটি ভিন্ন প্রতিবিম্বের উপরিপাত ঘটে, যার ফলে মস্তিষ্ক বস্তুর দূরত্ব নির্ভুলভাবে পরিমাপ করতে পারে এবং বস্তুকে ভালোভাবে (ত্রিমাত্রিক) দেখা যায়।</p>
-            </div>
-        </div>
-        
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (গ)</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
-                a মাধ্যমে আলোর বেগ, <i class="math-var">c</i><sub class="math-sub">a</sub> = 3 &times; 10<sup class="math-sup">8</sup> ms<sup class="math-sup">-1</sup><br>
-                b মাধ্যমে আলোর বেগ, <i class="math-var">c</i><sub class="math-sub">b</sub> = <i class="math-var">c</i><sub class="math-sub">a</sub> - (<sup>1</sup>/<sub>3</sub>)<i class="math-var">c</i><sub class="math-sub">a</sub> = (<sup>2</sup>/<sub>3</sub>)<i class="math-var">c</i><sub class="math-sub">a</sub><br>
-                <i class="math-var">c</i><sub class="math-sub">b</sub> = (<sup>2</sup>/<sub>3</sub>) &times; (3 &times; 10<sup class="math-sup">8</sup>) = 2 &times; 10<sup class="math-sup">8</sup> ms<sup class="math-sup">-1</sup><br>
-                প্রতিসরণ কোণ, <i class="math-var">r</i> = 35&deg;</p>
-                
-                <p class="reveal-item"><strong>আমরা জানি,</strong> <sup>sin <i class="math-var">i</i></sup> / <sub>sin <i class="math-var">r</i></sub> = <sup><i class="math-var">c</i><sub class="math-sub">a</sub></sup> / <sub><i class="math-var">c</i><sub class="math-sub">b</sub></sub></p>
-                <p class="reveal-item">sin <i class="math-var">i</i> = (<sup><i class="math-var">c</i><sub class="math-sub">a</sub></sup> / <sub><i class="math-var">c</i><sub class="math-sub">b</sub></sub>) &times; sin <i class="math-var">r</i> = (<sup>(3 &times; 10<sup class="math-sup">8</sup>)</sup> / <sub>(2 &times; 10<sup class="math-sup">8</sup>)</sub>) &times; sin 35&deg;</p>
-                <p class="reveal-item">sin <i class="math-var">i</i> = 1.5 &times; 0.5736 = 0.86</p>
-                <p class="reveal-item"><i class="math-var">i</i> = sin<sup class="math-sup">-1</sup>(0.86) &approx; 59.36&deg;</p>
-                <h3 class="reveal-item"><strong>উত্তর:</strong> আপতন কোণের মান 59.36&deg;।</h3>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ঘ)</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>(গ) হতে পাই,</strong> আপতন কোণ, <i class="math-var">i</i> = 59.36&deg; (অপরিবর্তিত)</p>
-                <p class="reveal-item">নতুন প্রতিসরণ কোণ, <i class="math-var">r</i>' = 35&deg; + 5&deg; = 40&deg;</p>
-                <p class="reveal-item"><strong>নতুন বেগ <i class="math-var">c</i><sub class="math-sub">b</sub>' হলে,</strong> <sup>sin <i class="math-var">i</i></sup> / <sub>sin <i class="math-var">r</i>'</sub> = <sup><i class="math-var">c</i><sub class="math-sub">a</sub></sup> / <sub><i class="math-var">c</i><sub class="math-sub">b</sub>'</sub></p>
-                
-                <p class="reveal-item"><i class="math-var">c</i><sub class="math-sub">b</sub>' = <i class="math-var">c</i><sub class="math-sub">a</sub> &times; (<sup>sin <i class="math-var">r</i>'</sup> / <sub>sin <i class="math-var">i</i></sub>)</p>
-                <p class="reveal-item"><i class="math-var">c</i><sub class="math-sub">b</sub>' = (3 &times; 10<sup class="math-sup">8</sup>) &times; (<sup>sin 40&deg;</sup> / <sub>sin 59.36&deg;</sub>)</p>
-                <p class="reveal-item"><i class="math-var">c</i><sub class="math-sub">b</sub>' = (3 &times; 10<sup class="math-sup">8</sup>) &times; (<sup>0.6428</sup> / <sub>0.8604</sub>) &approx; 2.24 &times; 10<sup class="math-sup">8</sup> ms<sup class="math-sup">-1</sup></p>
-                
-                <p class="reveal-item"><strong>বেগের পরিবর্তন:</strong><br>
-                &Delta;<i class="math-var">c</i> = <i class="math-var">c</i><sub class="math-sub">b</sub>' - <i class="math-var">c</i><sub class="math-sub">b</sub><br>
-                &Delta;<i class="math-var">c</i> = (2.24 &times; 10<sup class="math-sup">8</sup>) - (2 &times; 10<sup class="math-sup">8</sup>) = 0.24 &times; 10<sup class="math-sup">8</sup> ms<sup class="math-sup">-1</sup></p>
-                <h3 class="reveal-item"><strong>উত্তর:</strong> b মাধ্যমে আলোর বেগ 0.24 &times; 10<sup class="math-sup">8</sup> ms<sup class="math-sup">-1</sup> বৃদ্ধি করতে হবে।</h3>
-            </div>
-        </div>
-
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">সৃজনশীল প্রশ্ন ২</h2>
-            <div class="slide-content">
-                <p class="quiz-cq reveal-item">নাফিসের দাদু কাছের জিনিস স্পষ্ট দেখতে পান না। চক্ষুরোগ বিশেষজ্ঞ দাদুকে +2.25 D ক্ষমতা সম্পন্ন লেন্স চশমা হিসেবে ব্যবহার করার পরামর্শ দিলেন।</p>
-                <div class="reveal-item">
-                    <p>(ক) লেন্স কাকে বলে?</p>
-                    <p>(খ) চোখের সামনে মশাল খুব দ্রুত ঘুরালে আগুনের বৃত্ত দেখা যায় কেন?</p>
-                    <p>(গ) দাদুর চশমার ফোকাস দূরত্ব নির্ণয় কর।</p>
-                    <p>(ঘ) দাদুকে ধনাত্মক ক্ষমতার লেন্স ব্যবহারের পরামর্শ দেওয়ার যৌক্তিকতা চিত্রসহ বিশ্লেষণ কর।</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (ক ও খ)</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>(ক) লেন্স:</strong> দুটি গোলীয় পৃষ্ঠ দ্বারা সীমাবদ্ধ স্বচ্ছ প্রতিসারক মাধ্যমকে লেন্স বলে।</p>
-                <p class="reveal-item"><strong>(খ) ব্যাখ্যা:</strong> চোখের সামনে থেকে বস্তু সরানোর পর প্রায় 0.03 সেকেন্ড পর্যন্ত এর অনুভূতি মস্তিষ্কে থেকে যায় (দর্শনানুভূতির স্থায়িত্বকাল)। মশাল দ্রুত ঘুরালে তা 0.03 সেকেন্ডের কম সময়ে বৃত্তাকার পথ ঘুরে আসে, ফলে মস্তিষ্ক প্রতিটি ভিন্ন অবস্থানকে আলাদা করতে পারে না এবং একটি অবিচ্ছিন্ন আগুনের বৃত্ত দেখে।</p>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (গ)</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
-                চশমার ক্ষমতা, P = +2.25 D</p>
-                
-                <p class="reveal-item"><strong>আমরা জানি,</strong><br>
-                ফোকাস দূরত্ব, f (মিটারে) = <sup>1</sup>/<sub>P</sub></p>
-                
-                <p class="reveal-item">f = <sup>1</sup> / <sub>2.25</sub> &approx; 0.44 m</p>
-                <p class="reveal-item">f = 0.44 &times; 100 &approx; 44 cm</p>
-                
-                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> দাদুর চশমার ফোকাস দূরত্ব 44 cm।</h3>
-            </div>
-        </div>
-        
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (ঘ)</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>যৌক্তিকতা:</strong> দাদু কাছের জিনিস স্পষ্ট দেখতে পান না, এর অর্থ তার **দীর্ঘ দৃষ্টি (Hypermetropia)** ত্রুটি রয়েছে।</p>
-                <p class="reveal-item"><strong>কারণ:</strong> এই ত্রুটিতে চোখের লেন্সের অভিসারী ক্ষমতা কমে যায় (ফোকাস দূরত্ব বেড়ে যায়), ফলে 25 cm (নিকট বিন্দু) থেকে আসা আলোকরশ্মি রেটিনার **পেছনে** মিলিত হয়।</p>
-                <p class="reveal-item"><strong>প্রতিকার:</strong> চোখের অভিসারী ক্ষমতা বাড়ানোর জন্য একটি **উত্তল লেন্স** (যার ক্ষমতা ধনাত্মক) ব্যবহার করতে হয়।</p>
-                <p class="reveal-item">এই উত্তল লেন্সটি 25 cm (N) এ রাখা বস্তুর একটি অবাস্তব বিম্ব ত্রুটিপূর্ণ চোখের নতুন নিকট বিন্দুতে (O') তৈরি করে, যা চোখ স্পষ্ট দেখতে পায়। তাই দাদুকে ধনাত্মক (+2.25 D) ক্ষমতার লেন্স ব্যবহারের পরামর্শ দেওয়া যৌক্তিক।</p>
-            </div>
-        </div>
-        
-        <div class="slide quiz-slide">
-            <h2 class="slide-title">সৃজনশীল প্রশ্ন ৩</h2>
-            <div class="slide-content">
-                <p class="quiz-cq reveal-item">চিত্রে একটি অবতল লেন্স দেখানো হলো যার দ্বিগুণ ফোকাস দূরত্ব (2F) 30 cm।</p>
-                <div class="reveal-item">
-                    <p>(ক) লেন্স কাকে বলে?</p>
-                    <p>(খ) ব্যাপ্ত প্রতিফলন ব্যাখ্যা কর।</p>
-                    <p>(গ) লেন্সটির ক্ষমতা নির্ণয় কর।</p>
-                    <p>(ঘ) উদ্দীপকের লেন্সটির সাহায্যে কিভাবে চোখের হ্রস্ব দৃষ্টি ত্রুটি দূর করা যায়? চিত্রসহ তোমার মতামত দাও।</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৩ (গ)</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>দেওয়া আছে:</strong><br>
-                দ্বিগুণ ফোকাস দূরত্ব, 2f = 30 cm<br>
-                ফোকাস দূরত্ব, f = 15 cm</p>
-                <p class="reveal-item">এটি অবতল লেন্স, তাই ফোকাস দূরত্ব ঋণাত্মক:
-                f = -15 cm = -0.15 m</p>
-                
-                <p class="reveal-item"><strong>আমরা জানি,</strong><br>
-                ক্ষমতা, P = <sup>1</sup>/<sub><i class="math-var">f</i> (মিটারে)</sub></p>
-                
-                <p class="reveal-item">P = <sup>1</sup> / <sub>(-0.15)</sub> &approx; -6.67 D</p>
-                
-                <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> লেন্সটির ক্ষমতা -6.67 D।</h3>
-            </div>
-        </div>
-        
-        <div class="slide answer-slide">
-            <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৩ (ঘ)</h2>
-            <div class="slide-content">
-                <p class="reveal-item"><strong>মতামত:</strong> উদ্দীপকের অবতল লেন্সটি চোখের **হ্রস্ব দৃষ্টি (Myopia)** বা ক্ষীণদৃষ্টি ত্রুটি দূর করতে ব্যবহৃত হয়।</p>
-                <p class="reveal-item"><strong>কারণ:</strong> হ্রস্ব দৃষ্টি ত্রুটিতে চোখের লেন্সের অভিসারী ক্ষমতা বেড়ে যায় (ফোকাস দূরত্ব কমে যায়), ফলে দূরের বস্তু থেকে আসা আলোকরশ্মি রেটিনার **সামনে** মিলিত হয়।</p>
-                <p class="reveal-item"><strong>প্রতিকার:</strong> অবতল লেন্স একটি অপসারী লেন্স। এটি অসীম (দূর) থেকে আসা সমান্তরাল আলোকরশ্মিকে অপসারিত করে। এই অপসারিত রশ্মিগুলো ত্রুটিপূর্ণ চোখের দূরবিন্দু (F) থেকে আসছে বলে মনে হয়।</p>
-                <p class="reveal-item">তখন ত্রুটিপূর্ণ চোখটি ঐ অবাস্তব বিম্বটিকে (F বিন্দুতে) স্পষ্ট দেখতে পায় এবং চূড়ান্ত বিম্ব রেটিনায় গঠিত হয়। এভাবেই অবতল লেন্স হ্রস্ব দৃষ্টির প্রতিকার করে।</p>
-            </div>
-        </div>
-
-        <div class="slide thank-you-slide">
-            <h1 class="slide-title">ধন্যবাদ</h1>
-            <div class="slide-content">
-                <p class="reveal-item">প্রশ্নোত্তর পর্ব</p>
-            </div>
-        </div>
+      <div class="slide title-slide active">
+        <h1 class="slide-title">আলোর প্রতিসরণ</h1>
+        <div class="slide-content">
+          <p class="reveal-item">অধ্যায় ৯</p>
+          <p class="reveal-item">পদার্থবিজ্ঞান</p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">আজকের মূল বিষয়</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">প্রতিসরণ ও প্রতিসরণের সূত্র</li>
+            <li class="reveal-item">প্রতিসরণাঙ্ক (পরম ও আপেক্ষিক)</li>
+            <li class="reveal-item">
+              ক্রান্তি কোণ ও পূর্ণ অভ্যন্তরীণ প্রতিফলন
+            </li>
+            <li class="reveal-item">
+              প্রতিসরণের ব্যবহার (মরীচিকা, অপটিক্যাল ফাইবার)
+            </li>
+            <li class="reveal-item">লেন্স ও লেন্সের ক্ষমতা</li>
+            <li class="reveal-item">চোখের ত্রুটি ও তার প্রতিকার</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">আলোর প্রতিসরণ</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">
+              <strong>সংজ্ঞা:</strong> আলোক রশ্মি এক স্বচ্ছ মাধ্যম থেকে অন্য
+              স্বচ্ছ মাধ্যমে তীর্যকভাবে প্রবেশ করলে দুই মাধ্যমের বিভেদতলে এর দিক
+              পরিবর্তন হয়। এই দিক পরিবর্তনের ঘটনাকে আলোর প্রতিসরণ বলে।
+            </li>
+            <li class="reveal-item">
+              <strong>নিয়ম ১:</strong> আলো ঘন মাধ্যম থেকে হালকা মাধ্যমে গেলে
+              প্রতিসরিত রশ্মি অভিলম্ব থেকে দূরে সরে যায়।
+            </li>
+            <li class="reveal-item">
+              <strong>নিয়ম ২:</strong> আলো হালকা মাধ্যম থেকে ঘন মাধ্যমে গেলে
+              প্রতিসরিত রশ্মি অভিলম্বের কাছে আসে।
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide simulation-slide">
+        <h2 class="slide-title">সিমুলেশন: আলোর প্রতিসরণ (PhET)</h2>
+        <div class="slide-content">
+            <p class="reveal-item">কিভাবে আলো এক মাধ্যম থেকে অন্য মাধ্যমে গেলে বেঁকে যায়।</p>
+            <br>
+            <a class="reveal-item" href="https://phet.colorado.edu/sims/html/bending-light/latest/bending-light_all.html" target="_blank">PhET: Bending Light</a>
+        </div>
+    </div>
+
+      <div class="slide">
+        <h2 class="slide-title">প্রতিসরণের সূত্র</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">
+              <strong>প্রথম সূত্র:</strong> আপতিত রশ্মি, আপতন বিন্দুতে বিভেদতলের
+              উপর অঙ্কিত অভিলম্ব এবং প্রতিসরিত রশ্মি একই সমতলে থাকে।
+            </li>
+            <li class="reveal-item">
+              <strong>দ্বিতীয় সূত্র (স্নেলের সূত্র):</strong> একজোড়া নির্দিষ্ট
+              মাধ্যম এবং নির্দিষ্ট রঙের আলোর জন্য আপতন কোণের সাইন (sin) ও
+              প্রতিসরণ কোণের সাইনের (sin) অনুপাত সর্বদা ধ্রুব থাকে।
+              <br />
+              <i class="math-var">n</i><sub class="math-sub">1</sub>sin<i
+                class="math-var"
+                >&theta;</i
+              ><sub class="math-sub">1</sub> = <i class="math-var">n</i
+              ><sub class="math-sub">2</sub>sin<i class="math-var">&theta;</i
+              ><sub class="math-sub">2</sub>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide simulation-slide">
+        <h2 class="slide-title">সিমুলেশন: স্নেলের সূত্র (JavaLab)</h2>
+        <div class="slide-content">
+            <p class="reveal-item">আলোকরশ্মি এক মাধ্যম থেকে অন্য মাধ্যমে যাওয়ার সময় আপতন কোণ ও প্রতিসরণ কোণ পরিবর্তন করে স্নেলের সূত্র যাচাই করুন।</p>
+            <br>
+            <a class="reveal-item" href="https://javalab.org/en/light_refraction_en/" target="_blank">JavaLab: Light Refraction</a>
+        </div>
+    </div>
+
+    <div class="slide simulation-slide">
+        <h2 class="slide-title">সিমুলেশন: প্রতিফলন ও প্রতিসরণ (oPhysics)</h2>
+        <div class="slide-content">
+            <p class="reveal-item">একটি বিভেদতলে আলোকরশ্মির একইসাথে প্রতিফলন এবং প্রতিসরণ পর্যবেক্ষণ করুন। উভয় মাধ্যমের প্রতিসরাঙ্ক পরিবর্তন করা যায়।</p>
+            <br>
+            <a class="reveal-item" href="https://ophysics.com/l7.html" target="_blank">oPhysics: Reflection & Refraction</a>
+        </div>
+    </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: MCQ ১</h2>
+        <div class="slide-content">
+          <h3 class="reveal-item">
+            ১। আলো তির্যকভাবে হালকা মাধ্যম হতে ঘন মাধ্যমে প্রবেশ করলে প্রতিসরিত
+            রশ্মির কী ঘটে?
+          </h3>
+          <div class="reveal-item">
+            <p class="quiz-option">(ক) অভিলম্ব থেকে দূরে সরে যায়</p>
+            <p class="quiz-option">(খ) অভিলম্বের দিকে বেঁকে যায়</p>
+            <p class="quiz-option">(গ) অভিলম্ব বরাবর চলে যায়</p>
+            <p class="quiz-option">(ঘ) আপতিত রশ্মি বরাবর চলে যায়</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: MCQ ১</h2>
+        <div class="slide-content">
+          <h3>
+            ১। আলো তির্যকভাবে হালকা মাধ্যম হতে ঘন মাধ্যমে প্রবেশ করলে প্রতিসরিত
+            রশ্মির কী ঘটে?
+          </h3>
+          <p class="quiz-option">(ক) অভিলম্ব থেকে দূরে সরে যায়</p>
+          <p class="quiz-option correct-answer">(খ) অভিলম্বের দিকে বেঁকে যায়</p>
+          <p class="quiz-option">(গ) অভিলম্ব বরাবর চলে যায়</p>
+          <p class="quiz-option">(ঘ) আপতিত রশ্মি বরাবর চলে যায়</p>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: MCQ ২</h2>
+        <div class="slide-content">
+          <h3 class="reveal-item">
+            ২। আলো ঘন মাধ্যম হতে হালকা মাধ্যমে প্রতিসৃত হলে-
+          </h3>
+          <div class="reveal-item">
+            <p class="quiz-option">(ক) i &gt; r</p>
+            <p class="quiz-option">(খ) i = r</p>
+            <p class="quiz-option">(গ) i &ge; r</p>
+            <p class="quiz-option">(ঘ) i &lt; r</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: MCQ ২</h2>
+        <div class="slide-content">
+          <h3>২। আলো ঘন মাধ্যম হতে হালকা মাধ্যমে প্রতিসৃত হলে-</h3>
+          <p class="quiz-option">(ক) i &gt; r</p>
+          <p class="quiz-option">(খ) i = r</p>
+          <p class="quiz-option">(গ) i &ge; r</p>
+          <p class="quiz-option correct-answer">(ঘ) i &lt; r</p>
+          <p class="reveal-item explanation">
+            <strong>ব্যাখ্যা:</strong> আলো ঘন থেকে হালকা মাধ্যমে গেলে অভিলম্ব
+            থেকে দূরে সরে যায়, ফলে প্রতিসরণ কোণ (<i class="math-var">r</i>) আপতন
+            কোণ (<i class="math-var">i</i>) অপেক্ষা বড় হয়।
+          </p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">প্রতিসরণাঙ্ক (&eta;)</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">
+              <strong>সংজ্ঞা:</strong> দুটি মাধ্যমের আপতন কোণের sin ও প্রতিসরণ
+              কোণের sin এর অনুপাতকে (স্নেলের সূত্রের ধ্রুবক) প্রথম মাধ্যমের
+              সাপেক্ষে দ্বিতীয় মাধ্যমের প্রতিসরণাঙ্ক বলে।
+            </li>
+            <li class="reveal-item">
+              প্রতিসরণাঙ্ক দুই প্রকার:
+              <ol>
+                <li>পরম প্রতিসরণাঙ্ক</li>
+                <li>আপেক্ষিক প্রতিসরণাঙ্ক</li>
+              </ol>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">পরম প্রতিসরণাঙ্ক</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">
+              <strong>সংজ্ঞা:</strong> শূন্য মাধ্যমের সাপেক্ষে অন্য কোনো
+              মাধ্যমের প্রতিসরণাঙ্ককে ঐ মাধ্যমের পরম প্রতিসরণাঙ্ক বলে।
+            </li>
+            <li class="reveal-item">
+              একে <i class="math-var">&eta;</i
+              ><sub class="math-sub">মাধ্যম</sub> দিয়ে প্রকাশ করা হয়।
+            </li>
+            <li class="reveal-item">
+              <strong>কিছু মান:</strong>
+              <ul>
+                <li>শূন্য মাধ্যম: 1.00</li>
+                <li>বাতাস: 1.00023 (প্রায় 1.00)</li>
+                <li>পানি: 1.33</li>
+                <li>কাচ: 1.52</li>
+                <li>হীরা: 2.42</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">আপেক্ষিক প্রতিসরণাঙ্ক</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">
+              <strong>সংজ্ঞা:</strong> কোনো আলোক রশ্মি যখন এক স্বচ্ছ মাধ্যম থেকে
+              অন্য স্বচ্ছ মাধ্যমে তীর্যকভাবে প্রবেশ করে, তখন এক মাধ্যমের
+              সাপেক্ষে অন্য মাধ্যমের প্রতিসরণাঙ্ককে আপেক্ষিক প্রতিসরাঙ্ক বলে।
+            </li>
+            <li class="reveal-item">
+              যেমন: বায়ুর সাপেক্ষে পানির প্রতিসরণাঙ্ক,
+              <sub class="math-sub">a</sub><i class="math-var">&eta;</i
+              ><sub class="math-sub">w</sub> = 1.33।
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: MCQ ৩</h2>
+        <div class="slide-content">
+          <h3 class="reveal-item">৩। কোনটির প্রতিসরণাঙ্ক সবচেয়ে বেশি?</h3>
+          <div class="reveal-item">
+            <p class="quiz-option">(ক) বায়ু</p>
+            <p class="quiz-option">(খ) পানি</p>
+            <p class="quiz-option">(গ) হীরা</p>
+            <p class="quiz-option">(ঘ) কাঁচ</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: MCQ ৩</h2>
+        <div class="slide-content">
+          <h3>৩। কোনটির প্রতিসরণাঙ্ক সবচেয়ে বেশি?</h3>
+          <p class="quiz-option">(ক) বায়ু</p>
+          <p class="quiz-option">(খ) পানি</p>
+          <p class="quiz-option correct-answer">(গ) হীরা</p>
+          <p class="quiz-option">(ঘ) কাঁচ</p>
+          <p class="reveal-item explanation">
+            <strong>ব্যাখ্যা:</strong> হীরার পরম প্রতিসরণাঙ্ক 2.42, যা প্রদত্ত
+            মাধ্যমগুলোর মধ্যে সর্বোচ্চ।
+          </p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">প্রতিসরণাঙ্ক ও আলোর বেগ</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            আপেক্ষিক প্রতিসরণাঙ্ক হলো মাধ্যম দুটির পরম প্রতিসরণাঙ্কের অনুপাত বা
+            মাধ্যম দুটিতে আলোর বেগের অনুপাত।
+          </p>
+          <h3 class="reveal-item">
+            <sub class="math-sub">a</sub><i class="math-var">&eta;</i
+            ><sub class="math-sub">w</sub> =
+            <sup
+              ><i class="math-var">&eta;</i><sub class="math-sub">w</sub></sup
+            >
+            /
+            <sub
+              ><i class="math-var">&eta;</i><sub class="math-sub">a</sub></sub
+            >
+            =
+            <sup><i class="math-var">c</i><sub class="math-sub">a</sub></sup> /
+            <sub><i class="math-var">c</i><sub class="math-sub">w</sub></sub>
+          </h3>
+          <ul>
+            <li class="reveal-item">
+              <i class="math-var">&eta;</i><sub class="math-sub">w</sub> = পানির
+              পরম প্রতিসরণাঙ্ক
+            </li>
+            <li class="reveal-item">
+              <i class="math-var">&eta;</i><sub class="math-sub">a</sub> =
+              বায়ুর পরম প্রতিসরণাঙ্ক
+            </li>
+            <li class="reveal-item">
+              <i class="math-var">c</i><sub class="math-sub">a</sub> = বাতাসে
+              আলোর বেগ
+            </li>
+            <li class="reveal-item">
+              <i class="math-var">c</i><sub class="math-sub">w</sub> = পানিতে
+              আলোর বেগ
+            </li>
+          </ul>
+          <p class="reveal-item">
+            <strong>বিপরীত সম্পর্ক:</strong> <sub class="math-sub">g</sub
+            ><i class="math-var">&eta;</i><sub class="math-sub">w</sub> =
+            <sup>1</sup> /
+            <sub
+              ><sub class="math-sub">w</sub><i class="math-var">&eta;</i
+              ><sub class="math-sub">g</sub></sub
+            >
+          </p>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: CQ (গণিত) ১</h2>
+        <div class="slide-content">
+          <p class="quiz-cq reveal-item">
+            পানির পরম প্রতিসরণাঙ্ক 1.33 এবং কাচের পরম প্রতিসরণাঙ্ক 1.52 হলে
+            পানির সাপেক্ষে কাচের প্রতিসরণাঙ্ক কত?
+          </p>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: CQ (গণিত) ১</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>দেওয়া আছে:</strong><br />
+            পানির প্রতিসরণাঙ্ক, <i class="math-var">&eta;</i
+            ><sub class="math-sub">w</sub> = 1.33<br />
+            কাচের প্রতিসরণাঙ্ক, <i class="math-var">&eta;</i
+            ><sub class="math-sub">g</sub> = 1.52
+          </p>
+
+          <p class="reveal-item">
+            <strong>আমরা জানি,</strong><br />
+            পানির সাপেক্ষে কাচের প্রতিসরণাঙ্ক,<br />
+            <sub class="math-sub">w</sub><i class="math-var">&eta;</i
+            ><sub class="math-sub">g</sub> =
+            <sup
+              ><i class="math-var">&eta;</i><sub class="math-sub">g</sub></sup
+            >
+            /
+            <sub
+              ><i class="math-var">&eta;</i><sub class="math-sub">w</sub></sub
+            >
+          </p>
+
+          <p class="reveal-item">
+            <strong>হিসাব:</strong><br />
+            <sub class="math-sub">w</sub><i class="math-var">&eta;</i
+            ><sub class="math-sub">g</sub> = <sup>1.52</sup> /
+            <sub>1.33</sub> &approx; 1.14
+          </p>
+
+          <h3 class="reveal-item">
+            <strong>সঠিক উত্তর:</strong> 1.14 (এর কোনো একক নেই)।
+          </h3>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: CQ (গণিত) ২</h2>
+        <div class="slide-content">
+          <p class="quiz-cq reveal-item">
+            বায়ু সাপেক্ষে কাচের প্রতিসরণাঙ্ক 1.52 এবং বায়ু মাধ্যমে আপতন কোণ
+            40&deg; হলে কাচে প্রতিসরণ কোণ কত?
+          </p>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: CQ (গণিত) ২</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>দেওয়া আছে:</strong><br />
+            আপতন কোণ, <i class="math-var">i</i> = 40&deg;<br />
+            প্রতিসরণাঙ্ক, <sub class="math-sub">a</sub
+            ><i class="math-var">&eta;</i><sub class="math-sub">g</sub> = 1.52
+          </p>
+
+          <p class="reveal-item">
+            <strong>আমরা জানি,</strong> <sub class="math-sub">a</sub
+            ><i class="math-var">&eta;</i><sub class="math-sub">g</sub> =
+            <sup>sin <i class="math-var">i</i></sup> /
+            <sub>sin <i class="math-var">r</i></sub>
+          </p>
+
+          <p class="reveal-item">
+            sin <i class="math-var">r</i> =
+            <sup>sin <i class="math-var">i</i></sup> /
+            <sub
+              ><sub class="math-sub">a</sub><i class="math-var">&eta;</i
+              ><sub class="math-sub">g</sub></sub
+            >
+            = <sup>sin 40&deg;</sup> / <sub>1.52</sub>
+          </p>
+          <p class="reveal-item">
+            sin <i class="math-var">r</i> = <sup>0.643</sup> /
+            <sub>1.52</sub> &approx; 0.423
+          </p>
+          <p class="reveal-item">
+            <i class="math-var">r</i> = sin<sup class="math-sup">-1</sup>(0.423)
+            &approx; 25&deg;
+          </p>
+
+          <h3 class="reveal-item">
+            <strong>সঠিক উত্তর:</strong> প্রতিসরণ কোণ 25&deg;।
+          </h3>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: CQ (গণিত) ৩</h2>
+        <div class="slide-content">
+          <p class="quiz-cq reveal-item">
+            বায়ুর সাপেক্ষে পানির প্রতিসরণাঙ্ক 1.33। বায়ু মাধ্যমে আপতন কোণ
+            30&deg; হলে প্রতিসরণ কোণ নির্ণয় কর।
+          </p>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: CQ (গণিত) ৩</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>দেওয়া আছে:</strong><br />
+            আপতন কোণ, <i class="math-var">i</i> = 30&deg;<br />
+            প্রতিসরণাঙ্ক, <sub class="math-sub">a</sub
+            ><i class="math-var">&eta;</i><sub class="math-sub">w</sub> = 1.33
+          </p>
+
+          <p class="reveal-item">
+            <strong>আমরা জানি,</strong> <sub class="math-sub">a</sub
+            ><i class="math-var">&eta;</i><sub class="math-sub">w</sub> =
+            <sup>sin <i class="math-var">i</i></sup> /
+            <sub>sin <i class="math-var">r</i></sub>
+          </p>
+
+          <p class="reveal-item">
+            sin <i class="math-var">r</i> =
+            <sup>sin <i class="math-var">i</i></sup> /
+            <sub
+              ><sub class="math-sub">a</sub><i class="math-var">&eta;</i
+              ><sub class="math-sub">w</sub></sub
+            >
+            = <sup>sin 30&deg;</sup> / <sub>1.33</sub>
+          </p>
+          <p class="reveal-item">
+            sin <i class="math-var">r</i> = <sup>0.50</sup> /
+            <sub>1.33</sub> &approx; 0.376
+          </p>
+          <p class="reveal-item">
+            <i class="math-var">r</i> = sin<sup class="math-sup">-1</sup>(0.376)
+            &approx; 22.08&deg;
+          </p>
+
+          <h3 class="reveal-item">
+            <strong>সঠিক উত্তর:</strong> প্রতিসরণ কোণ 22.08&deg;।
+          </h3>
+        </div>
+      </div>
+
+      <div class="slide simulation-slide">
+        <h2 class="slide-title">সিমুলেশন: মাছের আপাত গভীরতা (JavaLab)</h2>
+        <div class="slide-content">
+            <p class="reveal-item">প্রতিসরণের কারণে পানির নিচের মাছকে কেন তার প্রকৃত অবস্থানের চেয়ে উপরে দেখা যায় তা এই সিমুলেশনের মাধ্যমে দেখুন।</p>
+            <br>
+            <a class="reveal-item" href="https://javalab.org/en/refraction_a_fish_under_water_en/" target="_blank">JavaLab: Refraction (Fish Under Water)</a>
+        </div>
+    </div>
+
+      <div class="slide">
+        <h2 class="slide-title">ক্রান্তি কোণ (Critical Angle)</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">
+              <strong>শর্ত:</strong> আলোক রশ্মিকে অবশ্যই ঘন মাধ্যম থেকে হালকা
+              মাধ্যমে যেতে হবে।
+            </li>
+            <li class="reveal-item">
+              <strong>সংজ্ঞা:</strong> ঘন মাধ্যমে আপতন কোণের যে মানের জন্য
+              প্রতিসরণ কোণের মান 90&deg; হয় (অর্থাৎ প্রতিসরিত রশ্মি বিভেদতল
+              ঘেঁষে চলে যায়), সেই আপতন কোণকে ক্রান্তি কোণ বা সংকট কোণ (<i
+                class="math-var"
+                >&theta;</i
+              ><sub class="math-sub">c</sub>) বলে।
+            </li>
+            <li class="reveal-item">
+              <strong>সূত্র:</strong> sin <i class="math-var">&theta;</i
+              ><sub class="math-sub">c</sub> =
+              <sup
+                ><i class="math-var">n</i><sub class="math-sub">হালকা</sub></sup
+              >
+              /
+              <sub><i class="math-var">n</i><sub class="math-sub">ঘন</sub></sub>
+              = <sup>1</sup> /
+              <sub
+                ><sub class="math-sub">হালকা</sub><i class="math-var">&eta;</i
+                ><sub class="math-sub">ঘন</sub></sub
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">পূর্ণ অভ্যন্তরীণ প্রতিফলন</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">
+              <strong>শর্ত ১:</strong> আলোক রশ্মিকে অবশ্যই ঘন মাধ্যম থেকে হালকা
+              মাধ্যমে যেতে হবে।
+            </li>
+            <li class="reveal-item">
+              <strong>শর্ত ২:</strong> আপতন কোণ (<i class="math-var">i</i>)
+              অবশ্যই ক্রান্তি কোণ (<i class="math-var">&theta;</i
+              ><sub class="math-sub">c</sub>) -এর চেয়ে বড় হতে হবে।
+            </li>
+            <li class="reveal-item">
+              <strong>ঘটনা:</strong> আপতন কোণ ক্রান্তি কোণের চেয়ে বড় হলে,
+              আলোকরশ্মি প্রতিসরিত না হয়ে সম্পূর্ণরূপে প্রথম মাধ্যমেই (ঘন
+              মাধ্যমে) প্রতিফলিত হয়ে ফিরে আসে। একে পূর্ণ অভ্যন্তরীণ প্রতিফলন
+              বলে।
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: MCQ ৪</h2>
+        <div class="slide-content">
+          <h3 class="reveal-item">
+            ৪। কোনটি পূর্ণ অভ্যন্তরীণ প্রতিফলন হওয়ার শর্ত?
+          </h3>
+          <div class="reveal-item">
+            <p class="quiz-option">(ক) আপতন কোণ = ক্রান্তি কোণ</p>
+            <p class="quiz-option">(খ) আপতন কোণ &gt; ক্রান্তি কোণ</p>
+            <p class="quiz-option">(গ) আপতন কোণ &lt; ক্রান্তি কোণ</p>
+            <p class="quiz-option">(ঘ) আপতন কোণ &gt; প্রতিসরণ কোণ</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: MCQ ৪</h2>
+        <div class="slide-content">
+          <h3>৪। কোনটি পূর্ণ অভ্যন্তরীণ প্রতিফলন হওয়ার শর্ত?</h3>
+          <p class="quiz-option">
+            (ক) আপতন কোণ = ক্রান্তি কোণ (90&deg; কোণে প্রতিসরণ হয়)
+          </p>
+          <p class="quiz-option correct-answer">
+            (খ) আপতন কোণ &gt; ক্রান্তি কোণ
+          </p>
+          <p class="quiz-option">
+            (গ) আপতন কোণ &lt; ক্রান্তি কোণ (প্রতিসরণ হয়)
+          </p>
+          <p class="quiz-option">(ঘ) আপতন কোণ &gt; প্রতিসরণ কোণ</p>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: MCQ ৫</h2>
+        <div class="slide-content">
+          <h3 class="reveal-item">৫। আপতন কোণ ক্রান্তিকোণের চেয়ে বড় হলে-</h3>
+          <div class="reveal-item">
+            <p>i. আলো সম্পূর্ণরূপে শোষিত হয়</p>
+            <p>ii. আলো সম্পূর্ণরূপে প্রতিফলিত হয়</p>
+            <p>iii. আলো সম্পূর্ণরূপে একই মাধ্যমে ফিরে আসে</p>
+          </div>
+          <h3 class="reveal-item">নিচের কোনটি সঠিক?</h3>
+          <div class="reveal-item">
+            <p class="quiz-option">(ক) i ও ii</p>
+            <p class="quiz-option">(খ) ii ও iii</p>
+            <p class="quiz-option">(গ) i ও iii</p>
+            <p class="quiz-option">(ঘ) i, ii ও iii</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: MCQ ৫</h2>
+        <div class="slide-content">
+          <h3>৫। আপতন কোণ ক্রান্তিকোণের চেয়ে বড় হলে-</h3>
+          <p class="reveal-item">
+            i. আলো সম্পূর্ণরূপে শোষিত হয় (ভুল)<br />
+            ii. আলো সম্পূর্ণরূপে প্রতিফলিত হয় (সঠিক)<br />
+            iii. আলো সম্পূর্ণরূপে একই মাধ্যমে ফিরে আসে (সঠিক)
+          </p>
+          <h3 class="reveal-item">নিচের কোনটি সঠিক?</h3>
+          <p class="quiz-option">(ক) i ও ii</p>
+          <p class="quiz-option correct-answer">(খ) ii ও iii</p>
+          <p class="quiz-option">(গ) i ও iii</p>
+          <p class="quiz-option">(ঘ) i, ii ও iii</p>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: CQ (গণিত) ৪</h2>
+        <div class="slide-content">
+          <p class="quiz-cq reveal-item">
+            কাচ (n=1.5) ও পানির (n=1.33) মধ্যকার সংকট কোণ কত?
+          </p>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: CQ (গণিত) ৪</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>দেওয়া আছে:</strong><br />
+            ঘন মাধ্যম (কাচ), <i class="math-var">n</i
+            ><sub class="math-sub">g</sub> = 1.5<br />
+            হালকা মাধ্যম (পানি), <i class="math-var">n</i
+            ><sub class="math-sub">w</sub> = 1.33
+          </p>
+
+          <p class="reveal-item">
+            <strong>আমরা জানি,</strong><br />
+            sin <i class="math-var">&theta;</i><sub class="math-sub">c</sub> =
+            <sup
+              ><i class="math-var">n</i><sub class="math-sub">হালকা</sub></sup
+            >
+            /
+            <sub><i class="math-var">n</i><sub class="math-sub">ঘন</sub></sub> =
+            <sup><i class="math-var">n</i><sub class="math-sub">w</sub></sup> /
+            <sub><i class="math-var">n</i><sub class="math-sub">g</sub></sub>
+          </p>
+
+          <p class="reveal-item">
+            sin <i class="math-var">&theta;</i><sub class="math-sub">c</sub> =
+            <sup>1.33</sup> / <sub>1.5</sub> &approx; 0.887
+          </p>
+          <p class="reveal-item">
+            <i class="math-var">&theta;</i><sub class="math-sub">c</sub> =
+            sin<sup class="math-sup">-1</sup>(0.887) &approx; 62.5&deg;
+          </p>
+
+          <h3 class="reveal-item">
+            <strong>সঠিক উত্তর:</strong> সংকট কোণ 62.5&deg; (প্রায়)।
+          </h3>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: CQ (গণিত) ৫</h2>
+        <div class="slide-content">
+          <p class="quiz-cq reveal-item">
+            বায়ুর সাপেক্ষে কোনো মাধ্যমের ক্রান্তি কোণ 45&deg; হলে ঐ মাধ্যমের
+            প্রতিসরণাঙ্ক কত?
+          </p>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: CQ (গণিত) ৫</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>দেওয়া আছে:</strong><br />
+            ক্রান্তি কোণ, <i class="math-var">&theta;</i
+            ><sub class="math-sub">c</sub> = 45&deg;<br />
+            হালকা মাধ্যম (বায়ু), <i class="math-var">n</i
+            ><sub class="math-sub">a</sub> &approx; 1
+          </p>
+
+          <p class="reveal-item">
+            <strong>আমরা জানি,</strong><br />
+            sin <i class="math-var">&theta;</i><sub class="math-sub">c</sub> =
+            <sup><i class="math-var">n</i><sub class="math-sub">a</sub></sup> /
+            <sub
+              ><i class="math-var">n</i><sub class="math-sub">medium</sub></sub
+            >
+          </p>
+
+          <p class="reveal-item">
+            <i class="math-var">n</i><sub class="math-sub">medium</sub> =
+            <sup><i class="math-var">n</i><sub class="math-sub">a</sub></sup> /
+            <sub
+              >sin <i class="math-var">&theta;</i
+              ><sub class="math-sub">c</sub></sub
+            >
+            = <sup>1</sup> / <sub>sin 45&deg;</sub>
+          </p>
+          <p class="reveal-item">
+            <i class="math-var">n</i><sub class="math-sub">medium</sub> =
+            <sup>1</sup> / <sub>(1/&radic;2)</sub> = &radic;2 &approx; 1.414
+          </p>
+
+          <h3 class="reveal-item">
+            <strong>সঠিক উত্তর:</strong> প্রতিসরণাঙ্ক 1.414।
+          </h3>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">পূর্ণ অভ্যন্তরীণ প্রতিফলনের ব্যবহার</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">
+              <strong>মরীচিকা (Mirage):</strong> মরুভূমিতে বা গরম রাস্তায় পূর্ণ
+              অভ্যন্তরীণ প্রতিফলনের জন্য দৃষ্টির ভ্রমকে মরীচিকা বলে।
+            </li>
+            <li class="reveal-item">
+              <strong>রংধনু (Rainbow):</strong> বৃষ্টির কণা বা জলীয় বাষ্পের
+              মধ্যে সূর্যের আলোর প্রতিসরণ, বিচ্ছুরণ এবং পূর্ণ অভ্যন্তরীণ
+              প্রতিফলনের ফলে রংধনু সৃষ্টি হয়।
+            </li>
+            <li class="reveal-item">
+              <strong>অপটিক্যাল ফাইবার (Optical Fiber):</strong> খুব সরু কাঁচ বা
+              প্লাস্টিকের নল, যার মধ্য দিয়ে পূর্ণ অভ্যন্তরীণ প্রতিফলনের মাধ্যমে
+              আলোকরশ্মি (তথ্য) পাঠানো হয়। এটি চিকিৎসা ও যোগাযোগে ব্যবহৃত হয়।
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: MCQ ৬</h2>
+        <div class="slide-content">
+          <h3 class="reveal-item">৬। মরুভূমিতে নিচের বায়ু-</h3>
+          <div class="reveal-item">
+            <p class="quiz-option">(ক) উত্তপ্ত ও হালকা হয়</p>
+            <p class="quiz-option">(খ) উত্তপ্ত ও ঘন হয়</p>
+            <p class="quiz-option">(গ) ঠান্ডা ও হালকা হয়</p>
+            <p class="quiz-option">(ঘ) ঠান্ডা ও ঘন হয়</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: MCQ ৬</h2>
+        <div class="slide-content">
+          <h3>৬। মরুভূমিতে নিচের বায়ু-</h3>
+          <p class="quiz-option correct-answer">(ক) উত্তপ্ত ও হালকা হয়</p>
+          <p class="quiz-option">(খ) উত্তপ্ত ও ঘন হয়</p>
+          <p class="quiz-option">(গ) ঠান্ডা ও হালকা হয়</p>
+          <p class="quiz-option">(ঘ) ঠান্ডা ও ঘন হয়</p>
+          <p class="reveal-item explanation">
+            <strong>ব্যাখ্যা:</strong> মরুভূমিতে বালু উত্তপ্ত থাকায় ভূপৃষ্ঠ
+            সংলগ্ন বায়ুস্তর উত্তপ্ত ও হালকা হয়, এবং উপরের বায়ু তুলনামূলক
+            ঠান্ডা ও ঘন থাকে।
+          </p>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: MCQ ৭</h2>
+        <div class="slide-content">
+          <h3 class="reveal-item">৭। অপটিক্যাল ফাইবার কী?</h3>
+          <div class="reveal-item">
+            <p class="quiz-option">(ক) কাঠ</p>
+            <p class="quiz-option">(খ) সরু কাচ</p>
+            <p class="quiz-option">(গ) মোটা কাচ</p>
+            <p class="quiz-option">(ঘ) খুব সরু ও নমনীয় কাচ তন্তু</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: MCQ ৭</h2>
+        <div class="slide-content">
+          <h3>৭। অপটিক্যাল ফাইবার কী?</h3>
+          <p class="quiz-option">(ক) কাঠ</p>
+          <p class="quiz-option">(খ) সরু কাচ</p>
+          <p class="quiz-option">(গ) মোটা কাচ</p>
+          <p class="quiz-option correct-answer">
+            (ঘ) খুব সরু ও নমনীয় কাচ তন্তু
+          </p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">লেন্স (Lens)</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">
+              <strong>সংজ্ঞা:</strong> দুইটি গোলীয় পৃষ্ঠ দ্বারা সীমাবদ্ধ কোনো
+              স্বচ্ছ প্রতিসারক মাধ্যমকে লেন্স বলে।
+            </li>
+            <li class="reveal-item">
+              <strong>প্রকারভেদ:</strong>
+              <ol>
+                <li>
+                  <strong>উত্তল লেন্স (Convex):</strong> মধ্যভাগ পুরু,
+                  প্রান্তভাগ সরু। একে অভিসারী লেন্স বলে (আলোকরশ্মিকে মিলিত করে)।
+                </li>
+                <li>
+                  <strong>অবতল লেন্স (Concave):</strong> মধ্যভাগ সরু, প্রান্তভাগ
+                  পুরু। একে অপসারী লেন্স বলে (আলোকরশ্মিকে ছড়িয়ে দেয়)।
+                </li>
+              </ol>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">লেন্স সংক্রান্ত সংজ্ঞা</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">
+              <strong>বক্রতার কেন্দ্র (C):</strong> লেন্সের পৃষ্ঠগুলো যে গোলকের
+              অংশ, সেই গোলকের কেন্দ্র। (দুটি পৃষ্ঠের জন্য $C_1, C_2$)।
+            </li>
+            <li class="reveal-item">
+              <strong>প্রধান অক্ষ:</strong> বক্রতার কেন্দ্র দুটি যোগ করলে যে
+              সরলরেখা পাওয়া যায়।
+            </li>
+            <li class="reveal-item">
+              <strong>আলোক কেন্দ্র (O):</strong> লেন্সের প্রধান অক্ষের উপরস্থ
+              একটি বিন্দু, যার মধ্য দিয়ে আলোকরশ্মি গেলে প্রতিসরণের পর কোনো দিক
+              পরিবর্তন করে না (সোজাসুজি চলে যায়)।
+            </li>
+            <li class="reveal-item">
+              <strong>প্রধান ফোকাস (F):</strong> প্রধান অক্ষের সমান্তরাল রশ্মি
+              প্রতিসরণের পর প্রধান অক্ষের যে বিন্দুতে মিলিত হয় (উত্তল) বা যে
+              বিন্দু থেকে অপসৃত হচ্ছে বলে মনে হয় (অবতল)।
+            </li>
+            <li class="reveal-item">
+              <strong>ফোকাস দূরত্ব (f):</strong> আলোক কেন্দ্র (O) থেকে প্রধান
+              ফোকাস (F) পর্যন্ত দূরত্ব।
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: MCQ ৮</h2>
+        <div class="slide-content">
+          <h3 class="reveal-item">৮। অবতল লেন্সকে কী লেন্স বলা হয়?</h3>
+          <div class="reveal-item">
+            <p class="quiz-option">(ক) অভিসারী লেন্স</p>
+            <p class="quiz-option">(খ) অপসারী লেন্স</p>
+            <p class="quiz-option">(গ) সমতল লেন্স</p>
+            <p class="quiz-option">(ঘ) সমতলোত্তল লেন্স</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: MCQ ৮</h2>
+        <div class="slide-content">
+          <h3>৮। অবতল লেন্সকে কী লেন্স বলা হয়?</h3>
+          <p class="quiz-option">(ক) অভিসারী লেন্স (উত্তল লেন্সকে বলে)</p>
+          <p class="quiz-option correct-answer">(খ) অপসারী লেন্স</p>
+          <p class="quiz-option">(গ) সমতল লেন্স</p>
+          <p class="quiz-option">(ঘ) সমতলোত্তল লেন্স</p>
+          <p class="reveal-item explanation">
+            <strong>ব্যাখ্যা:</strong> অবতল লেন্স সমান্তরাল আলোকরশ্মিকে ছড়িয়ে
+            দেয় বা অপসারী করে, তাই একে অপসারী লেন্স বলে।
+          </p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">লেন্সে প্রতিবিম্ব অঙ্কনের নিয়ম</h2>
+        <div class="slide-content">
+          <ol>
+            <li class="reveal-item">
+              আলোক কেন্দ্র (O) দিয়ে আপতিত রশ্মি সোজাসুজি চলে যায়।
+            </li>
+            <li class="reveal-item">
+              প্রধান অক্ষের সমান্তরাল রশ্মি প্রতিসরণের পর প্রধান ফোকাস (F) দিয়ে
+              যায় (বা F থেকে আসছে বলে মনে হয়)।
+            </li>
+            <li class="reveal-item">
+              প্রধান ফোকাস (F) দিয়ে আপতিত রশ্মি প্রতিসরণের পর প্রধান অক্ষের
+              সমান্তরাল হয়ে যায়।
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">উত্তল লেন্সে প্রতিবিম্ব</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">
+              <strong>বস্তু অসীমে:</strong> বিম্ব F-এ (বাস্তব, উল্টো, অত্যন্ত
+              খর্বিত)।
+            </li>
+            <li class="reveal-item">
+              <strong>বস্তু 2F-এর বাইরে:</strong> বিম্ব F ও 2F-এর মাঝে (বাস্তব,
+              উল্টো, খর্বিত)।
+            </li>
+            <li class="reveal-item">
+              <strong>বস্তু 2F-এ:</strong> বিম্ব 2F-এ (বাস্তব, উল্টো, সমান)।
+            </li>
+            <li class="reveal-item">
+              <strong>বস্তু F ও 2F-এর মাঝে:</strong> বিম্ব 2F-এর বাইরে (বাস্তব,
+              উল্টো, বিবর্ধিত)।
+            </li>
+            <li class="reveal-item">
+              <strong>বস্তু F-এ:</strong> বিম্ব অসীমে (বাস্তব, উল্টো, অত্যন্ত
+              বিবর্ধিত)।
+            </li>
+            <li class="reveal-item">
+              <strong>বস্তু F ও O-এর মাঝে:</strong> বিম্ব বস্তুর পেছনে (অবাস্তব,
+              সোজা, বিবর্ধিত)।
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">অবতল লেন্সে প্রতিবিম্ব</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            অবতল লেন্সে সর্বদা, সকল অবস্থানে বস্তুর জন্য প্রতিবিম্ব:
+          </p>
+          <ul>
+            <li class="reveal-item"><strong>অবাস্তব</strong></li>
+            <li class="reveal-item"><strong>সোজা</strong></li>
+            <li class="reveal-item"><strong>খর্বিত (ছোট)</strong></li>
+            <li class="reveal-item">
+              <strong>অবস্থান:</strong> ফোকাস (F) এবং আলোক কেন্দ্র (O) এর মধ্যে
+              গঠিত হয়।
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: MCQ ৯</h2>
+        <div class="slide-content">
+          <h3 class="reveal-item">
+            ৯। উত্তল লেন্সের লক্ষ্যবস্তু অসীমে হলে এর প্রতিবিম্বের আকৃতি কিরূপ
+            হবে?
+          </h3>
+          <div class="reveal-item">
+            <p class="quiz-option">(ক) খর্বিত</p>
+            <p class="quiz-option">(খ) আকারে সমান</p>
+            <p class="quiz-option">(গ) বিবর্ধিত</p>
+            <p class="quiz-option">(ঘ) অত্যন্ত খর্বিত</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: MCQ ৯</h2>
+        <div class="slide-content">
+          <h3>
+            ৯। উত্তল লেন্সের লক্ষ্যবস্তু অসীমে হলে এর প্রতিবিম্বের আকৃতি কিরূপ
+            হবে?
+          </h3>
+          <p class="quiz-option">(ক) খর্বিত</p>
+          <p class="quiz-option">(খ) আকারে সমান</p>
+          <p class="quiz-option">(গ) বিবর্ধিত</p>
+          <p class="quiz-option correct-answer">(ঘ) অত্যন্ত খর্বিত</p>
+          <p class="reveal-item explanation">
+            <strong>ব্যাখ্যা:</strong> অসীম থেকে আসা সমান্তরাল রশ্মিগুচ্ছ উত্তল
+            লেন্সে প্রতিসরণের পর প্রধান ফোকাসে মিলিত হয়, ফলে একটি বিন্দুর মতো
+            (অত্যন্ত খর্বিত) বিম্ব গঠিত হয়।
+          </p>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: CQ (গণিত) ৬</h2>
+        <div class="slide-content">
+          <p class="quiz-cq reveal-item">
+            একটি উত্তল লেন্সের ফোকাস দূরত্ব 20 cm। লেন্স হতে কত দূরে বস্তু রাখলে
+            দ্বিগুণ বিবর্ধিত প্রতিবিম্ব পাওয়া যাবে?
+          </p>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: CQ (গণিত) ৬</h2>
+        <div class="slide-content">
+          <p class="reveal-item">দেওয়া আছে, f = +20 cm, বিবর্ধন m = 2।</p>
+          <p class="reveal-item">
+            <strong>১. বাস্তব বিম্বের ক্ষেত্রে (m = -2):</strong><br />
+            m = -v/u &rArr; -2 = -v/u &rArr; v = 2u<br />
+            <sup>1</sup>/<sub>u</sub> + <sup>1</sup>/<sub>v</sub> =
+            <sup>1</sup>/<sub>f</sub> &rArr; <sup>1</sup>/<sub>u</sub> +
+            <sup>1</sup>/<sub>2u</sub> = <sup>1</sup>/<sub>20</sub><br />
+            <sup>(2+1)</sup>/<sub>2u</sub> = <sup>1</sup>/<sub>20</sub> &rArr;
+            <sup>3</sup>/<sub>2u</sub> = <sup>1</sup>/<sub>20</sub><br />
+            2u = 60 &rArr; <strong>u = 30 cm</strong>
+          </p>
+
+          <p class="reveal-item">
+            <strong>২. অবাস্তব বিম্বের ক্ষেত্রে (m = +2):</strong><br />
+            m = -v/u &rArr; 2 = -v/u &rArr; v = -2u<br />
+            <sup>1</sup>/<sub>u</sub> + <sup>1</sup>/<sub>v</sub> =
+            <sup>1</sup>/<sub>f</sub> &rArr; <sup>1</sup>/<sub>u</sub> +
+            <sup>1</sup>/<sub>(-2u)</sub> = <sup>1</sup>/<sub>20</sub><br />
+            <sup>(2-1)</sup>/<sub>2u</sub> = <sup>1</sup>/<sub>20</sub> &rArr;
+            <sup>1</sup>/<sub>2u</sub> = <sup>1</sup>/<sub>20</sub><br />
+            2u = 20 &rArr; <strong>u = 10 cm</strong>
+          </p>
+
+          <h3 class="reveal-item">
+            <strong>উত্তর:</strong> 30 cm দূরে (বাস্তব বিম্বের জন্য) অথবা 10 cm
+            দূরে (অবাস্তব বিম্বের জন্য)।
+          </h3>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">চোখ ও স্পষ্ট দর্শন</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">
+              <strong>উপযোজন (Accommodation):</strong> চোখের লেন্সের ফোকাস
+              দূরত্ব নিয়ন্ত্রণ করার ক্ষমতাকে উপযোজন বলে।
+            </li>
+            <li class="reveal-item">
+              <strong>স্পষ্ট দর্শনের ন্যূনতম দূরত্ব:</strong> যে ন্যূনতম দূরত্ব
+              পর্যন্ত চোখ বিনা শ্রান্তিতে স্পষ্ট দেখতে পায়। স্বাভাবিক চোখের জন্য
+              এর মান <strong>25 cm</strong>। একে নিকট বিন্দু বলে।
+            </li>
+            <li class="reveal-item">
+              <strong>দর্শনানুভূতির স্থায়িত্বকাল:</strong> চোখের সামনে থেকে
+              বস্তু সরানোর পর 0.03 সেকেন্ড (বা 0.1s) পর্যন্ত এর অনুভূতি
+              মস্তিষ্কে থেকে যায়।
+            </li>
+            <li class="reveal-item">
+              <strong>স্বাভাবিক দৃষ্টির পাল্লা:</strong> 25 cm থেকে অসীম
+              পর্যন্ত।
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: MCQ ১০</h2>
+        <div class="slide-content">
+          <h3 class="reveal-item">
+            ১০। স্বাভাবিক বয়ষ্ক ব্যক্তির স্পষ্ট দর্শনের ন্যূনতম দূরত্ব কত?
+          </h3>
+          <div class="reveal-item">
+            <p class="quiz-option">(ক) 50 সে. মি.</p>
+            <p class="quiz-option">(খ) 25 সে. মি.</p>
+            <p class="quiz-option">(গ) 15 সে. মি.</p>
+            <p class="quiz-option">(ঘ) 5 সে. মি.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: MCQ ১০</h2>
+        <div class="slide-content">
+          <h3>
+            ১০। স্বাভাবিক বয়ষ্ক ব্যক্তির স্পষ্ট দর্শনের ন্যূনতম দূরত্ব কত?
+          </h3>
+          <p class="quiz-option">(ক) 50 সে. মি.</p>
+          <p class="quiz-option correct-answer">(খ) 25 সে. মি.</p>
+          <p class="quiz-option">(গ) 15 সে. মি.</p>
+          <p class="quiz-option">(ঘ) 5 সে. মি.</p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">চোখের ত্রুটি: হ্রস্ব দৃষ্টি (Myopia)</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">
+              <strong>লক্ষণ:</strong> এই ত্রুটিগ্রস্ত চোখ দূরের জিনিস ভালোভাবে
+              দেখতে পায় না, কিন্তু কাছের জিনিস স্পষ্ট দেখতে পায়।
+            </li>
+            <li class="reveal-item">
+              <strong>কারণ:</strong>
+              <ol>
+                <li>অক্ষিগোলকের ব্যাসার্ধ বেড়ে যাওয়া।</li>
+                <li>
+                  চোখের লেন্সের ফোকাস দূরত্ব কমে যাওয়া (অভিসারী ক্ষমতা বেড়ে
+                  যাওয়া)।
+                </li>
+              </ol>
+            </li>
+            <li class="reveal-item">
+              <strong>ফল:</strong> দূরের বস্তু থেকে আসা আলোকরশ্মি রেটিনার সামনে
+              মিলিত হয়।
+            </li>
+            <li class="reveal-item">
+              <strong>প্রতিকার:</strong> উপযুক্ত ফোকাস দূরত্বের অবতল লেন্স
+              (Concave Lens) ব্যবহার করা।
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: MCQ ১১</h2>
+        <div class="slide-content">
+          <h3 class="reveal-item">
+            ১১। জহির শ্রেণিকক্ষের পেছনে বসে ব্লাকবোর্ডের লেখা স্পষ্ট দেখতে পায়
+            না। এক্ষেত্রে জহিরের চোখের কি ধরনের ত্রুটি হয়েছে?
+          </h3>
+          <div class="reveal-item">
+            <p class="quiz-option">(ক) দীর্ঘ দৃষ্টি</p>
+            <p class="quiz-option">(খ) হ্রস্ব দৃষ্টি</p>
+            <p class="quiz-option">(গ) চালসে</p>
+            <p class="quiz-option">(ঘ) দূরবন্ধ দৃষ্টি</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: MCQ ১১</h2>
+        <div class="slide-content">
+          <h3>
+            ১১। জহির শ্রেণিকক্ষের পেছনে বসে ব্লাকবোর্ডের লেখা স্পষ্ট দেখতে পায়
+            না। এক্ষেত্রে জহিরের চোখের কি ধরনের ত্রুটি হয়েছে?
+          </h3>
+          <p class="quiz-option">(ক) দীর্ঘ দৃষ্টি</p>
+          <p class="quiz-option correct-answer">(খ) হ্রস্ব দৃষ্টি</p>
+          <p class="quiz-option">(গ) চালসে</p>
+          <p class="quiz-option">(ঘ) দূরবন্ধ দৃষ্টি</p>
+          <p class="reveal-item explanation">
+            <strong>ব্যাখ্যা:</strong> যে চোখ দূরের জিনিস স্পষ্ট দেখতে পায় না,
+            তাকে হ্রস্ব দৃষ্টি বা ক্ষীণদৃষ্টি বলে।
+          </p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">চোখের ত্রুটি: দীর্ঘ দৃষ্টি (Hypermetropia)</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">
+              <strong>লক্ষণ:</strong> এই ত্রুটিগ্রস্ত চোখ দূরের জিনিস দেখতে পায়,
+              কিন্তু কাছের জিনিস (যেমন 25 cm দূরের) স্পষ্ট দেখতে পায় না।
+            </li>
+            <li class="reveal-item">
+              <strong>কারণ:</strong>
+              <ol>
+                <li>অক্ষিগোলকের ব্যাসার্ধ কমে যাওয়া।</li>
+                <li>
+                  চোখের লেন্সের ফোকাস দূরত্ব বেড়ে যাওয়া (অভিসারী ক্ষমতা কমে
+                  যাওয়া)।
+                </li>
+              </ol>
+            </li>
+            <li class="reveal-item">
+              <strong>ফল:</strong> কাছের বস্তু থেকে আসা আলোকরশ্মি রেটিনার পেছনে
+              মিলিত হয়।
+            </li>
+            <li class="reveal-item">
+              <strong>প্রতিকার:</strong> উপযুক্ত ফোকাস দূরত্বের উত্তল লেন্স
+              (Convex Lens) ব্যবহার করা।
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: MCQ ১২</h2>
+        <div class="slide-content">
+          <h3 class="reveal-item">
+            ১২। দূরদৃষ্টির জন্য চোখের সামনে লক্ষ্যবস্তুর বিম্ব রেটিনার কোথায়
+            গঠিত হয়?
+          </h3>
+          <div class="reveal-item">
+            <p class="quiz-option">(ক) সামনে</p>
+            <p class="quiz-option">(খ) সমতলে</p>
+            <p class="quiz-option">(গ) পেছনে</p>
+            <p class="quiz-option">(ঘ) বিম্ব গঠিত হয় না</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: MCQ ১২</h2>
+        <div class="slide-content">
+          <h3>
+            ১২। দূরদৃষ্টির জন্য চোখের সামনে লক্ষ্যবস্তুর বিম্ব রেটিনার কোথায়
+            গঠিত হয়?
+          </h3>
+          <p class="quiz-option">(ক) সামনে</p>
+          <p class="quiz-option">(খ) সমতলে</p>
+          <p class="quiz-option correct-answer">(গ) পেছনে</p>
+          <p class="quiz-option">(ঘ) বিম্ব গঠিত হয় না</p>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">লেন্সের ক্ষমতা (Power of Lens)</h2>
+        <div class="slide-content">
+          <ul>
+            <li class="reveal-item">
+              <strong>সংজ্ঞা:</strong> কোনো লেন্সের অভিসারী বা অপসারী করার
+              সামর্থ্যকে তার ক্ষমতা বলে। এটি ফোকাস দূরত্বের ব্যস্তানুপাতিক।
+            </li>
+            <li class="reveal-item">
+              <strong>সূত্র:</strong> <i class="math-var">P</i> = <sup>1</sup> /
+              <sub><i class="math-var">f</i> (মিটারে)</sub>
+            </li>
+            <li class="reveal-item"><strong>একক:</strong> ডায়াপ্টার (D)।</li>
+            <li class="reveal-item">
+              1 ডায়াপ্টার: 1 মিটার ফোকাস দূরত্ববিশিষ্ট কোনো লেন্সের ক্ষমতাকে 1
+              ডায়াপ্টার বলে।
+            </li>
+            <li class="reveal-item">
+              <strong>চিহ্ন:</strong>
+              <ul>
+                <li>উত্তল লেন্সের ক্ষমতা (+) ধনাত্মক।</li>
+                <li>অবতল লেন্সের ক্ষমতা (-) ঋণাত্মক।</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: MCQ ১৩</h2>
+        <div class="slide-content">
+          <h3 class="reveal-item">১৩। +2 D দ্বারা কোনটি বুঝায়?</h3>
+          <div class="reveal-item">
+            <p class="quiz-option">(ক) লেন্সটি অবতল</p>
+            <p class="quiz-option">(খ) লেন্সটির ফোকাস দূরত্ব 2 মিটার</p>
+            <p class="quiz-option">(গ) লেন্সটির ফোকাস দূরত্ব 6 সে. মি.</p>
+            <p class="quiz-option">(ঘ) লেন্সটির ফোকাস দূরত্ব 50 সে. মি.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: MCQ ১৩</h2>
+        <div class="slide-content">
+          <h3>১৩। +2 D দ্বারা কোনটি বুঝায়?</h3>
+          <p class="quiz-option">(ক) লেন্সটি অবতল</p>
+          <p class="quiz-option">(খ) লেন্সটির ফোকাস দূরত্ব 2 মিটার</p>
+          <p class="quiz-option">(গ) লেন্সটির ফোকাস দূরত্ব 6 সে. মি.</p>
+          <p class="quiz-option correct-answer">
+            (ঘ) লেন্সটির ফোকাস দূরত্ব 50 সে. মি.
+          </p>
+          <p class="reveal-item explanation">
+            <strong>ব্যাখ্যা:</strong> P = +2 D (উত্তল লেন্স)।<br />
+            f = 1/P = 1/2 m = 0.5 m = 50 cm।
+          </p>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: MCQ ১৪</h2>
+        <div class="slide-content">
+          <h3 class="reveal-item">
+            ১৪। কোন ব্যক্তি চশমা হিসেবে 20 cm ফোকাস দূরত্বের অবতল লেন্স ব্যবহার
+            করে, ঐ লেন্সের ক্ষমতা কত?
+          </h3>
+          <div class="reveal-item">
+            <p class="quiz-option">(ক) -5 D</p>
+            <p class="quiz-option">(খ) 5 D</p>
+            <p class="quiz-option">(গ) 0.05 D</p>
+            <p class="quiz-option">(ঘ) -0.05 D</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: MCQ ১৪</h2>
+        <div class="slide-content">
+          <h3>
+            ১৪। কোন ব্যক্তি চশমা হিসেবে 20 cm ফোকাস দূরত্বের অবতল লেন্স ব্যবহার
+            করে, ঐ লেন্সের ক্ষমতা কত?
+          </h3>
+          <p class="quiz-option correct-answer">(ক) -5 D</p>
+          <p class="quiz-option">(খ) 5 D</p>
+          <p class="quiz-option">(গ) 0.05 D</p>
+          <p class="quiz-option">(ঘ) -0.05 D</p>
+          <p class="reveal-item explanation">
+            <strong>ব্যাখ্যা:</strong> অবতল লেন্স, তাই f = -20 cm = -0.2 m।<br />
+            P = 1/f = 1 / (-0.2) = -5 D।
+          </p>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: CQ (গণিত) ৭</h2>
+        <div class="slide-content">
+          <p class="quiz-cq reveal-item">
+            শাকিল একটি বস্তুর বিম্ব গঠন করার জন্য 20 cm ফোকাস দূরত্বের একটি
+            উত্তল লেন্স ব্যবহার করল। লেন্সটির ক্ষমতা কত?
+          </p>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: CQ (গণিত) ৭</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>দেওয়া আছে:</strong><br />
+            লেন্সটি উত্তল, তাই ফোকাস দূরত্ব, f = +20 cm = +0.2 m
+          </p>
+
+          <p class="reveal-item">
+            <strong>আমরা জানি,</strong><br />
+            ক্ষমতা, P = <sup>1</sup>/<sub
+              ><i class="math-var">f</i> (মিটারে)</sub
+            >
+          </p>
+
+          <p class="reveal-item">P = <sup>1</sup> / <sub>0.2</sub> = +5 D</p>
+
+          <h3 class="reveal-item">
+            <strong>সঠিক উত্তর:</strong> লেন্সটির ক্ষমতা +5 D।
+          </h3>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: CQ (গণিত) ৮</h2>
+        <div class="slide-content">
+          <p class="quiz-cq reveal-item">
+            নাহিদের দাদুর ব্যবহৃত চশমার ক্ষমতা +2.25 D। ব্যবহৃত চশমার ফোকাস
+            দূরত্ব নির্ণয় কর।
+          </p>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: CQ (গণিত) ৮</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>দেওয়া আছে:</strong><br />
+            চশমার ক্ষমতা, P = +2.25 D
+          </p>
+
+          <p class="reveal-item">
+            <strong>আমরা জানি,</strong><br />
+            f = <sup>1</sup>/<sub>P</sub>
+          </p>
+
+          <p class="reveal-item">f = <sup>1</sup> / <sub>2.25</sub> = 0.44 m</p>
+          <p class="reveal-item">f = 0.44 &times; 100 = 44 cm</p>
+
+          <h3 class="reveal-item">
+            <strong>সঠিক উত্তর:</strong> ফোকাস দূরত্ব 44 cm (এটি একটি উত্তল
+            লেন্স)।
+          </h3>
+        </div>
+      </div>
+
+      <div class="slide">
+        <h2 class="slide-title">লেন্সের সাধারণ সূত্র</h2>
+        <div class="slide-content">
+          <p class="reveal-item"><strong>লেন্সের সূত্র:</strong></p>
+          <h3 class="reveal-item">
+            <sup>1</sup>/<sub><i class="math-var">u</i></sub> +
+            <sup>1</sup>/<sub><i class="math-var">v</i></sub> =
+            <sup>1</sup>/<sub><i class="math-var">f</i></sub>
+          </h3>
+
+          <p class="reveal-item"><strong>রৈখিক বিবর্ধন (m):</strong></p>
+          <h3 class="reveal-item">
+            <i class="math-var">m</i> = <sup>বিম্বের দৈর্ঘ্য</sup> /
+            <sub>বস্তুর দৈর্ঘ্য</sub> = - <sup><i class="math-var">v</i></sup> /
+            <sub><i class="math-var">u</i></sub>
+          </h3>
+
+          <p class="reveal-item"><strong>চিহ্নের প্রথা:</strong></p>
+          <ul>
+            <li>
+              <i class="math-var">u</i> (বস্তুর দূরত্ব) সর্বদা ধনাত্মক (+)।
+            </li>
+            <li>
+              <i class="math-var">f</i> (ফোকাস দূরত্ব) উত্তলের জন্য (+), অবতলের
+              জন্য (-)।
+            </li>
+            <li>
+              <i class="math-var">v</i> (বিম্বের দূরত্ব) বাস্তব বিম্বের জন্য
+              (+), অবাস্তব বিম্বের জন্য (-)।
+            </li>
+            <li>
+              <i class="math-var">m</i> (বিবর্ধন) সোজা বিম্বের জন্য (+), উল্টো
+              বিম্বের জন্য (-)।
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">কুইজ: CQ (গণিত) ৯</h2>
+        <div class="slide-content">
+          <p class="quiz-cq reveal-item">
+            একটি উত্তল লেন্স থেকে 24 cm দূরে অবস্থিত একটি বস্তুর বাস্তব বিম্ব
+            লক্ষ্যবস্তুর দ্বিগুণ। লেন্সটির ফোকাস দূরত্ব নির্ণয় কর।
+          </p>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: CQ (গণিত) ৯</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>দেওয়া আছে:</strong><br />
+            বস্তুর দূরত্ব, u = +24 cm<br />
+            বিম্ব বাস্তব (তাই উল্টো), বিবর্ধন, m = -2
+          </p>
+
+          <p class="reveal-item">
+            <strong>১ম ধাপ: v নির্ণয়</strong><br />
+            m = -v/u &rArr; -2 = -v/24 &rArr; v = 48 cm
+          </p>
+
+          <p class="reveal-item">
+            <strong>২য় ধাপ: f নির্ণয়</strong><br />
+            <sup>1</sup>/<sub>f</sub> = <sup>1</sup>/<sub>u</sub> +
+            <sup>1</sup>/<sub>v</sub> = <sup>1</sup>/<sub>24</sub> +
+            <sup>1</sup>/<sub>48</sub><br />
+            <sup>1</sup>/<sub>f</sub> = <sup>(2 + 1)</sup> / <sub>48</sub> =
+            <sup>3</sup> / <sub>48</sub> = <sup>1</sup> / <sub>16</sub>
+          </p>
+
+          <h3 class="reveal-item"><strong>সঠিক উত্তর:</strong> f = 16 cm।</h3>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">সৃজনশীল প্রশ্ন ১</h2>
+        <div class="slide-content">
+          <p class="quiz-cq reveal-item">
+            আলোকরশ্মি a মাধ্যম (<i class="math-var">c</i
+            ><sub class="math-sub">a</sub> = 3&times;10<sup class="math-sup"
+              >8</sup
+            >
+            ms<sup class="math-sup">-1</sup>) থেকে b মাধ্যমে প্রবেশ করায় এর বেগ
+            এক-তৃতীয়াংশ হ্রাস পেল।
+          </p>
+          <div class="reveal-item">
+            <p>(ক) প্রতিসরণাঙ্ক কাকে বলে?</p>
+            <p>(খ) মানুষের দুটি চোখ থাকার সুবিধা ব্যাখ্যা কর।</p>
+            <p>
+              (গ) b মাধ্যমে প্রতিসরণ কোণের মান 35&deg; হলে আপতন কোণের মান নির্ণয়
+              কর।
+            </p>
+            <p>
+              (ঘ) আপতন কোণের মান পরিবর্তন না করে যদি প্রতিসরণ কোণের মান 5&deg;
+              বৃদ্ধি করা হয়, তাহলে b মাধ্যমে আলোর বেগের কীরূপ পরিবর্তন আনতে হবে?
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ক ও খ)</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>(ক) প্রতিসরণাঙ্ক:</strong> একজোড়া নির্দিষ্ট মাধ্যম এবং
+            নির্দিষ্ট বর্ণের আলোকরশ্মির জন্য আপতন কোণের সাইন এবং প্রতিসরণ কোণের
+            সাইনের অনুপাত একটি ধ্রুব সংখ্যা। এই ধ্রুব সংখ্যাকে প্রথম মাধ্যম
+            সাপেক্ষে দ্বিতীয় মাধ্যমের প্রতিসরণাঙ্ক বলে।
+          </p>
+          <p class="reveal-item">
+            <strong>(খ) দুটি চোখের সুবিধা:</strong> দুটি চোখ দিয়ে বস্তু দেখলে
+            দুটি ভিন্ন প্রতিবিম্বের উপরিপাত ঘটে, যার ফলে মস্তিষ্ক বস্তুর দূরত্ব
+            নির্ভুলভাবে পরিমাপ করতে পারে এবং বস্তুকে ভালোভাবে (ত্রিমাত্রিক) দেখা
+            যায়।
+          </p>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (গ)</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>দেওয়া আছে:</strong><br />
+            a মাধ্যমে আলোর বেগ, <i class="math-var">c</i
+            ><sub class="math-sub">a</sub> = 3 &times; 10<sup class="math-sup"
+              >8</sup
+            >
+            ms<sup class="math-sup">-1</sup><br />
+            b মাধ্যমে আলোর বেগ, <i class="math-var">c</i
+            ><sub class="math-sub">b</sub> = <i class="math-var">c</i
+            ><sub class="math-sub">a</sub> - (<sup>1</sup>/<sub>3</sub>)<i
+              class="math-var"
+              >c</i
+            ><sub class="math-sub">a</sub> = (<sup>2</sup>/<sub>3</sub>)<i
+              class="math-var"
+              >c</i
+            ><sub class="math-sub">a</sub><br />
+            <i class="math-var">c</i><sub class="math-sub">b</sub> =
+            (<sup>2</sup>/<sub>3</sub>) &times; (3 &times; 10<sup
+              class="math-sup"
+              >8</sup
+            >) = 2 &times; 10<sup class="math-sup">8</sup> ms<sup
+              class="math-sup"
+              >-1</sup
+            ><br />
+            প্রতিসরণ কোণ, <i class="math-var">r</i> = 35&deg;
+          </p>
+
+          <p class="reveal-item">
+            <strong>আমরা জানি,</strong>
+            <sup>sin <i class="math-var">i</i></sup> /
+            <sub>sin <i class="math-var">r</i></sub> =
+            <sup><i class="math-var">c</i><sub class="math-sub">a</sub></sup> /
+            <sub><i class="math-var">c</i><sub class="math-sub">b</sub></sub>
+          </p>
+          <p class="reveal-item">
+            sin <i class="math-var">i</i> = (<sup
+              ><i class="math-var">c</i><sub class="math-sub">a</sub></sup
+            >
+            / <sub><i class="math-var">c</i><sub class="math-sub">b</sub></sub
+            >) &times; sin <i class="math-var">r</i> = (<sup
+              >(3 &times; 10<sup class="math-sup">8</sup>)</sup
+            >
+            / <sub>(2 &times; 10<sup class="math-sup">8</sup>)</sub>) &times;
+            sin 35&deg;
+          </p>
+          <p class="reveal-item">
+            sin <i class="math-var">i</i> = 1.5 &times; 0.5736 = 0.86
+          </p>
+          <p class="reveal-item">
+            <i class="math-var">i</i> = sin<sup class="math-sup">-1</sup>(0.86)
+            &approx; 59.36&deg;
+          </p>
+          <h3 class="reveal-item">
+            <strong>উত্তর:</strong> আপতন কোণের মান 59.36&deg;।
+          </h3>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ১ (ঘ)</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>(গ) হতে পাই,</strong> আপতন কোণ, <i class="math-var">i</i> =
+            59.36&deg; (অপরিবর্তিত)
+          </p>
+          <p class="reveal-item">
+            নতুন প্রতিসরণ কোণ, <i class="math-var">r</i>' = 35&deg; + 5&deg; =
+            40&deg;
+          </p>
+          <p class="reveal-item">
+            <strong
+              >নতুন বেগ <i class="math-var">c</i><sub class="math-sub">b</sub>'
+              হলে,</strong
+            >
+            <sup>sin <i class="math-var">i</i></sup> /
+            <sub>sin <i class="math-var">r</i>'</sub> =
+            <sup><i class="math-var">c</i><sub class="math-sub">a</sub></sup> /
+            <sub><i class="math-var">c</i><sub class="math-sub">b</sub>'</sub>
+          </p>
+
+          <p class="reveal-item">
+            <i class="math-var">c</i><sub class="math-sub">b</sub>' =
+            <i class="math-var">c</i><sub class="math-sub">a</sub> &times; (<sup
+              >sin <i class="math-var">r</i>'</sup
+            >
+            / <sub>sin <i class="math-var">i</i></sub
+            >)
+          </p>
+          <p class="reveal-item">
+            <i class="math-var">c</i><sub class="math-sub">b</sub>' = (3 &times;
+            10<sup class="math-sup">8</sup>) &times; (<sup>sin 40&deg;</sup> /
+            <sub>sin 59.36&deg;</sub>)
+          </p>
+          <p class="reveal-item">
+            <i class="math-var">c</i><sub class="math-sub">b</sub>' = (3 &times;
+            10<sup class="math-sup">8</sup>) &times; (<sup>0.6428</sup> /
+            <sub>0.8604</sub>) &approx; 2.24 &times; 10<sup class="math-sup"
+              >8</sup
+            >
+            ms<sup class="math-sup">-1</sup>
+          </p>
+
+          <p class="reveal-item">
+            <strong>বেগের পরিবর্তন:</strong><br />
+            &Delta;<i class="math-var">c</i> = <i class="math-var">c</i
+            ><sub class="math-sub">b</sub>' - <i class="math-var">c</i
+            ><sub class="math-sub">b</sub><br />
+            &Delta;<i class="math-var">c</i> = (2.24 &times; 10<sup
+              class="math-sup"
+              >8</sup
+            >) - (2 &times; 10<sup class="math-sup">8</sup>) = 0.24 &times;
+            10<sup class="math-sup">8</sup> ms<sup class="math-sup">-1</sup>
+          </p>
+          <h3 class="reveal-item">
+            <strong>উত্তর:</strong> b মাধ্যমে আলোর বেগ 0.24 &times; 10<sup
+              class="math-sup"
+              >8</sup
+            >
+            ms<sup class="math-sup">-1</sup> বৃদ্ধি করতে হবে।
+          </h3>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">সৃজনশীল প্রশ্ন ২</h2>
+        <div class="slide-content">
+          <p class="quiz-cq reveal-item">
+            নাফিসের দাদু কাছের জিনিস স্পষ্ট দেখতে পান না। চক্ষুরোগ বিশেষজ্ঞ
+            দাদুকে +2.25 D ক্ষমতা সম্পন্ন লেন্স চশমা হিসেবে ব্যবহার করার পরামর্শ
+            দিলেন।
+          </p>
+          <div class="reveal-item">
+            <p>(ক) লেন্স কাকে বলে?</p>
+            <p>
+              (খ) চোখের সামনে মশাল খুব দ্রুত ঘুরালে আগুনের বৃত্ত দেখা যায় কেন?
+            </p>
+            <p>(গ) দাদুর চশমার ফোকাস দূরত্ব নির্ণয় কর।</p>
+            <p>
+              (ঘ) দাদুকে ধনাত্মক ক্ষমতার লেন্স ব্যবহারের পরামর্শ দেওয়ার
+              যৌক্তিকতা চিত্রসহ বিশ্লেষণ কর।
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (ক ও খ)</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>(ক) লেন্স:</strong> দুটি গোলীয় পৃষ্ঠ দ্বারা সীমাবদ্ধ স্বচ্ছ
+            প্রতিসারক মাধ্যমকে লেন্স বলে।
+          </p>
+          <p class="reveal-item">
+            <strong>(খ) ব্যাখ্যা:</strong> চোখের সামনে থেকে বস্তু সরানোর পর
+            প্রায় 0.03 সেকেন্ড পর্যন্ত এর অনুভূতি মস্তিষ্কে থেকে যায়
+            (দর্শনানুভূতির স্থায়িত্বকাল)। মশাল দ্রুত ঘুরালে তা 0.03 সেকেন্ডের কম
+            সময়ে বৃত্তাকার পথ ঘুরে আসে, ফলে মস্তিষ্ক প্রতিটি ভিন্ন অবস্থানকে
+            আলাদা করতে পারে না এবং একটি অবিচ্ছিন্ন আগুনের বৃত্ত দেখে।
+          </p>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (গ)</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>দেওয়া আছে:</strong><br />
+            চশমার ক্ষমতা, P = +2.25 D
+          </p>
+
+          <p class="reveal-item">
+            <strong>আমরা জানি,</strong><br />
+            ফোকাস দূরত্ব, f (মিটারে) = <sup>1</sup>/<sub>P</sub>
+          </p>
+
+          <p class="reveal-item">
+            f = <sup>1</sup> / <sub>2.25</sub> &approx; 0.44 m
+          </p>
+          <p class="reveal-item">f = 0.44 &times; 100 &approx; 44 cm</p>
+
+          <h3 class="reveal-item">
+            <strong>সঠিক উত্তর:</strong> দাদুর চশমার ফোকাস দূরত্ব 44 cm।
+          </h3>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ২ (ঘ)</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>যৌক্তিকতা:</strong> দাদু কাছের জিনিস স্পষ্ট দেখতে পান না, এর
+            অর্থ তার দীর্ঘ দৃষ্টি (Hypermetropia) ত্রুটি রয়েছে।
+          </p>
+          <p class="reveal-item">
+            <strong>কারণ:</strong> এই ত্রুটিতে চোখের লেন্সের অভিসারী ক্ষমতা কমে
+            যায় (ফোকাস দূরত্ব বেড়ে যায়), ফলে 25 cm (নিকট বিন্দু) থেকে আসা
+            আলোকরশ্মি রেটিনার পেছনে মিলিত হয়।
+          </p>
+          <p class="reveal-item">
+            <strong>প্রতিকার:</strong> চোখের অভিসারী ক্ষমতা বাড়ানোর জন্য একটি
+            উত্তল লেন্স (যার ক্ষমতা ধনাত্মক) ব্যবহার করতে হয়।
+          </p>
+          <p class="reveal-item">
+            এই উত্তল লেন্সটি 25 cm (N) এ রাখা বস্তুর একটি অবাস্তব বিম্ব
+            ত্রুটিপূর্ণ চোখের নতুন নিকট বিন্দুতে (O') তৈরি করে, যা চোখ স্পষ্ট
+            দেখতে পায়। তাই দাদুকে ধনাত্মক (+2.25 D) ক্ষমতার লেন্স ব্যবহারের
+            পরামর্শ দেওয়া যৌক্তিক।
+          </p>
+        </div>
+      </div>
+
+      <div class="slide quiz-slide">
+        <h2 class="slide-title">সৃজনশীল প্রশ্ন ৩</h2>
+        <div class="slide-content">
+          <p class="quiz-cq reveal-item">
+            চিত্রে একটি অবতল লেন্স দেখানো হলো যার দ্বিগুণ ফোকাস দূরত্ব (2F) 30
+            cm।
+          </p>
+          <div class="reveal-item">
+            <p>(ক) লেন্স কাকে বলে?</p>
+            <p>(খ) ব্যাপ্ত প্রতিফলন ব্যাখ্যা কর।</p>
+            <p>(গ) লেন্সটির ক্ষমতা নির্ণয় কর।</p>
+            <p>
+              (ঘ) উদ্দীপকের লেন্সটির সাহায্যে কিভাবে চোখের হ্রস্ব দৃষ্টি ত্রুটি
+              দূর করা যায়? চিত্রসহ তোমার মতামত দাও।
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৩ (গ)</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>দেওয়া আছে:</strong><br />
+            দ্বিগুণ ফোকাস দূরত্ব, 2f = 30 cm<br />
+            ফোকাস দূরত্ব, f = 15 cm
+          </p>
+          <p class="reveal-item">
+            এটি অবতল লেন্স, তাই ফোকাস দূরত্ব ঋণাত্মক: f = -15 cm = -0.15 m
+          </p>
+
+          <p class="reveal-item">
+            <strong>আমরা জানি,</strong><br />
+            ক্ষমতা, P = <sup>1</sup>/<sub
+              ><i class="math-var">f</i> (মিটারে)</sub
+            >
+          </p>
+
+          <p class="reveal-item">
+            P = <sup>1</sup> / <sub>(-0.15)</sub> &approx; -6.67 D
+          </p>
+
+          <h3 class="reveal-item">
+            <strong>সঠিক উত্তর:</strong> লেন্সটির ক্ষমতা -6.67 D।
+          </h3>
+        </div>
+      </div>
+
+      <div class="slide answer-slide">
+        <h2 class="slide-title">উত্তর: সৃজনশীল প্রশ্ন ৩ (ঘ)</h2>
+        <div class="slide-content">
+          <p class="reveal-item">
+            <strong>মতামত:</strong> উদ্দীপকের অবতল লেন্সটি চোখের হ্রস্ব দৃষ্টি
+            (Myopia) বা ক্ষীণদৃষ্টি ত্রুটি দূর করতে ব্যবহৃত হয়।
+          </p>
+          <p class="reveal-item">
+            <strong>কারণ:</strong> হ্রস্ব দৃষ্টি ত্রুটিতে চোখের লেন্সের অভিসারী
+            ক্ষমতা বেড়ে যায় (ফোকাস দূরত্ব কমে যায়), ফলে দূরের বস্তু থেকে আসা
+            আলোকরশ্মি রেটিনার সামনে মিলিত হয়।
+          </p>
+          <p class="reveal-item">
+            <strong>প্রতিকার:</strong> অবতল লেন্স একটি অপসারী লেন্স। এটি অসীম
+            (দূর) থেকে আসা সমান্তরাল আলোকরশ্মিকে অপসারিত করে। এই অপসারিত
+            রশ্মিগুলো ত্রুটিপূর্ণ চোখের দূরবিন্দু (F) থেকে আসছে বলে মনে হয়।
+          </p>
+          <p class="reveal-item">
+            তখন ত্রুটিপূর্ণ চোখটি ঐ অবাস্তব বিম্বটিকে (F বিন্দুতে) স্পষ্ট দেখতে
+            পায় এবং চূড়ান্ত বিম্ব রেটিনায় গঠিত হয়। এভাবেই অবতল লেন্স হ্রস্ব
+            দৃষ্টির প্রতিকার করে।
+          </p>
+        </div>
+      </div>
+
+      <div class="slide thank-you-slide">
+        <h1 class="slide-title">ধন্যবাদ</h1>
+        <div class="slide-content">
+          <p class="reveal-item">প্রশ্নোত্তর পর্ব</p>
+        </div>
+      </div>
     </div>
 
     <div class="slide-counter" id="slideCounter"></div>
     <div class="slide-jump">
-        <input type="number" id="slideJumpInput" placeholder="স্লাইড #" min="1">
+      <input type="number" id="slideJumpInput" placeholder="স্লাইড #" min="1" />
     </div>
     <div class="nav-buttons">
-        <button id="prevBtn">পূর্ববর্তী</button>
-        <button id="nextBtn">পরবর্তী</button>
+      <button id="prevBtn">পূর্ববর্তী</button>
+      <button id="nextBtn">পরবর্তী</button>
     </div>
 
     <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        const totalSlides = slides.length;
-        const slideCounter = document.getElementById('slideCounter');
-        let revealIndex = 0;
+      let currentSlide = 0;
+      const slides = document.querySelectorAll(".slide");
+      const totalSlides = slides.length;
+      const slideCounter = document.getElementById("slideCounter");
+      let revealIndex = 0;
 
-        function showSlide(index) {
-            // Ensure index is within bounds
-            if (index >= totalSlides) {
-                index = 0;
-            } else if (index < 0) {
-                index = totalSlides - 1;
-            }
-            currentSlide = index;
-
-            // Remove 'active' class from all slides
-            slides.forEach(slide => {
-                slide.classList.remove('active');
-            });
-
-            // Add 'active' class to the current slide
-            const activeSlide = slides[currentSlide];
-            activeSlide.classList.add('active');
-
-            // Reset reveal items for the new slide
-            revealIndex = 0;
-            const revealItems = activeSlide.querySelectorAll('.reveal-item');
-            revealItems.forEach(item => item.classList.remove('is-visible'));
-
-            // Update slide counter
-            slideCounter.textContent = `স্লাইড ${currentSlide + 1} / ${totalSlides}`;
+      function showSlide(index) {
+        // Ensure index is within bounds
+        if (index >= totalSlides) {
+          index = 0;
+        } else if (index < 0) {
+          index = totalSlides - 1;
         }
+        currentSlide = index;
 
-        function revealNext() {
-            const activeSlide = slides[currentSlide];
-            const revealItems = activeSlide.querySelectorAll('.reveal-item');
-            
-            if (revealIndex < revealItems.length) {
-                revealItems[revealIndex].classList.add('is-visible');
-                revealIndex++;
-                return true; // An item was revealed
-            }
-            return false; // No items left to reveal
-        }
-
-        function handleNext() {
-            if (!revealNext()) {
-                // If no items were revealed (or no items to reveal), go to next slide
-                showSlide(currentSlide + 1);
-            }
-        }
-
-        function handlePrev() {
-            showSlide(currentSlide - 1);
-        }
-
-        document.getElementById('nextBtn').addEventListener('click', handleNext);
-        document.getElementById('prevBtn').addEventListener('click', handlePrev);
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (event) => {
-            if (event.target.id === 'slideJumpInput') {
-                if (event.key === 'Enter') {
-                    event.preventDefault(); // Prevent default Enter behavior
-                    const targetSlide = parseInt(slideJumpInput.value);
-                    
-                    // Validate the input number
-                    if (!isNaN(targetSlide) && targetSlide >= 1 && targetSlide <= totalSlides) {
-                        showSlide(targetSlide - 1); // Jump to the slide (0-based index)
-                    } else {
-                        // Optionally provide feedback for invalid input
-                        slideJumpInput.style.borderColor = 'red';
-                        setTimeout(() => {
-                            slideJumpInput.style.borderColor = '#555';
-                        }, 1000);
-                    }
-                    slideJumpInput.value = ''; // Clear the input box after jump
-                    slideJumpInput.blur(); // Remove focus from input box
-                }
-                return; // Don't trigger next/prev if typing in input
-            }
-
-            if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === ' ') {
-                event.preventDefault(); // Stop space from scrolling
-                handleNext();
-            } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-                event.preventDefault();
-                handlePrev();
-            }
+        // Remove 'active' class from all slides
+        slides.forEach((slide) => {
+          slide.classList.remove("active");
         });
 
-        // Initial call to show the first slide
-        showSlide(0);
-        
-        // Slide Jump Functionality
-        const slideJumpInput = document.getElementById('slideJumpInput');
-        slideJumpInput.max = totalSlides; // Set max value dynamically
+        // Add 'active' class to the current slide
+        const activeSlide = slides[currentSlide];
+        activeSlide.classList.add("active");
 
-        // Clear red border on focus
-        slideJumpInput.addEventListener('focus', () => {
-             slideJumpInput.style.borderColor = '#555';
-        });
+        // Reset reveal items for the new slide
+        revealIndex = 0;
+        const revealItems = activeSlide.querySelectorAll(".reveal-item");
+        revealItems.forEach((item) => item.classList.remove("is-visible"));
+
+        // Update slide counter
+        slideCounter.textContent = `স্লাইড ${
+          currentSlide + 1
+        } / ${totalSlides}`;
+      }
+
+      function revealNext() {
+        const activeSlide = slides[currentSlide];
+        const revealItems = activeSlide.querySelectorAll(".reveal-item");
+
+        if (revealIndex < revealItems.length) {
+          revealItems[revealIndex].classList.add("is-visible");
+          revealIndex++;
+          return true; // An item was revealed
+        }
+        return false; // No items left to reveal
+      }
+
+      function handleNext() {
+        if (!revealNext()) {
+          // If no items were revealed (or no items to reveal), go to next slide
+          showSlide(currentSlide + 1);
+        }
+      }
+
+      function handlePrev() {
+        showSlide(currentSlide - 1);
+      }
+
+      document.getElementById("nextBtn").addEventListener("click", handleNext);
+      document.getElementById("prevBtn").addEventListener("click", handlePrev);
+
+      // Keyboard navigation
+      document.addEventListener("keydown", (event) => {
+        if (event.target.id === "slideJumpInput") {
+          if (event.key === "Enter") {
+            event.preventDefault(); // Prevent default Enter behavior
+            const targetSlide = parseInt(slideJumpInput.value);
+
+            // Validate the input number
+            if (
+              !isNaN(targetSlide) &&
+              targetSlide >= 1 &&
+              targetSlide <= totalSlides
+            ) {
+              showSlide(targetSlide - 1); // Jump to the slide (0-based index)
+            } else {
+              // Optionally provide feedback for invalid input
+              slideJumpInput.style.borderColor = "red";
+              setTimeout(() => {
+                slideJumpInput.style.borderColor = "#555";
+              }, 1000);
+            }
+            slideJumpInput.value = ""; // Clear the input box after jump
+            slideJumpInput.blur(); // Remove focus from input box
+          }
+          return; // Don't trigger next/prev if typing in input
+        }
+
+        if (
+          event.key === "ArrowRight" ||
+          event.key === "ArrowDown" ||
+          event.key === " "
+        ) {
+          event.preventDefault(); // Stop space from scrolling
+          handleNext();
+        } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+          event.preventDefault();
+          handlePrev();
+        }
+      });
+
+      // Initial call to show the first slide
+      showSlide(0);
+
+      // Slide Jump Functionality
+      const slideJumpInput = document.getElementById("slideJumpInput");
+      slideJumpInput.max = totalSlides; // Set max value dynamically
+
+      // Clear red border on focus
+      slideJumpInput.addEventListener("focus", () => {
+        slideJumpInput.style.borderColor = "#555";
+      });
     </script>
-
-</body>
+  </body>
 </html>

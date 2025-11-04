@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Pre-Test Analysis (Modern)</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #f8f9fa; /* Light background */
+            --primary-color: #007bff; /* Blue for primary accents */
+            --secondary-color: #6c757d; /* Grey for secondary elements */
+            --text-dark: #343a40; /* Dark text */
+            --text-light: #ffffff; /* Light text (for elements on dark background) */
+            --card-bg: #ffffff;
+            --border-light: #e9ecef;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545; /* Red for highlighting */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        /* --- Header --- */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.8rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+        }
+
+        /* --- Cards --- */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px var(--shadow-light);
+            transition: transform 0.2s ease-in-out;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-title {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        /* --- Layout Grids --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .top-scorer-grid {
+            display: grid;
+            grid-template-columns: 1fr; 
+            gap: 2rem;
+        }
+
+        /* --- Stat Card Items --- */
+        .stat-item {
+            text-align: center;
+            background: var(--bg-color); 
+            padding: 1.2rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-light);
+        }
+        
+        .stat-item .label {
+            font-size: 0.95rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.4rem;
+        }
+        
+        .stat-item .value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1;
+        }
+        
+        .stat-item .value small {
+            font-size: 1rem;
+            color: var(--secondary-color);
+            font-weight: 400;
+        }
+
+        /* --- Tables --- */
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-bg);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        th {
+            background-color: #e9f5ff; 
+            color: var(--primary-color);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 1; 
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: #f2f7fa; 
+        }
+
+        tbody tr:hover {
+            background-color: #e6f7ff; 
+        }
+
+        /* Specific styles for top scorers */
+        .top-scorer-row.highlighted {
+            background-color: #ffe6e6 !important; /* Light red background */
+            color: var(--danger-color);
+            font-weight: 600;
+        }
+        
+        .rank-badge {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-left: 8px;
+        }
+
+        .rank-badge.gold { background-color: #ffc107; } /* 1st */
+        .rank-badge.silver { background-color: #a6b1be; } /* 2nd */
+        .rank-badge.bronze { background-color: #cd7f32; } /* 3rd */
+
+        /* --- Responsive Design --- */
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            .card-title {
+                font-size: 1.2rem;
+            }
+            .stat-item .value {
+                font-size: 1.8rem;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <header>
+            <h1>Physics Pre-Test Performance</h1>
+            <p>Sandwip Ananda Pathshala</p>
+            <p>SSC 2026 Batch</p>
+        </header>
+
+        <div class="card">
+            <h2 class="card-title">Key Performance Indicators</h2>
+            <div class="stats-grid" id="stats-container">
+                </div>
+        </div>
+
+        <div class="top-scorer-grid">
+            <div class="card">
+                <h2 class="card-title">Top Scorers</h2>
+                <div class="table-container" style="max-height: 400px;">
+                    <table id="top-scorers-table">
+                        <thead>
+                            <tr>
+                                <th>Roll</th>
+                                <th>Name</th>
+                                <th>Marks</th>
+                                <th>Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">All Student Results (Sorted by Roll)</h2>
+            <div class="table-container" style="max-height: 500px;">
+                <table id="full-results-table">
+                    <thead>
+                        <tr>
+                            <th>Roll</th>
+                            <th>Name</th>
+                            <th>Marks</th>
+                            <th>Grade</th>
+                            <th>Grade Point</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    
+    <script>
+        // --- DATA FROM ANALYSIS ---
+        
+        const rawStudentData = [
+          {"Roll":37,"Name":"Tanjina Khanam","Marks":20},
+          {"Roll":26,"Name":"Amir Hasnat Abir","Marks":18},
+          {"Roll":8,"Name":"ANIKA TABASSOM NOHA","Marks":18},
+          {"Roll":18,"Name":"Tasmia Jahan Faria","Marks":16},
+          {"Roll":10,"Name":"ARIN GUHA PUJA","Marks":15},
+          {"Roll":14,"Name":"RIYAZUL JANNAH NUHA","Marks":15},
+          {"Roll":35,"Name":"Mahmudur Rahman","Marks":15},
+          {"Roll":17,"Name":"NAZIFA ZAMAN","Marks":15},
+          {"Roll":46,"Name":"Mst. Nusrat Jahan Mimpa","Marks":14},
+          {"Roll":9,"Name":"MOHSIN HOSSEN NIHAD","Marks":14},
+          {"Roll":13,"Name":"Jamiul Alam Srabonto","Marks":14},
+          {"Roll":29,"Name":"Meherunnesa Nadia","Marks":14},
+          {"Roll":2,"Name":"Arka Nandi","Marks":14},
+          {"Roll":1,"Name":"Sayeedah Binte Kamal","Marks":13},
+          {"Roll":45,"Name":"Shajedul Alam","Marks":13},
+          {"Roll":30,"Name":"Afrin Sultana","Marks":13},
+          {"Roll":28,"Name":"Md. Alamgir Hossain Mahin","Marks":13},
+          {"Roll":22,"Name":"Mosammat Anika","Marks":13},
+          {"Roll":41,"Name":"Md. Abdur Rahman","Marks":12},
+          {"Roll":16,"Name":"Sudipta Nandi Aritra","Marks":12},
+          {"Roll":43,"Name":"Taohid Ashraf Tasmi","Marks":11},
+          {"Roll":24,"Name":"Tanjina Hasan","Marks":11},
+          {"Roll":20,"Name":"TOWHIDUR RAHMAN","Marks":11},
+          {"Roll":62,"Name":"Shahed Uddin","Marks":11},
+          {"Roll":48,"Name":"Razia Sultana","Marks":11},
+          {"Roll":3,"Name":"FARHA SHAHRIAR SUBHA","Marks":11},
+          {"Roll":4,"Name":"Taspiya Tabassum Tanha","Marks":11},
+          {"Roll":47,"Name":"Marium Binte Alam","Marks":10},
+          {"Roll":15,"Name":"Samiha Islam","Marks":10},
+          {"Roll":27,"Name":"MUSKATUL SANEY","Marks":10},
+          {"Roll":50,"Name":"AFRIN JAHAN TAMANNA","Marks":10},
+          {"Roll":53,"Name":"SANJIDA SULTANA","Marks":9},
+          {"Roll":33,"Name":"Md. Shalin","Marks":9},
+          {"Roll":32,"Name":"Mohammed Tahmid Kabir","Marks":9},
+          {"Roll":31,"Name":"Mohammed Mehedi Jachim","Marks":9},
+          {"Roll":25,"Name":"MARIAM JANNAT RAISA","Marks":8},
+          {"Roll":49,"Name":"MAYSA AWADA","Marks":8},
+          {"Roll":67,"Name":"Md. Mufsan Lavib","Marks":8}
+        ];
+
+        const MAX_MARKS = 25;
+
+        // Function to determine Grade and Grade Point based on Bangladeshi system
+        function getGradeInfo(marks) {
+            const percentage = (marks / MAX_MARKS) * 100;
+            if (percentage >= 80) return { grade: 'A+', gp: 5.00 };
+            if (percentage >= 70) return { grade: 'A', gp: 4.00 };
+            if (percentage >= 60) return { grade: 'A-', gp: 3.50 };
+            if (percentage >= 50) return { grade: 'B', gp: 3.00 };
+            if (percentage >= 40) return { grade: 'C', gp: 2.00 };
+            if (percentage >= 33) return { grade: 'D', gp: 1.00 };
+            return { grade: 'F', gp: 0.00 };
+        }
+
+        // --- MODIFICATION ---
+        // 1. Process data first (add grades) WITHOUT sorting
+        const processedStudentData = rawStudentData.map(student => {
+            const gradeInfo = getGradeInfo(student.Marks);
+            return { ...student, Grade: gradeInfo.grade, GradePoint: gradeInfo.gp };
+        });
+
+        // 2. Create a version sorted by MARKS (for stats and top scorers)
+        const processedStudentDataByMarks = [...processedStudentData].sort((a, b) => b.Marks - a.Marks);
+        
+        // 3. Create a version sorted by ROLL (for the main table)
+        const processedStudentDataByRoll = [...processedStudentData].sort((a, b) => a.Roll - b.Roll);
+
+
+        // --- Calculate statistics ---
+        const totalStudents = processedStudentData.length;
+        const sumMarks = processedStudentData.reduce((acc, student) => acc + student.Marks, 0);
+        const meanMarks = sumMarks / totalStudents;
+        
+        // Median calculation (needs a sorted list of marks)
+        let medianMarks;
+        const sortedMarksOnly = processedStudentData.map(s => s.Marks).sort((a, b) => a - b);
+        const mid = Math.floor(sortedMarksOnly.length / 2);
+        if (sortedMarksOnly.length % 2 === 0) {
+            medianMarks = (sortedMarksOnly[mid - 1] + sortedMarksOnly[mid]) / 2;
+        } else {
+            medianMarks = sortedMarksOnly[mid];
+        }
+
+        // Get Min/Max from the mark-sorted list
+        const minMarks = processedStudentDataByMarks[processedStudentDataByMarks.length - 1].Marks;
+        const maxMarks = processedStudentDataByMarks[0].Marks;
+
+        const statsData = {
+            total_students: totalStudents,
+            mean_marks: meanMarks.toFixed(2),
+            median_marks: medianMarks,
+            min_marks: minMarks,
+            max_marks: maxMarks,
+            mean_percentage: ((meanMarks / MAX_MARKS) * 100).toFixed(2),
+            max_possible_marks: MAX_MARKS
+        };
+        
+        // Top 4 Scorers (from the mark-sorted list)
+        const top4ScorersData = processedStudentDataByMarks.slice(0, 4);
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Populate Statistics ---
+            const statsContainer = document.getElementById('stats-container');
+            statsContainer.innerHTML = `
+                <div class="stat-item">
+                    <div class="label">Total Students Participated</div>
+                    <div class="value">${statsData.total_students}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">Mean Score</div>
+                    <div class="value">${statsData.mean_marks} <small>/ ${MAX_MARKS}</small></div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">Class Avg. (%)</div>
+                    <div class="value">${statsData.mean_percentage}<small>%</small></div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">Median Score</div>
+                    <div class="value">${statsData.median_marks}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">Highest Score</div>
+                    <div class="value">${statsData.max_marks}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">Lowest Score</div>
+                    <div class="value">${statsData.min_marks}</div>
+                </div>
+            `;
+            
+            // --- Populate Tables ---
+            function populateFullResultsTable(tableId, data) {
+                const tableBody = document.querySelector(`#${tableId} tbody`);
+                tableBody.innerHTML = '';
+                data.forEach(student => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${student.Roll}</td>
+                        <td>${student.Name}</td>
+                        <td>${student.Marks}</td>
+                        <td>${student.Grade}</td>
+                        <td>${student.GradePoint.toFixed(2)}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+            // --- MODIFICATION: Use the ROLL-sorted data here ---
+            populateFullResultsTable('full-results-table', processedStudentDataByRoll);
+
+
+            function populateTopScorersTable(tableId, data) {
+                const tableBody = document.querySelector(`#${tableId} tbody`);
+                tableBody.innerHTML = '';
+                
+                // --- MODIFICATION: Updated logic for ranks/highlighting ---
+                data.forEach((student) => {
+                    const row = document.createElement('tr');
+                    let rankBadge = '';
+                    let rowClass = '';
+
+                    if (student.Marks === 20) {
+                        rowClass = 'highlighted'; // Red mark for 20
+                    } else if (student.Marks === 18) {
+                        rankBadge = '<span class="rank-badge gold">1st</span>'; // 1st for 18
+                    } else if (student.Marks === 16) {
+                        rankBadge = '<span class="rank-badge silver">2nd</span>'; // 2nd for 16
+                    } else if (student.Marks === 15) {
+                        rankBadge = '<span class="rank-badge bronze">3rd</span>'; // 3rd for 15
+                    }
+
+                    row.className = `top-scorer-row ${rowClass}`;
+                    row.innerHTML = `
+                        <td>${student.Roll}</td>
+                        <td>${student.Name} ${rankBadge}</td>
+                        <td>${student.Marks}</td>
+                        <td>${student.Grade}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+            // Use the MARK-sorted data here
+            populateTopScorersTable('top-scorers-table', top4ScorersData);
+            
+        });
+    </script>
+</body>
+</html>

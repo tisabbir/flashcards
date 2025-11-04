@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Pre-Test Analysis</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #0a0a1a;
+            --primary-accent: #00f0ff;
+            --secondary-accent: #ff00ff;
+            --card-bg: rgba(20, 20, 40, 0.75);
+            --text-color: #e0e0e0;
+            --text-muted: #a0a0c0;
+            --border-color: rgba(0, 240, 255, 0.3);
+            --shadow-color: rgba(0, 240, 255, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            padding: 2rem;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        /* --- Header --- */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: var(--primary-accent);
+            text-shadow: 0 0 10px var(--primary-accent), 0 0 20px var(--primary-accent);
+            letter-spacing: 2px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        /* --- Cards --- */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 0 15px var(--shadow-color);
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+        }
+        
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary-accent);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        /* --- Layout Grids --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .table-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+        }
+
+        /* --- Stat Card Items --- */
+        .stat-item {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .stat-item .label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-item .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-accent);
+        }
+        
+        .stat-item .value small {
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        /* --- Tables --- */
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            /* Custom scrollbar for futuristic look */
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-accent) var(--bg-color);
+        }
+        
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .table-container::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background-color: var(--primary-accent);
+            border-radius: 10px;
+            border: 2px solid var(--bg-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            background-color: rgba(0, 240, 255, 0.1);
+            color: var(--primary-accent);
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(5px);
+        }
+
+        tbody tr:hover {
+            background-color: rgba(0, 240, 255, 0.05);
+        }
+        
+        /* --- Responsive Design --- */
+        @media (max-width: 900px) {
+            .chart-grid, .table-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <header>
+            <h1>Physics Pre-Test Analysis</h1>
+            <p>Dashboard for student performance (Max Marks: 25)</p>
+        </header>
+
+        <div class="card">
+            <h2 class="card-title">Key Performance Indicators</h2>
+            <div class="stats-grid" id="stats-container">
+                </div>
+        </div>
+
+        <div class="chart-grid">
+            <div class="card">
+                <h2 class="card-title">Mark Distribution</h2>
+                <canvas id="barChart"></canvas>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Score Groups</h2>
+                <canvas id="donutChart"></canvas>
+            </div>
+        </div>
+
+        <div class="table-grid">
+            <div class="card">
+                <h2 class="card-title">Top 5 Scorers</h2>
+                <div class="table-container" style="max-height: 335px;">
+                    <table id="top-scorers-table">
+                        <thead>
+                            <tr>
+                                <th>Roll</th>
+                                <th>Name</th>
+                                <th>Marks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Full Results (Sorted)</h2>
+                <div class="table-container">
+                    <table id="full-results-table">
+                        <thead>
+                            <tr>
+                                <th>Roll</th>
+                                <th>Name</th>
+                                <th>Marks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <script>
+        // --- DATA FROM ANALYSIS ---
+        // This data is embedded directly from the analysis.
+        
+        const statsData = {
+          "total_students": 38,
+          "mean_marks": 12.32,
+          "median_marks": 12,
+          "std_deviation": 2.92,
+          "min_marks": 8,
+          "max_marks": 20,
+          "mean_percentage": 49.26,
+          "max_possible_marks": 25
+        };
+
+        const distributionData = {
+          "labels": ["0-5", "6-10", "11-15", "16-20", "21-25"],
+          "counts": [0, 11, 23, 4, 0]
+        };
+
+        const topScorersData = [
+          {"Roll":37,"Name":"Tanjina Khanam","Marks":20},
+          {"Roll":26,"Name":"Amir Hasnat Abir","Marks":18},
+          {"Roll":8,"Name":"ANIKA TABASSOM NOHA","Marks":18},
+          {"Roll":18,"Name":"Tasmia Jahan Faria","Marks":16},
+          {"Roll":10,"Name":"ARIN GUHA PUJA","Marks":15}
+        ];
+
+        const fullResultsData = [
+          {"Roll":37,"Name":"Tanjina Khanam","Marks":20},
+          {"Roll":26,"Name":"Amir Hasnat Abir","Marks":18},
+          {"Roll":8,"Name":"ANIKA TABASSOM NOHA","Marks":18},
+          {"Roll":18,"Name":"Tasmia Jahan Faria","Marks":16},
+          {"Roll":10,"Name":"ARIN GUHA PUJA","Marks":15},
+          {"Roll":14,"Name":"RIYAZUL JANNAH NUHA","Marks":15},
+          {"Roll":35,"Name":"Mahmudur Rahman","Marks":15},
+          {"Roll":17,"Name":"NAZIFA ZAMAN","Marks":15},
+          {"Roll":46,"Name":"Mst. Nusrat Jahan Mimpa","Marks":14},
+          {"Roll":9,"Name":"MOHSIN HOSSEN NIHAD","Marks":14},
+          {"Roll":13,"Name":"Jamiul Alam Srabonto","Marks":14},
+          {"Roll":29,"Name":"Meherunnesa Nadia","Marks":14},
+          {"Roll":2,"Name":"Arka Nandi","Marks":14},
+          {"Roll":1,"Name":"Sayeedah Binte Kamal","Marks":13},
+          {"Roll":45,"Name":"Shajedul Alam","Marks":13},
+          {"Roll":30,"Name":"Afrin Sultana","Marks":13},
+          {"Roll":28,"Name":"Md. Alamgir Hossain Mahin","Marks":13},
+          {"Roll":22,"Name":"Mosammat Anika","Marks":13},
+          {"Roll":41,"Name":"Md. Abdur Rahman","Marks":12},
+          {"Roll":16,"Name":"Sudipta Nandi Aritra","Marks":12},
+          {"Roll":43,"Name":"Taohid Ashraf Tasmi","Marks":11},
+          {"Roll":24,"Name":"Tanjina Hasan","Marks":11},
+          {"Roll":20,"Name":"TOWHIDUR RAHMAN","Marks":11},
+          {"Roll":62,"Name":"Shahed Uddin","Marks":11},
+          {"Roll":48,"Name":"Razia Sultana","Marks":11},
+          {"Roll":3,"Name":"FARHA SHAHRIAR SUBHA","Marks":11},
+          {"Roll":4,"Name":"Taspiya Tabassum Tanha","Marks":11},
+          {"Roll":47,"Name":"Marium Binte Alam","Marks":10},
+          {"Roll":15,"Name":"Samiha Islam","Marks":10},
+          {"Roll":27,"Name":"MUSKATUL SANEY","Marks":10},
+          {"Roll":50,"Name":"AFRIN JAHAN TAMANNA","Marks":10},
+          {"Roll":53,"Name":"SANJIDA SULTANA","Marks":9},
+          {"Roll":33,"Name":"Md. Shalin","Marks":9},
+          {"Roll":32,"Name":"Mohammed Tahmid Kabir","Marks":9},
+          {"Roll":31,"Name":"Mohammed Mehedi Jachim","Marks":9},
+          {"Roll":25,"Name":"MARIAM JANNAT RAISA","Marks":8},
+          {"Roll":49,"Name":"MAYSA AWADA","Marks":8},
+          {"Roll":67,"Name":"Md. Mufsan Lavib","Marks":8}
+        ];
+        
+        // --- Wait for DOM to load before running scripts ---
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. Populate Statistics ---
+            const statsContainer = document.getElementById('stats-container');
+            statsContainer.innerHTML = `
+                <div class="stat-item">
+                    <div class="label">Total Students</div>
+                    <div class="value">${statsData.total_students}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">Mean Score</div>
+                    <div class="value">${statsData.mean_marks} <small>/ 25</small></div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">Class Average</div>
+                    <div class="value">${statsData.mean_percentage}<small>%</small></div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">Median Score</div>
+                    <div class="value">${statsData.median_marks}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">Highest Score</div>
+                    <div class="value">${statsData.max_marks}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">Lowest Score</div>
+                    <div class="value">${statsData.min_marks}</div>
+                </div>
+            `;
+            
+            // --- 2. Populate Tables ---
+            function populateTable(tableId, data) {
+                const tableBody = document.querySelector(`#${tableId} tbody`);
+                tableBody.innerHTML = ''; // Clear existing
+                data.forEach(student => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${student.Roll}</td>
+                        <td>${student.Name}</td>
+                        <td>${student.Marks}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+            populateTable('top-scorers-table', topScorersData);
+            populateTable('full-results-table', fullResultsData);
+
+            
+            // --- 3. Chart.js Global Config ---
+            Chart.defaults.color = '#a0a0c0';
+            Chart.defaults.borderColor = 'rgba(0, 240, 255, 0.1)';
+            Chart.defaults.font.family = "'Roboto', sans-serif";
+
+            // --- 4. Create Bar Chart ---
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            
+            // Gradient for bars
+            const barGradient = barCtx.createLinearGradient(0, 0, 0, 400);
+            barGradient.addColorStop(0, 'rgba(0, 240, 255, 0.8)');
+            barGradient.addColorStop(1, 'rgba(255, 0, 255, 0.8)');
+            
+            const barChart = new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: distributionData.labels,
+                    datasets: [{
+                        label: 'Number of Students',
+                        data: distributionData.counts,
+                        backgroundColor: barGradient,
+                        borderColor: 'rgba(0, 240, 255, 1)',
+                        borderWidth: 1,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(10, 10, 26, 0.9)',
+                            titleFont: { size: 14, family: "'Orbitron', sans-serif" },
+                            bodyFont: { size: 12 },
+                            borderColor: 'rgba(0, 240, 255, 0.5)',
+                            borderWidth: 1,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Students'
+                            },
+                            grid: {
+                                color: 'rgba(0, 240, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Mark Bins'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // --- 5. Create Donut Chart ---
+            const donutCtx = document.getElementById('donutChart').getContext('2d');
+            const donutChart = new Chart(donutCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: distributionData.labels,
+                    datasets: [{
+                        data: distributionData.counts,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)', // 0-5
+                            'rgba(255, 159, 64, 0.7)', // 6-10
+                            'rgba(75, 192, 192, 0.7)', // 11-15
+                            'rgba(54, 162, 235, 0.7)', // 16-20
+                            'rgba(153, 102, 255, 0.7)' // 21-25
+                        ],
+                        borderColor: 'rgba(20, 20, 40, 1)',
+                        borderWidth: 2,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                boxWidth: 12
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(10, 10, 26, 0.9)',
+                            titleFont: { size: 14, family: "'Orbitron', sans-serif" },
+                            bodyFont: { size: 12 },
+                            borderColor: 'rgba(0, 240, 255, 0.5)',
+                            borderWidth: 1,
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+        });
+    </script>
+</body>
+</html>
