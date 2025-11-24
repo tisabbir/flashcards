@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পরীক্ষার প্রস্তুতি চেকলিস্ট</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:wght@400;600;700&family=Charmonman:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ফন্ট ও বেসিক সেটআপ */
+        body {
+            font-family: 'Tiro Bangla', sans-serif;
+            background-color: #fcf1f5; /* খুব হালকা গোলাপী ব্যাকগ্রাউন্ড */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #4a4a4a;
+            padding: 20px;
+        }
+
+        /* কন্টেইনার */
+        .feminine-container {
+            background: linear-gradient(145deg, #ffffff 95%, #ffe5ed 100%); /* হালকা গ্রেডিয়েন্ট */
+            padding: 40px 50px;
+            border-radius: 30px; /* আরও রাউন্ডেড কর্নার */
+            box-shadow: 0 8px 30px rgba(255, 150, 180, 0.4); /* গোলাপী শ্যাডো */
+            width: 90%;
+            max-width: 650px;
+            border: 3px solid #ffb3c6; /* গোলাপী বর্ডার */
+            position: relative; /* অতিরিক্ত ইমোজি পজিশন করার জন্য */
+            overflow: hidden; /* বর্ডারের বাইরে ইমোজি না যাওয়ার জন্য */
+        }
+        
+        /* অতিরিক্ত ফ্লোরাল ইমোজি পজিশনিং */
+        .feminine-container::before,
+        .feminine-container::after {
+            content: '🌸';
+            position: absolute;
+            font-size: 2.5em;
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .feminine-container::before {
+            top: 15px;
+            left: 20px;
+            transform: rotate(-20deg);
+        }
+        .feminine-container::after {
+            bottom: 15px;
+            right: 20px;
+            transform: rotate(30deg);
+        }
+
+        /* শিরোনাম */
+        h1 {
+            font-family: 'Charmonman', cursive; /* ফ্যান্সি ফন্ট */
+            text-align: center;
+            color: #d81b60; /* গাঢ় গোলাপী */
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px #ffc2d1;
+            position: relative;
+            z-index: 1; /* টেক্সটকে সামনে রাখার জন্য */
+        }
+        .sub-heading {
+            text-align: center;
+            color: #a05252; /* নরম বাদামী */
+            font-size: 1.2em;
+            margin-bottom: 35px;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* কলাম গ্রিড */
+        .checklist-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* দুটি কলাম */
+            gap: 25px 50px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* কলাম শিরোনাম */
+        h2 {
+            font-family: 'Tiro Bangla', sans-serif;
+            color: #e91e63; /* উজ্জ্বল গোলাপী */
+            font-size: 1.6em;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #ffc2d1;
+            text-align: center;
+            text-shadow: 0.5px 0.5px #ffe5ed;
+        }
+
+        /* তালিকা */
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            align-items: flex-start; /* আইটেমগুলো উপরে অ্যালাইন হবে */
+            padding: 12px 0;
+            font-size: 1.15em;
+            line-height: 1.4;
+            border-bottom: 1px dotted #ffc2d1; /* ডটেড বিভাজক */
+            transition: background-color 0.2s ease-in-out;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        li:hover {
+            background-color: #fff9fc; /* হোভার ইফেক্ট */
+            border-radius: 5px;
+        }
+
+        /* আইকন */
+        .item-icon {
+            font-size: 1.7em; /* বড় আইকন */
+            margin-right: 15px;
+            color: #ff9fb8; /* সফট পিঙ্ক */
+            flex-shrink: 0;
+            line-height: 1; /* আইকনের নিজস্ব লাইন হাইট */
+        }
+        
+        /* বোল্ড টেক্সট */
+        strong {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        /* প্রিন্ট স্টাইল */
+        @media print {
+            body {
+                background-color: #ffffff;
+                padding: 0;
+            }
+            .feminine-container {
+                box-shadow: none;
+                border: none;
+                padding: 10px;
+                background: #ffffff;
+            }
+            .feminine-container::before,
+            .feminine-container::after {
+                display: none; /* প্রিন্টে অতিরিক্ত ইমোজি বাদ */
+            }
+            .sub-heading {
+                color: #000;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="feminine-container">
+    <h1>পরীক্ষার প্রস্তুতি</h1>
+    <p class="sub-heading">💖 মিষ্টি মেয়েদের জন্য প্রয়োজনীয় সামগ্রীর তালিকা 🌸</p>
+    
+    <div class="checklist-columns">
+        
+        <div>
+            <h2>📝 লেখার সামগ্রী</h2>
+            <ul>
+                <li><span class="item-icon">🖊️</span> <strong>পেন</strong> (অতিরিক্ত সহ)</li>
+                <li><span class="item-icon">✏️</span> <strong>পেনসিল</strong></li>
+                <li><span class="item-icon">🧽</span> <strong>রাবার ও শার্পনার</strong></li>
+                <li><span class="item-icon">📏</span> <strong>রুলার</strong></li>
+                <li><span class="item-icon">📐</span> <strong>জ্যামিতি বক্স</strong> (কম্পাস, প্রোটেক্টর)</li>
+                <li><span class="item-icon">🧮</span> <strong>ক্যালকুলেটর</strong> (যদি অনুমতি থাকে)</li>
+                <li><span class="item-icon">💼</span> <strong>স্বচ্ছ পেনসিল বক্স/পাউচ</strong></li>
+            </ul>
+        </div>
+        
+        <div>
+            <h2>✨ অন্যান্য আবশ্যকতা</h2>
+            <ul>
+                <li><span class="item-icon">💌</span> <strong>প্রবেশপত্র</strong></li>
+                <li><span class="item-icon"> ID</span> <strong>স্টুডেন্ট আইডি কার্ড</strong></li>
+                <li><span class="item-icon">⌚</span> <strong>হাত ঘড়ি</strong> (অ্যানালগ/সাধারণ)</li>
+                <li><span class="item-icon">💧</span> <strong>পানি বোতল</strong> (স্বচ্ছ)</li>
+                <li><span class="item-icon">🎀</span> <strong>টিস্যু ও হ্যান্ড স্যানিটাইজার</strong></li>
+                <li><span class="item-icon">🍬</span> <strong>হালকা স্ন্যাক্স/চকোলেট</strong> (যদি অনুমতি থাকে)</li>
+                <li><span class="item-icon">🩹</span> <strong>জরুরী প্রাথমিক চিকিৎসা</strong> (ব্যান্ড-এইড)</li>
+            </ul>
+        </div>
+        
+    </div>
+</div>
+
+</body>
+</html>

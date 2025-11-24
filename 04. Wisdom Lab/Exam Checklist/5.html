@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পরীক্ষার প্রস্তুতি চেকলিস্ট</title>
+    <style>
+        /* ফন্ট ও বেসিক সেটআপ */
+        @import url('https://fonts.googleapis.com/css2?family=Tiro+Bangla:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Tiro Bangla', sans-serif;
+            background-color: #fefcfd; /* খুব হালকা ব্যাকগ্রাউন্ড */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #4a4a4a;
+            padding: 20px;
+        }
+
+        /* কন্টেইনার */
+        .feminine-container {
+            background-color: #ffffff;
+            padding: 35px 45px;
+            border-radius: 25px;
+            box-shadow: 0 5px 20px rgba(255, 194, 209, 0.6); /* সফট পিঙ্ক শ্যাডো */
+            width: 90%;
+            max-width: 600px;
+            border: 5px dashed #ffc2d1; /* ফুলের মতো ড্যাশড বর্ডার */
+        }
+
+        /* শিরোনাম */
+        h1 {
+            text-align: center;
+            color: #d81b60; /* গাঢ় গোলাপী */
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px #ffc2d1;
+        }
+
+        /* কলাম গ্রিড */
+        .checklist-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* দুটি কলাম */
+            gap: 20px 40px;
+        }
+
+        /* কলাম শিরোনাম */
+        h2 {
+            color: #f77f98; /* ফুলের গোলাপী */
+            font-size: 1.4em;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #fee8ee;
+            text-align: center;
+        }
+
+        /* তালিকা */
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            font-size: 1.1em;
+            line-height: 1.4;
+            border-bottom: 1px dotted #ffc2d1; /* ডটেড বিভাজক */
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+
+        /* ফুলের আইকন */
+        .flower-icon {
+            font-size: 1.5em;
+            margin-right: 15px;
+            color: #ffb3c6; /* আইকন পিঙ্ক */
+        }
+        
+        /* বোল্ড টেক্সট */
+        strong {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        /* প্রিন্ট স্টাইল */
+        @media print {
+            body {
+                background-color: #ffffff;
+                padding: 0;
+            }
+            .feminine-container {
+                box-shadow: none;
+                border: none;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="feminine-container">
+    <h1>💖 পরীক্ষার প্রস্তুতি সামগ্রী 🌸</h1>
+    
+    <div class="checklist-columns">
+        
+        <div>
+            <h2>📝 লেখার সামগ্রী</h2>
+            <ul>
+                <li><span class="flower-icon">🌷</span> <strong>পেন</strong> (অতিরিক্ত সহ)</li>
+                <li><span class="flower-icon">🌷</span> <strong>পেনসিল</strong></li>
+                <li><span class="flower-icon">🌷</span> <strong>রাবার</strong></li>
+                <li><span class="flower-icon">🌷</span> <strong>শার্পনার</strong></li>
+                <li><span class="flower-icon">🌷</span> <strong>রুলার</strong></li>
+                <li><span class="flower-icon">🌷</span> <strong>জ্যামিতি বক্স</strong></li>
+                <li><span class="flower-icon">🌷</span> <strong>ক্যালকুলেটর</strong></li>
+            </ul>
+        </div>
+        
+        <div>
+            <h2>✨ অন্যান্য আবশ্যকতা</h2>
+            <ul>
+                <li><span class="flower-icon">🌟</span> <strong>প্রবেশপত্র</strong></li>
+                <li><span class="flower-icon">🌟</span> <strong>স্টুডেন্ট আইডি কার্ড</strong></li>
+                <li><span class="flower-icon">🌟</span> <strong>হাত ঘড়ি</strong></li>
+                <li><span class="flower-icon">🌟</span> <strong>পানি বোতল</strong></li>
+                <li><span class="flower-icon">🌟</span> <strong>টিস্যু</strong></li>
+                <li><span class="flower-icon">🌟</span> <strong>অতিরিক্ত পেন/পেনসিল</strong></li>
+                <li><span class="flower-icon">🌟</span> <strong>অন্যান্য প্রয়োজনীয় সামগ্রী</strong></li> 
+            </ul>
+        </div>
+        
+    </div>
+</div>
+
+</body>
+</html>

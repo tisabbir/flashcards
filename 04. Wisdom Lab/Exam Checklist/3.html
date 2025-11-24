@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পরীক্ষার প্রস্তুতি চেকলিস্ট</title>
+    <style>
+        /* ফন্ট ও বেসিক সেটআপ */
+        @import url('https://fonts.googleapis.com/css2?family=Tiro+Bangla:wght@400;600&display=swap');
+        
+        body {
+            font-family: 'Tiro Bangla', sans-serif;
+            background-color: #ffffff; /* প্রিন্টের জন্য সাদা ব্যাকগ্রাউন্ড */
+            margin: 0;
+            padding: 40px;
+            color: #333;
+        }
+
+        /* কন্টেইনার */
+        .elegant-print-container {
+            width: 100%;
+            max-width: 700px; /* প্রিন্টের জন্য উপযুক্ত প্রস্থ */
+            margin: 0 auto;
+            border: 2px solid #ffb3c6; /* মার্জিত পিঙ্ক বর্ডার */
+            padding: 20px 30px;
+            border-radius: 10px;
+        }
+
+        /* শিরোনাম */
+        h1 {
+            text-align: center;
+            color: #d9487c;
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ffcdd2;
+        }
+
+        /* আইটেম গ্রিড/কলাম */
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* দুটি কলাম */
+            gap: 15px 30px; /* কলাম ও রো-এর মধ্যে ফাঁকা স্থান */
+            list-style: none;
+            padding: 0;
+        }
+
+        /* প্রতিটি আইটেম */
+        .item-grid li {
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            padding: 5px 0;
+            line-height: 1.4;
+        }
+
+        /* আইকন */
+        .icon {
+            font-size: 1.1em;
+            margin-right: 12px;
+            color: #ffb3c6; /* পিঙ্ক আইকন */
+        }
+        
+        /* বোল্ড টেক্সট (HTML ট্যাগ ব্যবহার) */
+        strong {
+            font-weight: 600; /* সেমি-বোল্ড */
+            color: #555;
+        }
+
+        /* ফুটার নোট */
+        .note {
+            text-align: center;
+            margin-top: 30px;
+            font-style: italic;
+            color: #888;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            font-size: 0.95em;
+        }
+
+        /* প্রিন্ট মিডিয়া কোয়েরি: অপ্রয়োজনীয় উপাদান প্রিন্টে বাদ দিতে */
+        @media print {
+            body {
+                padding: 0;
+            }
+            .elegant-print-container {
+                border: none; /* প্রিন্টে বর্ডার বাদ দেওয়া */
+                box-shadow: none;
+                padding: 0;
+            }
+            .note {
+                display: none; /* প্রিন্টে নোট বাদ দেওয়া */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="elegant-print-container">
+    <h1>🌷 পরীক্ষার দিনের আবশ্যক সামগ্রী 🌷</h1>
+    
+    <ul class="item-grid">
+        <li><span class="icon">✓</span> <strong>প্রবেশপত্র</strong></li>
+        <li><span class="icon">✓</span> <strong>স্টুডেন্ট আইডি কার্ড</strong></li>
+        <li><span class="icon">✓</span> <strong>পেন</strong></li>
+        <li><span class="icon">✓</span> <strong>পেনসিল</strong></li>
+        <li><span class="icon">✓</span> <strong>রাবার</strong></li>
+        <li><span class="icon">✓</span> <strong>শার্পনার</strong></li>
+        <li><span class="icon">✓</span> <strong>রুলার</strong></li>
+        <li><span class="icon">✓</span> <strong>ক্যালকুলেটর</strong></li>
+        <li><span class="icon">✓</span> <strong>জ্যামিতি বক্স</strong></li>
+        <li><span class="icon">✓</span> <strong>হাত ঘড়ি</strong></li>
+        <li><span class="icon">✓</span> <strong>অতিরিক্ত পেন/পেনসিল</strong></li>
+        <li><span class="icon">✓</span> <strong>টিস্যু</strong></li>
+        <li><span class="icon">✓</span> <strong>পানি বোতল</strong></li>
+    </ul>
+
+    <p class="note">পরীক্ষার জন্য শুভ কামনা! সব গুছিয়ে রেখে শান্ত মনে পরীক্ষা দিতে যাও।</p>
+</div>
+
+</body>
+</html>

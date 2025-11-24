@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পরীক্ষার প্রস্তুতি চেকলিস্ট</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:wght@400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ফন্ট ও বেসিক সেটআপ */
+        body {
+            font-family: 'Tiro Bangla', sans-serif;
+            background-color: #fcf6f9; /* খুবই হালকা গোলাপী/ক্রিম */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #3d3d3d;
+            padding: 20px;
+        }
+
+        /* কন্টেইনার - পেপারের মতো লুক */
+        .premium-container {
+            background: linear-gradient(135deg, #ffffff 90%, #fff0f5 100%); /* হালকা গ্রেডিয়েন্ট */
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1); /* গভীর কিন্তু সফট শ্যাডো */
+            width: 95%;
+            max-width: 700px;
+            border: 1px solid #ffc2d1; /* সূক্ষ্ম গোলাপী বর্ডার */
+        }
+
+        /* শিরোনাম - ফ্যান্সি ফন্ট ব্যবহার */
+        h1 {
+            font-family: 'Playfair Display', serif; /* ফ্যান্সি ইংরেজি ফন্ট */
+            text-align: center;
+            color: #c03975; /* ডাস্টি রোজ পিঙ্ক */
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px #ffe5ea; /* সফট টেক্সট শ্যাডো */
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        /* কলাম গ্রিড */
+        .checklist-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* দুটি কলাম */
+            gap: 25px 50px;
+        }
+
+        /* কলাম শিরোনাম */
+        h2 {
+            color: #e8799a; /* উজ্জ্বল পিঙ্ক */
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 3px solid #ffc2d1; /* মোটা পিঙ্ক বর্ডার */
+        }
+
+        /* তালিকা */
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            align-items: flex-start; /* আইটেমগুলো উপরে অ্যালাইন হবে */
+            padding: 12px 0;
+            font-size: 1.15em;
+            line-height: 1.5;
+            transition: background-color 0.3s;
+        }
+        li:hover {
+             background-color: #fff8fb; /* হোভার এফেক্ট */
+        }
+
+        /* আইকন - ফন্টের পরিবর্তে SVG-স্টাইলের ইমোজি ব্যবহার */
+        .flower-icon {
+            font-size: 1.8em;
+            margin-right: 15px;
+            color: #ff9fb8; /* সফট পিঙ্ক */
+            flex-shrink: 0; /* টেক্সট লম্বা হলেও আইকন সরবে না */
+        }
+        
+        /* বোল্ড টেক্সট */
+        strong {
+            font-weight: 700;
+            color: #4a4a4a;
+        }
+        
+        /* প্রিন্ট স্টাইল */
+        @media print {
+            body {
+                background-color: #ffffff;
+                padding: 0;
+            }
+            .premium-container {
+                box-shadow: none;
+                border: none;
+                padding: 10px;
+                background: #ffffff; /* গ্রেডিয়েন্ট বাদ */
+            }
+            .subtitle {
+                color: #000;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="premium-container">
+    <h1>Preparation Checklist</h1>
+    <p class="subtitle">💖 পরীক্ষার জন্য প্রয়োজনীয় সকল সামগ্রী 🌸</p>
+    
+    <div class="checklist-columns">
+        
+        <div>
+            <h2>🖊️ লেখার সামগ্রী</h2>
+            <ul>
+                <li><span class="flower-icon">🌷</span> <strong>পেন</strong> (অতিরিক্ত সহ)</li>
+                <li><span class="flower-icon">🌷</span> <strong>পেনসিল, রাবার</strong></li>
+                <li><span class="flower-icon">🌷</span> <strong>শার্পনার, রুলার</strong></li>
+                <li><span class="flower-icon">🌷</span> <strong>জ্যামিতি বক্স</strong> (কম্পাস, প্রোটেক্টর)</li>
+                <li><span class="flower-icon">🌷</span> <strong>ক্যালকুলেটর</strong> (যদি অনুমতি থাকে)</li>
+                <li><span class="flower-icon">🌷</span> <strong>অতিরিক্ত পেন/পেনসিল</strong> (ব্যাকআপ)</li>
+            </ul>
+        </div>
+        
+        <div>
+            <h2>✨ অন্যান্য আবশ্যকতা</h2>
+            <ul>
+                <li><span class="flower-icon">🌟</span> <strong>প্রবেশপত্র ও আইডি কার্ড</strong></li>
+                <li><span class="flower-icon">🌟</span> <strong>হাত ঘড়ি</strong> (অ্যানালগ/সাধারণ)</li>
+                <li><span class="flower-icon">🌟</span> <strong>পানি বোতল</strong> (স্বচ্ছ)</li>
+                <li><span class="flower-icon">🌟</span> <strong>টিস্যু/হ্যান্ড স্যানিটাইজার</strong></li>
+                <li><span class="flower-icon">🌟</span> <strong>স্বচ্ছ পাউচ/বক্স</strong></li>
+                <li><span class="flower-icon">🌟</span> <strong>হালকা স্ন্যাক্স</strong> (যদি অনুমতি থাকে)</li>
+            </ul>
+        </div>
+        
+    </div>
+</div>
+
+</body>
+</html>

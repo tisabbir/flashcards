@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রাসূল (সাঃ) এর শিক্ষা পদ্ধতি</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ফন্ট ও রঙের প্যালেট: ইসলামী থিম (সবুজ ও সোনালী) */
+        :root {
+            --primary-color: #047857; /* গাঢ় সবুজ */
+            --secondary-color: #fbbf24; /* সোনালী */
+            --text-dark: #1e293b;
+            --text-light: #475569;
+            --bg-light: #f0fdf4; /* হালকা সবুজ ব্যাকগ্রাউন্ড */
+            --card-bg: #ffffff;
+        }
+
+        /* 1. বেসিক সেটআপ */
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* 2. স্লাইড স্ট্রাকচার */
+        .deck-container { position: relative; width: 100%; height: 100%; }
+        .slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--card-bg);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 40px 60px;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.6s ease-in-out, visibility 0.6s;
+        }
+        .slide.current { opacity: 1; visibility: visible; z-index: 1; }
+
+        /* 3. অ্যানিমেশন */
+        .reveal {
+            opacity: 0; transform: translateY(20px);
+            transition: all 0.5s ease-out;
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* 4. ফন্ট স্টাইল */
+        h1 { font-size: 58px; color: var(--primary-color); margin-bottom: 10px; text-align: center; font-weight: 700; }
+        h2 { font-size: 42px; color: var(--secondary-color); margin-bottom: 30px; text-align: center; font-weight: 700;}
+        h3 { font-size: 30px; color: var(--text-dark); margin-bottom: 15px; font-weight: 600;}
+        p { font-size: 24px; color: var(--text-light); line-height: 1.6; text-align: center; }
+        .note { font-size: 18px; color: #65a30d; margin-top: 10px; font-style: italic; }
+
+        /* 5. মূল বৈশিষ্ট্য লিস্ট */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+            max-width: 900px;
+            text-align: left;
+        }
+        .feature-list li {
+            font-size: 28px;
+            color: var(--text-dark);
+            margin-bottom: 18px;
+            padding: 10px 0;
+            border-bottom: 1px dashed #e5e7eb;
+            display: flex;
+            align-items: flex-start;
+        }
+        .feature-list li:last-child { border-bottom: none; }
+        .feature-icon {
+            color: var(--secondary-color);
+            font-size: 32px;
+            margin-right: 15px;
+            margin-top: 5px;
+        }
+        .feature-text {
+            flex-grow: 1;
+        }
+        .feature-text strong {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        .feature-example {
+            font-size: 20px;
+            color: var(--text-light);
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* 6. গ্রিড (শিক্ষণ পদ্ধতি) */
+        .method-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 20px;
+        }
+        .method-card {
+            background: var(--bg-light);
+            padding: 30px;
+            border-radius: 15px;
+            border-top: 5px solid var(--primary-color);
+            text-align: left;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .method-card h3 {
+            color: var(--primary-color);
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        .method-card ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .method-card li {
+            font-size: 22px;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 25px;
+        }
+        .method-card li::before {
+            content: "\f058"; /* Check-circle icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="deck-container">
+
+    <div class="slide current">
+        <i class="fa-solid fa-mosque reveal active" style="font-size: 100px; color: var(--primary-color); margin-bottom: 20px;"></i>
+        <h1 class="reveal">🌺 রাসূল ﷺ এর শিক্ষা পদ্ধতি বিশ্লেষণ</h1>
+        <p class="reveal">মানবজাতির সর্বশ্রেষ্ঠ শিক্ষকের অনন্য শিক্ষাদান কৌশল</p>
+        <div class="note reveal" style="margin-top: 50px;">
+            "নিশ্চয়ই আমি শিক্ষক রূপে প্রেরিত হয়েছি।" — **সহীহ ইবনে মাজাহ, ২২৯**
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>শিক্ষণ পদ্ধতির মূল বৈশিষ্ট্য (১-৪)</h2>
+        <ul class="feature-list">
+            <li class="reveal active">
+                <span class="feature-icon"><i class="fa-solid fa-question-circle"></i></span>
+                <span class="feature-text">
+                    <strong>১. প্রশ্নের মাধ্যমে শিক্ষা (সক্রিয় অংশগ্রহণ)</strong>
+                    <span class="feature-example">যেমন, "তোমরা জানো কার মাফ করা সর্বোত্তম?" — *শিক্ষার্থীকে চিন্তার সুযোগ দেওয়া*</span>
+                </span>
+            </li>
+            <li class="reveal">
+                <span class="feature-icon"><i class="fa-solid fa-lightbulb"></i></span>
+                <span class="feature-text">
+                    <strong>২. দৃষ্টান্ত, উপমা ও গল্পের ব্যবহার</strong>
+                    <span class="feature-example">জটিল বিষয়কে সহজে বোঝাতে বাস্তব উদাহরণ: "আমার ও তোমাদের দৃষ্টান্ত..."</span>
+                </span>
+            </li>
+            <li class="reveal">
+                <span class="feature-icon"><i class="fa-solid fa-hand-pointer"></i></span>
+                <span class="feature-text">
+                    <strong>৩. চিত্র, দৃষ্টি ও বাস্তব প্রদর্শনের মাধ্যমে শেখানো</strong>
+                    <span class="feature-example">মাটিতে দাগ টেনে বা অঙ্গভঙ্গি ব্যবহার করে শিক্ষা দেওয়া। (*Visual Learning*)</span>
+                </span>
+            </li>
+            <li class="reveal">
+                <span class="feature-icon"><i class="fa-solid fa-layer-group"></i></span>
+                <span class="feature-text">
+                    <strong>৪. ধীরে ধীরে ও সহজ থেকে কঠিনের দিকে শিক্ষা (Tadarruj)</strong>
+                    <span class="feature-example">প্রথমে ঈমান, পরে নামাজ— ধাপে ধাপে বিষয়ের প্রবর্তন।</span>
+                </span>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="slide">
+        <h2>শিক্ষণ পদ্ধতির মূল বৈশিষ্ট্য (৫-৮)</h2>
+        <ul class="feature-list">
+            <li class="reveal active">
+                <span class="feature-icon"><i class="fa-solid fa-clock"></i></span>
+                <span class="feature-text">
+                    <strong>৫. সময়ানুবর্তিতা ও নিয়মিততা</strong>
+                    <span class="feature-example">গুরুত্বপূর্ণ মুহূর্তগুলোকে শিক্ষার সুযোগ হিসেবে গ্রহণ করা। (*Teaching Opportunity*)</span>
+                </span>
+            </li>
+            <li class="reveal">
+                <span class="feature-icon"><i class="fa-solid fa-heart"></i></span>
+                <span class="feature-text">
+                    <strong>৬. বন্ধুত্বপূর্ণ ও সহানুভূতিশীল আচরণ</strong>
+                    <span class="feature-example">বেদুইনের ভুলের প্রতিক্রিয়ায় ক্রোধ নয়, বরং ধৈর্য ও বোঝানোর পথ বেছে নেওয়া।</span>
+                </span>
+            </li>
+            <li class="reveal">
+                <span class="feature-icon"><i class="fa-solid fa-user-tag"></i></span>
+                <span class="feature-text">
+                    <strong>৭. শিক্ষার্থীর মানসিক অবস্থা ও সামর্থ্য অনুযায়ী শিক্ষা</strong>
+                    <span class="feature-example">কারও জন্য "রাগ করো না", অন্যকে "মায়ের সেবা করো"— ব্যক্তিকেন্দ্রিক শিক্ষা।</span>
+                </span>
+            </li>
+            <li class="reveal">
+                <span class="feature-icon"><i class="fa-solid fa-redo-alt"></i></span>
+                <span class="feature-text">
+                    <strong>৮. পুনরাবৃত্তি ও জোর দিয়ে শেখানো</strong>
+                    <span class="feature-example">একটি বাক্য কখনও **তিনবার পর্যন্ত** পুনরাবৃত্তি করা যেন ভালোভাবে বুঝে নেয়।</span>
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="slide">
+        <h2>নৈতিক ও আত্মিক ভিত্তি (৯-১২)</h2>
+        <ul class="feature-list" style="max-width: 1000px;">
+            <li class="reveal active">
+                <span class="feature-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+                <span class="feature-text">
+                    <strong>৯. বিশেষজ্ঞতা ও জ্ঞানের গভীরতা</strong>
+                    <span class="feature-example">তিনি যা শিক্ষা দিতেন, তা নিজে গভীরভাবে জানতেন ও অনুশীলন করতেন।</span>
+                </span>
+            </li>
+            <li class="reveal">
+                <span class="feature-icon"><i class="fa-solid fa-hands-praying"></i></span>
+                <span class="feature-text">
+                    <strong>১০. ভালো নিয়ত ও উদ্দেশ্য</strong>
+                    <span class="feature-example">উদ্দেশ্য ছিল **আল্লাহর সন্তুষ্টি** ও মানবকল্যাণ। (সৎ নিয়ত শিক্ষা কার্যক্রমের মূল শক্তি)</span>
+                </span>
+            </li>
+            <li class="reveal">
+                <span class="feature-icon"><i class="fa-solid fa-award"></i></span>
+                <span class="feature-text">
+                    <strong>১১. শিক্ষার্থীর প্রচেষ্টা ও প্রতিভার স্বীকৃতি দেওয়া</strong>
+                    <span class="feature-example">মুআয ইবনু জাবাল (রা.)-কে "হালাল-হারামের বিষয়ে সবচেয়ে জানে"— বলে প্রশংসা করা।</span>
+                </span>
+            </li>
+            <li class="reveal">
+                <span class="feature-icon"><i class="fa-solid fa-balance-scale"></i></span>
+                <span class="feature-text">
+                    <strong>১২. মূল্যায়ন ও আত্মসমালোচনামূলক শিক্ষা</strong>
+                    <span class="feature-example">ভুল হলে সংশোধন করতেন কিন্তু কখনও অপমান করতেন না। (নরম কিন্তু কার্যকর মূল্যায়ন)</span>
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="slide">
+        <h2>🕌 রাসূল ﷺ-এর শিক্ষণ পদ্ধতির ধরন</h2>
+
+        <div class="method-grid">
+            <div class="method-card reveal active">
+                <h3>(ক) বক্তৃতাভিত্তিক পদ্ধতি (Lecture Method)</h3>
+                <ul>
+                    <li>উপযুক্ত পরিবেশ সৃষ্টি</li>
+                    <li>ধীরে ও স্পষ্টভাবে কথা বলা</li>
+                    <li>অল্প তথ্য, কিন্তু গভীর ব্যাখ্যা</li>
+                    <li>গল্প ও উদাহরণ ব্যবহার</li>
+                    <li>দেহভঙ্গি ও কণ্ঠস্বরের পরিবর্তন</li>
+                </ul>
+            </div>
+            <div class="method-card reveal">
+                <h3>(খ) অংশগ্রহণমূলক পদ্ধতি (Participation Method)</h3>
+                <ul>
+                    <li>প্রশ্নোত্তর পর্ব ও আলোচনা</li>
+                    <li>হাতে-কলমে শেখা (Learn by Doing)</li>
+                    <li>কুইজ ও প্রতিযোগিতা</li>
+                    <li>বিতর্ক ও আলোচনা (Discussion)</li>
+                    <li>নাটিকা বা ভূমিকা পালন (Role Play)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="note reveal" style="margin-top: 30px;">
+            **সহীহ মুসলিম (৪৪/৩)**: রাসূল (সাঃ) একটি কথা তিনবার পুনরাবৃত্তি করতেন যাতে শ্রোতারা ভালোভাবে বুঝতে পারে।
+        </div>
+    </div>
+
+    <div class="slide">
+        <i class="fa-solid fa-leaf reveal active" style="font-size: 80px; color: var(--primary-color); margin-bottom: 20px;"></i>
+        <h1 class="reveal" style="font-size: 50px;">🌟 সারসংক্ষেপ</h1>
+        
+        <p class="reveal" style="font-size: 30px; font-weight: 600; color: var(--text-dark); max-width: 800px;">
+            রাসূলুল্লাহ ﷺ এর শিক্ষা পদ্ধতি ছিল—
+        </p>
+        
+        <ul class="feature-list" style="max-width: 700px; margin-top: 20px;">
+            <li class="reveal" style="border-bottom: none; font-size: 32px;">
+                <span class="feature-icon"><i class="fa-solid fa-brain"></i></span>
+                <strong>চিন্তাশীল ও বাস্তবমুখী</strong>
+            </li>
+            <li class="reveal" style="border-bottom: none; font-size: 32px;">
+                <span class="feature-icon"><i class="fa-solid fa-users"></i></span>
+                <strong>অংশগ্রহণমূলক ও ভালোবাসাভিত্তিক</strong>
+            </li>
+            <li class="reveal" style="border-bottom: none; font-size: 32px;">
+                <span class="feature-icon"><i class="fa-solid fa-hands-clapping"></i></span>
+                <strong>নৈতিক ও চরিত্র গঠনকারী</strong>
+            </li>
+        </ul>
+        
+        <p class="reveal" style="font-size: 26px; color: var(--primary-color); margin-top: 30px; font-style: italic;">
+            তিনি ছিলেন এমন শিক্ষক, যিনি শুধু মস্তিষ্ক নয়— **হৃদয় ও চরিত্রকে** শিক্ষিত করেছিলেন।
+        </p>
+    </div>
+
+</div>
+
+<script>
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function showSlide(index) {
+        // নতুন স্লাইড দেখাতে
+        const currentSlide = document.querySelector('.slide.current');
+        if (currentSlide) {
+            currentSlide.classList.remove('current');
+            // বর্তমান স্লাইডের সব রিভিলড উপাদান লুকিয়ে দাও
+            currentSlide.querySelectorAll('.reveal').forEach(el => el.classList.remove('active'));
+        }
+        
+        const newSlide = slides[index];
+        if (newSlide) {
+            newSlide.classList.add('current');
+            currentSlideIndex = index;
+            
+            // প্রথম রিভিল উপাদানকে স্বয়ংক্রিয়ভাবে দেখাও
+            const firstReveal = newSlide.querySelector('.reveal');
+            if (firstReveal) {
+                // একটি ছোট ডিলে, যাতে স্লাইড ট্রানজিশন শেষ হওয়ার পর রিভিল হয়
+                setTimeout(() => firstReveal.classList.add('active'), 100); 
+            }
+        }
+    }
+
+    function revealNext() {
+        // বর্তমান স্লাইডের পরবর্তী লুকানো উপাদান দেখাও
+        const currentSlide = slides[currentSlideIndex];
+        const elementsToReveal = currentSlide.querySelectorAll('.reveal:not(.active)');
+        if (elementsToReveal.length > 0) {
+            elementsToReveal[0].classList.add('active');
+            return true;
+        }
+        return false;
+    }
+
+    function nextStep() {
+        // যদি রিভিল করার কিছু থাকে, আগে সেটা করো
+        if (revealNext()) return;
+        
+        // না হলে পরের স্লাইডে যাও
+        if (currentSlideIndex < slides.length - 1) showSlide(currentSlideIndex + 1);
+    }
+
+    function prevStep() {
+        // আগের স্লাইডে যাও
+        if (currentSlideIndex > 0) showSlide(currentSlideIndex - 1);
+    }
+
+    // মাউস ক্লিক বা কী-বোর্ড প্রেস ইভেন্ট
+    document.addEventListener('click', nextStep);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') nextStep();
+        else if (e.key === 'ArrowLeft') prevStep();
+    });
+
+    // স্লাইড শুরু করা
+    showSlide(0); 
+</script>
+
+</body>
+</html>

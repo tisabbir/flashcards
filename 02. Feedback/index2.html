@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ফিডব্যাক সেশন</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* 1. বেসিক সেটআপ */
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: #f0f9ff;
+        }
+
+        /* 2. স্লাইড স্ট্রাকচার */
+        .deck-container { position: relative; width: 100%; height: 100%; }
+        .slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #ffffff;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 40px 60px;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s;
+        }
+        .slide.current { opacity: 1; visibility: visible; z-index: 1; }
+
+        /* 3. অ্যানিমেশন */
+        .reveal {
+            opacity: 0; transform: translateY(20px);
+            transition: all 0.5s ease-out;
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* 4. ফন্ট স্টাইল */
+        h1 { font-size: 56px; color: #0f172a; margin-bottom: 15px; text-align: center; }
+        h2 { font-size: 36px; color: #0ea5e9; margin-bottom: 30px; text-align: center; font-weight: 700;}
+        p { font-size: 22px; color: #475569; line-height: 1.5; text-align: center; }
+
+        /* 5. কার্ড ডিজাইন */
+        .question-card {
+            background: #f8fafc;
+            border-left: 6px solid #0ea5e9;
+            padding: 30px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            text-align: left;
+        }
+        
+        .question-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0ea5e9;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .question-text {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .option-badge {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 18px;
+            color: #334155;
+            cursor: default;
+            transition: transform 0.2s;
+        }
+        .option-badge:hover { transform: scale(1.05); border-color: #0ea5e9; color: #0ea5e9; }
+
+        /* গ্রিড লেআউট (Keep/Improve/Add) */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 25px;
+            width: 100%;
+            max-width: 1100px;
+        }
+        
+        .grid-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+        
+        .grid-card i { font-size: 32px; margin-bottom: 15px; display: block; }
+        .grid-card h3 { font-size: 22px; color: #1e293b; margin-bottom: 10px; }
+        .grid-card p { font-size: 16px; }
+
+    </style>
+</head>
+<body>
+
+<div class="deck-container">
+
+    <div class="slide current">
+        <i class="fa-solid fa-comments reveal active" style="font-size: 90px; color: #0ea5e9; margin-bottom: 20px;"></i>
+        <h1 class="reveal">কেমন ছিল এই সেমিস্টার?</h1>
+        <p class="reveal">তোমাদের সৎ মতামত আমাকে আরও ভালো শিক্ষক হতে সাহায্য করবে।</p>
+        
+    </div>
+
+    <div class="slide">
+        <h2>পর্ব ১: পড়া বোঝা ও শেখা</h2>
+        
+        <div class="question-card reveal active">
+            <span class="question-number">প্রশ্ন ১</span>
+            <div class="question-text">আমি কি টপিকগুলো সহজ ও পরিষ্কারভাবে বুঝিয়েছি?</div>
+            <div class="options">
+                <span class="option-badge">💯 একদম ক্লিয়ার</span>
+                <span class="option-badge">✅ মোটামুটি</span>
+                <span class="option-badge">😐 ঠিকঠাক</span>
+                <span class="option-badge">❌ কঠিন লেগেছে</span>
+            </div>
+        </div>
+
+        <div class="question-card reveal">
+            <span class="question-number">প্রশ্ন ২</span>
+            <div class="question-text">বাস্তব জীবনের উদাহরণগুলো কি তোমার বুঝতে সাহায্য করেছে?</div>
+            <div class="options">
+                <span class="option-badge">খুব বেশি</span>
+                <span class="option-badge">সাহায্য করেছে</span>
+                <span class="option-badge">তেমন না</span>
+                <span class="option-badge">একদমই না</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>পর্ব ২: ক্লাসের পরিবেশ</h2>
+
+        <div class="question-card reveal active">
+            <span class="question-number">প্রশ্ন ৩</span>
+            <div class="question-text">পড়ানোর গতি (Speed) তোমার কাছে কেমন লেগেছে?</div>
+            <div class="options">
+                <span class="option-badge" style="background-color: #fee2e2;">বড্ড ফাস্ট 🚀</span>
+                <span class="option-badge" style="background-color: #dcfce7;">একদম পারফেক্ট 👌</span>
+                <span class="option-badge" style="background-color: #fef9c3;">একটু স্লো 🐢</span>
+            </div>
+        </div>
+
+        <div class="question-card reveal">
+            <span class="question-number">প্রশ্ন ৪</span>
+            <div class="question-text">আমি কি ক্লাসে প্রশ্ন করতে বা কথা বলতে সাহস দিয়েছি?</div>
+            <div class="options">
+                <span class="option-badge">হ্যাঁ, সবসময়</span>
+                <span class="option-badge">মাঝে মাঝে</span>
+                <span class="option-badge">না, ভয় পেতাম</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>পর্ব ৩: মেথড বা পদ্ধতি</h2>
+
+        <div class="question-card reveal active" style="border-left-color: #8b5cf6;">
+            <span class="question-number" style="color: #8b5cf6;">প্রশ্ন ৫</span>
+            <div class="question-text">কোন পদ্ধতিতে পড়ানোর ফলে তোমার বুঝতে সবচেয়ে সুবিধা হয়েছে?</div>
+            <p style="text-align: left; font-size: 18px; color: #64748b;">(যেমন: স্লাইড, বোর্ডের লেখা, ভিডিও, নাকি গল্প বলা?)</p>
+        </div>
+
+        <div class="question-card reveal" style="border-left-color: #f59e0b;">
+            <span class="question-number" style="color: #f59e0b;">প্রশ্ন ৬</span>
+            <div class="question-text">পরের সেমিস্টারে শেখানোর স্টাইলে কী পরিবর্তন আনলে ভালো হয়?</div>
+            <p style="text-align: left; font-size: 18px; color: #64748b;">(তোমার পরামর্শ এখানে খুব গুরুত্বপূর্ণ)</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>পর্ব ৪: পরামর্শ ও উন্নয়ন</h2>
+        
+        <div class="grid-3">
+            <div class="grid-card reveal" style="border-top: 5px solid #22c55e;">
+                <i class="fa-regular fa-thumbs-up" style="color: #22c55e;"></i>
+                <span class="question-number" style="color: #22c55e;">প্রশ্ন ৭: KEEP</span>
+                <h3>কোনটা ধরে রাখা উচিত?</h3>
+                <p>আমার ক্লাসের কোন বিষয়গুলো তোমার ভালো লেগেছে এবং বাদ দেওয়া উচিত না?</p>
+            </div>
+
+            <div class="grid-card reveal" style="border-top: 5px solid #ef4444;">
+                <i class="fa-solid fa-wrench" style="color: #ef4444;"></i>
+                <span class="question-number" style="color: #ef4444;">প্রশ্ন ৮: IMPROVE</span>
+                <h3>কোথায় উন্নতি দরকার?</h3>
+                <p>কোন বিষয়গুলো আমার পরিবর্তন করা বা আরও ভালো করা দরকার?</p>
+            </div>
+
+            <div class="grid-card reveal" style="border-top: 5px solid #3b82f6;">
+                <i class="fa-solid fa-plus" style="color: #3b82f6;"></i>
+                <span class="question-number" style="color: #3b82f6;">প্রশ্ন ৯: ADD</span>
+                <h3>নতুন কী যোগ করব?</h3>
+                <p>কোর্সটাকে আরও ইন্টারেস্টিং করতে নতুন কী আইডিয়া দেওয়া যায়?</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="question-card reveal active" style="text-align: center; border-left: none; border-top: 8px solid #ec4899; padding: 60px;">
+            <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 60px; color: #ec4899; margin-bottom: 20px;"></i>
+            <span class="question-number" style="color: #ec4899;">প্রশ্ন ১০: একটা ইচ্ছে</span>
+            <div class="question-text" style="font-size: 36px; line-height: 1.4;">
+                "যদি এই কোর্সের বা আমার পড়ানোর <strong>একটা মাত্র জিনিস</strong> তুমি বদলাতে পারতে, সেটা কী হতো?"
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <i class="fa-regular fa-heart reveal active" style="font-size: 90px; color: #ef4444; margin-bottom: 30px;"></i>
+        <h1 class="reveal">অনেক ধন্যবাদ!</h1>
+        <p class="reveal">তোমার এই ফিডব্যাক আমাকে আগামীতে আরও ভালো করতে সাহায্য করবে।</p>
+    </div>
+
+</div>
+
+<script>
+    // স্লাইড চেঞ্জ করার লজিক (একই আছে)
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function showSlide(index) {
+        const currentSlide = document.querySelector('.slide.current');
+        if (currentSlide) {
+            currentSlide.classList.remove('current');
+            currentSlide.querySelectorAll('.reveal').forEach(el => el.classList.remove('active'));
+        }
+        const newSlide = slides[index];
+        if (newSlide) {
+            newSlide.classList.add('current');
+            currentSlideIndex = index;
+            const firstReveal = newSlide.querySelector('.reveal');
+            if (firstReveal) firstReveal.classList.add('active');
+        }
+    }
+
+    function revealNext() {
+        const currentSlide = slides[currentSlideIndex];
+        const elementsToReveal = currentSlide.querySelectorAll('.reveal:not(.active)');
+        if (elementsToReveal.length > 0) {
+            elementsToReveal[0].classList.add('active');
+            return true;
+        }
+        return false;
+    }
+
+    function nextStep() {
+        if (revealNext()) return;
+        if (currentSlideIndex < slides.length - 1) showSlide(currentSlideIndex + 1);
+    }
+
+    function prevStep() {
+        if (currentSlideIndex > 0) showSlide(currentSlideIndex - 1);
+    }
+
+    document.addEventListener('click', nextStep);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') nextStep();
+        else if (e.key === 'ArrowLeft') prevStep();
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সেমিস্টার–শেষ শিক্ষক মূল্যায়ন</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* 1. CORE SETUP */
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            font-family: 'Noto Sans Bengali', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* 2. DECK STRUCTURE */
+        .deck-container { position: relative; width: 100%; height: 100%; }
+        .slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #ffffff;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 40px 80px;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.6s ease-in-out, visibility 0.6s;
+        }
+        .slide.current { opacity: 1; visibility: visible; z-index: 1; }
+
+        /* 3. ANIMATIONS */
+        .reveal {
+            opacity: 0; transform: translateY(30px);
+            transition: all 0.5s ease-out;
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* 4. TYPOGRAPHY */
+        h1 { font-size: 64px; color: #1e293b; margin-bottom: 10px; text-align: center; }
+        h2 { font-size: 42px; color: #2563eb; margin-bottom: 40px; text-align: center; border-bottom: 4px solid #bfdbfe; display: inline-block; padding-bottom: 10px;}
+        p { font-size: 24px; color: #475569; line-height: 1.5; text-align: center; }
+
+        /* 5. CUSTOM LAYOUTS */
+        
+        /* Question Card Style */
+        .question-card {
+            background: #f1f5f9;
+            border-left: 8px solid #2563eb;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 1000px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        
+        .question-number {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2563eb;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 32px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .option-badge {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 18px;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        /* Grid Layout for Keep/Improve/Add */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        
+        .grid-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+        
+        .grid-card i { font-size: 40px; margin-bottom: 15px; display: block; }
+        .grid-card h3 { font-size: 24px; color: #1e293b; margin-bottom: 10px; }
+        
+        /* Title Slide Specifics */
+        .title-slide { background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%); }
+        .sub-title { font-size: 28px; color: #64748b; margin-top: 20px; }
+
+    </style>
+</head>
+<body>
+
+<div class="deck-container">
+
+    <div class="slide current title-slide">
+        <i class="fa-solid fa-clipboard-list reveal active" style="font-size: 80px; color: #2563eb; margin-bottom: 20px;"></i>
+        <h1 class="reveal">সেমিস্টার–শেষ শিক্ষক মূল্যায়ন</h1>
+        <p class="sub-title reveal">আপনার মতামত আমাদের শিক্ষার মান উন্নয়নে সাহায্য করবে।</p>
+        <p class="reveal" style="margin-top: 40px; font-size: 18px; color: #94a3b8;">কীবোর্ডের <strong>Right Arrow</strong> বা মাউস ক্লিক করে সামনে যান</p>
+    </div>
+
+    <div class="slide">
+        <h2>অংশ ১: শিক্ষণ শৈলী ও স্পষ্টতা</h2>
+        
+        <div class="question-card reveal active">
+            <span class="question-number">প্রশ্ন ১</span>
+            <div class="question-text">শিক্ষক কি বিষয়বস্তু পরিষ্কারভাবে ব্যাখ্যা করেছেন?</div>
+            <div class="options">
+                <span class="option-badge">সম্পূর্ণ সহমত</span>
+                <span class="option-badge">সহমত</span>
+                <span class="option-badge">নিরপেক্ষ</span>
+                <span class="option-badge">অসম্মত</span>
+                <span class="option-badge">সম্পূর্ণ অসম্মত</span>
+            </div>
+        </div>
+
+        <div class="question-card reveal">
+            <span class="question-number">প্রশ্ন ২</span>
+            <div class="question-text">উদাহরণ বা বাস্তব প্রয়োগ দেখিয়ে শেখানোর পদ্ধতি কি আপনার বুঝতে সাহায্য করেছে?</div>
+            <div class="options">
+                <span class="option-badge"><i class="fa-solid fa-star"></i> ১</span>
+                <span class="option-badge"><i class="fa-solid fa-star"></i> ২</span>
+                <span class="option-badge"><i class="fa-solid fa-star"></i> ৩</span>
+                <span class="option-badge"><i class="fa-solid fa-star"></i> ৪</span>
+                <span class="option-badge"><i class="fa-solid fa-star"></i> ৫</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>অংশ ২: ক্লাসের পরিবেশ ও গতি</h2>
+
+        <div class="question-card reveal active">
+            <span class="question-number">প্রশ্ন ৩</span>
+            <div class="question-text">ক্লাসের শেখানোর গতি (Pacing) আপনার জন্য কেমন ছিল?</div>
+            <div class="options">
+                <span class="option-badge" style="background-color: #fee2e2;">খুব দ্রুত 🐇</span>
+                <span class="option-badge" style="background-color: #dcfce7;">উপযুক্ত/সঠিক ✅</span>
+                <span class="option-badge" style="background-color: #fef9c3;">ধীর 🐢</span>
+            </div>
+        </div>
+
+        <div class="question-card reveal">
+            <span class="question-number">প্রশ্ন ৪</span>
+            <div class="question-text">শিক্ষক কি প্রশ্ন করতে, আলোচনা করতে বা ক্লাসে অংশগ্রহণ করতে উৎসাহিত করেছেন?</div>
+            <div class="options">
+                <span class="option-badge">খুব বেশি</span>
+                <span class="option-badge">মোটামুটি</span>
+                <span class="option-badge">কম</span>
+                <span class="option-badge">একদমই না</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>অংশ ৩: শিক্ষণ-পদ্ধতি মূল্যায়ন</h2>
+
+        <div class="question-card reveal active" style="border-left-color: #10b981;">
+            <span class="question-number" style="color: #10b981;">প্রশ্ন ৫</span>
+            <div class="question-text">কোন শিক্ষণ-পদ্ধতি আপনাকে শেখার ক্ষেত্রে সবচেয়ে বেশি সাহায্য করেছে?</div>
+            <p style="text-align: left; font-size: 18px; color: #64748b;">(যেমন: স্লাইড প্রেজেন্টেশন, বোর্ড ওয়ার্ক, গ্রুপ স্টাডি, ভিডিও টিউটোরিয়াল ইত্যাদি)</p>
+        </div>
+
+        <div class="question-card reveal" style="border-left-color: #f59e0b;">
+            <span class="question-number" style="color: #f59e0b;">প্রশ্ন ৬</span>
+            <div class="question-text">আগামী সেমিস্টারে কোন শিক্ষণ-পদ্ধতি উন্নত করা প্রয়োজন বলে মনে হয়?</div>
+            <p style="text-align: left; font-size: 18px; color: #64748b;">(আপনার পরামর্শ লিখুন)</p>
+        </div>
+    </div>
+
+    <div class="slide">
+        <h2>অংশ ৪: ধারাবাহিকতা ও উন্নয়ন</h2>
+        <p class="reveal active" style="margin-bottom: 30px;">শিক্ষকের কাজের মূল্যায়নে আপনার পরামর্শ</p>
+        
+        <div class="grid-3">
+            <div class="grid-card reveal" style="border-top: 5px solid #22c55e;">
+                <i class="fa-regular fa-circle-check" style="color: #22c55e;"></i>
+                <span class="question-number" style="color: #22c55e;">প্রশ্ন ৭: KEEP</span>
+                <h3>কোন বিষয়গুলো চালিয়ে যাওয়া উচিত?</h3>
+                <p style="font-size: 16px;">যেগুলো আপনার ভালো লেগেছে এবং পরিবর্তন করা উচিত নয়।</p>
+            </div>
+
+            <div class="grid-card reveal" style="border-top: 5px solid #ef4444;">
+                <i class="fa-solid fa-screwdriver-wrench" style="color: #ef4444;"></i>
+                <span class="question-number" style="color: #ef4444;">প্রশ্ন ৮: IMPROVE</span>
+                <h3>কোন বিষয়গুলো উন্নত বা পরিবর্তন করা উচিত?</h3>
+                <p style="font-size: 16px;">যেখানে আরো ভালো করার সুযোগ আছে।</p>
+            </div>
+
+            <div class="grid-card reveal" style="border-top: 5px solid #3b82f6;">
+                <i class="fa-solid fa-plus-circle" style="color: #3b82f6;"></i>
+                <span class="question-number" style="color: #3b82f6;">প্রশ্ন ৯: ADD</span>
+                <h3>নতুন কী যোগ করা উচিত?</h3>
+                <p style="font-size: 16px;">নতুন কোনো টপিক, ম্যাটেরিয়াল বা পদ্ধতি।</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="question-card reveal active" style="text-align: center; border-left: none; border-top: 8px solid #8b5cf6; padding: 60px;">
+            <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 60px; color: #8b5cf6; margin-bottom: 20px;"></i>
+            <span class="question-number" style="color: #8b5cf6;">প্রশ্ন ১০: পরিবর্তন প্রস্তাব</span>
+            <div class="question-text" style="font-size: 40px;">
+                "যদি এই কোর্স সম্পর্কে আপনি একটি মাত্র জিনিস পরিবর্তন করতে পারতেন — সেটি কী হতো?"
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <i class="fa-regular fa-paper-plane reveal active" style="font-size: 100px; color: #2563eb; margin-bottom: 30px;"></i>
+        <h1 class="reveal">ধন্যবাদ!</h1>
+        <p class="reveal">আপনাদের সৎ মতামত আমাকে আরও ভালো শিক্ষক হতে সাহায্য করবে।</p>
+    </div>
+
+</div>
+
+<script>
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function showSlide(index) {
+        const currentSlide = document.querySelector('.slide.current');
+        if (currentSlide) {
+            currentSlide.classList.remove('current');
+            currentSlide.querySelectorAll('.reveal').forEach(el => el.classList.remove('active'));
+        }
+
+        const newSlide = slides[index];
+        if (newSlide) {
+            newSlide.classList.add('current');
+            currentSlideIndex = index;
+            const firstReveal = newSlide.querySelector('.reveal');
+            if (firstReveal) firstReveal.classList.add('active');
+        }
+    }
+
+    function revealNext() {
+        const currentSlide = slides[currentSlideIndex];
+        const elementsToReveal = currentSlide.querySelectorAll('.reveal:not(.active)');
+        if (elementsToReveal.length > 0) {
+            elementsToReveal[0].classList.add('active');
+            return true;
+        }
+        return false;
+    }
+
+    function nextStep() {
+        if (revealNext()) return;
+        if (currentSlideIndex < slides.length - 1) {
+            showSlide(currentSlideIndex + 1);
+        }
+    }
+
+    function prevStep() {
+        if (currentSlideIndex > 0) {
+            showSlide(currentSlideIndex - 1);
+        }
+    }
+
+    document.addEventListener('click', nextStep);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') nextStep();
+        else if (e.key === 'ArrowLeft') prevStep();
+    });
+</script>
+
+</body>
+</html>

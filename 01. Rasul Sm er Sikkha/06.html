@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>নবীজির (সাঃ) শিক্ষণ কৌশল: গ্লোবাল মাস্টারক্লাস</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* কালার প্যালেট: গভীর আধ্যাত্মিকতা */
+        :root {
+            --primary-color: #3b0764; /* গভীর বেগুনি (Regal) */
+            --secondary-color: #fcd34d; /* সোনালী/অ্যাকসেন্ট */
+            --text-dark: #f0fdfa; /* সাদার কাছাকাছি */
+            --text-light: #d1d5db; /* হালকা ধূসর */
+            --bg-dark: #1e1b4b; /* গভীর নীল ব্যাকগ্রাউন্ড */
+            --card-bg: #4c1d95; /* কার্ড ব্যাকগ্রাউন্ড */
+        }
+
+        /* বেসিক সেটআপ */
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        /* স্লাইড স্ট্রাকচার ও ট্রানজিশন */
+        .deck-container { position: relative; width: 100%; height: 100%; }
+        .slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-dark);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 40px 60px;
+            opacity: 0; visibility: hidden;
+            /* উন্নত ট্রানজিশন (Smooth Fade) */
+            transition: opacity 1s ease-in-out, visibility 1s;
+        }
+        .slide.current { opacity: 1; visibility: visible; z-index: 1; }
+
+        /* উপাদান অ্যানিমেশন (Sequential Reveal) */
+        .reveal {
+            opacity: 0; 
+            transform: translateY(30px) scale(0.98);
+            /* স্মুথ অ্যানিমেশন */
+            transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+        }
+        .reveal.active { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+        }
+
+        /* কার্ড ডিজাইন */
+        .point-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 80px;
+            border-radius: 25px;
+            width: 100%;
+            max-width: 1000px;
+            background: var(--card-bg); /* গাঢ় কার্ড BG */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--secondary-color);
+        }
+        .card-icon {
+            font-size: 100px;
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px rgba(252, 211, 77, 0.7);
+        }
+
+        h2 { 
+            font-size: 48px; 
+            color: var(--secondary-color); 
+            margin-bottom: 15px; 
+            text-align: center; 
+            font-weight: 700;
+        }
+        .main-detail {
+            font-size: 28px;
+            color: var(--text-dark);
+            text-align: center;
+            line-height: 1.7;
+            margin-bottom: 35px;
+        }
+        .example {
+            font-size: 20px;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-left: 5px solid var(--secondary-color);
+            background-color: #312e81; /* কন্ট্রাস্টের জন্য ভিন্ন রঙ */
+            border-radius: 10px;
+            width: 95%;
+            line-height: 1.5;
+        }
+        .reference-box {
+            font-size: 18px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--text-light);
+            text-align: center;
+        }
+        .reference-box a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .reference-box a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        /* টাইটেল স্লাইডের জন্য বিশেষ স্টাইল */
+        .title-slide h1 {
+            font-size: 80px;
+            color: var(--secondary-color);
+            text-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+<div class="deck-container">
+
+    <div class="slide current title-slide">
+        <div class="point-card" style="border: none; background: transparent; box-shadow: none; max-width: 100%;">
+            <i class="fa-solid fa-feather-alt reveal active" style="font-size: 140px; color: var(--secondary-color); margin-bottom: 30px; text-shadow: 0 0 20px rgba(252, 211, 77, 0.9);"></i>
+            <h1 class="reveal">নবীজির ﷺ শিক্ষণ কৌশল</h1>
+            <p class="reveal" style="font-size: 36px; color: var(--text-light);">ঐতিহ্য ও আধুনিক শিক্ষার সমন্বয়</p>
+            <div class="reference-box reveal" style="margin-top: 70px;">
+                <p>
+                    <a href="https://sunnah.com/ibnmajah:229" target="_blank">আমি <B>শিক্ষক রূপে</B> প্রেরিত হয়েছি। — ইবনে মাজাহ, ২২৯</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="point-card reveal active">
+            <div class="card-icon reveal"><i class="fa-solid fa-comment-dots"></i></div>
+            <h2 class="reveal">১. প্রশ্নের মাধ্যমে শিক্ষা: সক্রিয়তা</h2>
+            <p class="main-detail reveal">
+                শিক্ষার্থীকে চিন্তায় নিয়োজিত করা এবং <span style="color: var(--secondary-color);">উত্তর খোঁজার আগ্রহ</span> সৃষ্টি করা। এটি শেখার প্রক্রিয়াকে <B>অংশগ্রহণমূলক</B> করে তোলে।
+            </p>
+            <div class="example reveal">
+                <B>সিরাত উদাহরণ:</B> রাসূল (সাঃ) সাহাবীদের জিজ্ঞাসা করলেন, "তোমরা কি জানো, <B>গরিব কে?</B>"— উত্তরের মাধ্যমে তিনি কিয়ামতের দিনের বাস্তব সত্য তুলে ধরেন।
+            </div>
+            <div class="reference-box reveal">
+                <a href="https://sunnah.com/muslim:2581" target="_blank">সহীহ মুসলিম, ২৫৮১ (গরিবের সংজ্ঞা)</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="point-card reveal active">
+            <div class="card-icon reveal"><i class="fa-solid fa-puzzle-piece"></i></div>
+            <h2 class="reveal">২. উপমা ও দৃষ্টান্ত: জটিলতার সমাধান</h2>
+            <p class="main-detail reveal">
+                আধ্যাত্মিক ও নৈতিক ধারণাকে <span style="color: var(--secondary-color);">বাস্তব ও পরিচিত জিনিসের</span> সাথে তুলনা করে <B>সহজে বোধগম্য</B> করে তোলা।
+            </p>
+            <div class="example reveal">
+                <B>সিরাত উদাহরণ:</B> সালাতের গুরুত্ব বোঝাতে বললেন, "পাঁচ ওয়াক্ত সালাতের উপমা হলো তোমাদের কারো দরজায় প্রবাহিত <B>গভীর নদী</B>, যেখানে সে প্রতিদিন <B>পাঁচবার</B> গোসল করে।"
+            </div>
+            <div class="reference-box reveal">
+                <a href="https://sunnah.com/muslim:667" target="_blank">সহীহ মুসলিম, ৬৬৭ (সালাত ও নদীর উপমা)</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="point-card reveal active">
+            <div class="card-icon reveal"><i class="fa-solid fa-route"></i></div>
+            <h2 class="reveal">৩. ভিজ্যুয়াল প্রদর্শনী: মনের গভীরে অঙ্কন</h2>
+            <p class="main-detail reveal">
+                কথা বলার পাশাপাশি <span style="color: var(--secondary-color);">মাটিতে এঁকে</span> বা অঙ্গভঙ্গি ব্যবহার করে শিক্ষাদান, যা শিক্ষার্থীর মনে <B>স্থায়ী ছাপ</B> ফেলে।
+            </p>
+            <div class="example reveal">
+                <B>সিরাত উদাহরণ:</B> নবী (সাঃ) মাটিতে একটি <B>সরল রেখা</B> টেনে দেখিয়েছিলেন, এটাই আল্লাহর সরল পথ।
+            </div>
+            <div class="reference-box reveal">
+                <a href="https://quran.com/6/153" target="_blank">সূরা আল-আন'আম, ৬:১৫৩ (সরল পথের নির্দেশনা)</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="point-card reveal active">
+            <div class="card-icon reveal"><i class="fa-solid fa-stairs"></i></div>
+            <h2 class="reveal">৪. ধীরে ধীরে শিক্ষা: ধাপে ধাপে অগ্রগতি</h2>
+            <p class="main-detail reveal">
+                শিক্ষার্থীর <span style="color: var(--secondary-color);">ধারণক্ষমতা অনুযায়ী</span> <B>ধাপে ধাপে</B> গভীর জ্ঞানে প্রবেশ করা। ভিত্তি মজবুত না করে শাখা-প্রশাখায় প্রবেশ না করা।
+            </p>
+            <div class="example reveal">
+                <B>সিরাত উদাহরণ:</B> মুয়ায (রাঃ)-কে ইয়েমেনে প্রেরণের সময় প্রথমে <B>তাওহীদ</B>, তারপর সালাত, এরপর জাকাতের নির্দেশ দেন।
+            </div>
+            <div class="reference-box reveal">
+                <a href="https://sunnah.com/bukhari:7372" target="_blank">সহীহ বুখারী, ৭৩৭২ (মুয়ায (রাঃ)-কে নির্দেশ)</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="point-card reveal active">
+            <div class="card-icon reveal"><i class="fa-solid fa-hand-holding-heart"></i></div>
+            <h2 class="reveal">৫. সহানুভূতিশীল আচরণ: কঠোরতা পরিহার</h2>
+            <p class="main-detail reveal">
+                ভুল সংশোধনে <span style="color: var(--secondary-color);">ভালোবাসা ও ধৈর্য</span> ব্যবহার করা। <B>কঠোরতা</B> বা <B>কর্কশভাষা</B> সম্পূর্ণরূপে পরিহার করা ছিল কুরআনের নির্দেশ।
+            </p>
+            <div class="example reveal">
+                <B>কুরআনের ঘোষণা:</B> "(হে নবী!) আপনি যদি কঠোর ও কর্কশভাষী হতেন, তবে তারা আপনার কাছ থেকে <B>দূরে সরে যেত</B>।"
+            </div>
+            <div class="reference-box reveal">
+                <a href="https://quran.com/3/159" target="_blank">সূরা আলে ইমরান, ৩:১৫৯ (নম্রতার গুরুত্ব)</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="point-card reveal active">
+            <div class="card-icon reveal"><i class="fa-solid fa-redo-alt"></i></div>
+            <h2 class="reveal">৬. পুনরাবৃত্তি: স্থায়িত্ব ও নিশ্চয়তা</h2>
+            <p class="main-detail reveal">
+                গুরুত্বপূর্ণ বাক্য বা কঠিন বিষয় <span style="color: var(--secondary-color);">একাধিকবার</span> বলে নিশ্চিত করা যে শ্রোতারা তা সঠিকভাবে শুনেছেন এবং <B>হৃদয়ে গেঁথে</B> নিয়েছেন।
+            </p>
+            <div class="example reveal">
+                <B>সিরাত উদাহরণ:</B> নবী (সাঃ) যখন কোনো কথা বলতেন, তখন তা <B>তিনবার</B> পুনরাবৃত্তি করতেন, যাতে তা ভালোভাবে বোঝা যায়।
+            </div>
+            <div class="reference-box reveal">
+                <a href="https://sunnah.com/bukhari:95" target="_blank">সহীহ বুখারী, ৯৫ (তিনবার পুনরাবৃত্তি)</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="point-card reveal active">
+            <div class="card-icon reveal"><i class="fa-solid fa-user-tag"></i></div>
+            <h2 class="reveal">৭. ব্যক্তিকেন্দ্রিক শিক্ষা: ব্যক্তিগত মনোযোগ</h2>
+            <p class="main-detail reveal">
+                প্রত্যেক ব্যক্তির <span style="color: var(--secondary-color);">ব্যক্তিত্ব ও দুর্বলতা</span> অনুযায়ী <B>ভিন্ন ভিন্ন</B> উপদেশ দেওয়া, যা তার জন্য সবচেয়ে বেশি উপকারী।
+            </p>
+            <div class="example reveal">
+                <B>সিরাত উদাহরণ:</B> এক ব্যক্তিকে বললেন, <B>"রাগ করো না।"</B> অন্য এক ব্যক্তিকে বললেন, <B>"তোমার মায়ের সেবা করো।"</B> — উপদেশটি ব্যক্তির প্রয়োজন অনুযায়ী পরিবর্তিত হতো।
+            </div>
+            <div class="reference-box reveal">
+                <a href="https://sunnah.com/bukhari:6116" target="_blank">সহীহ বুখারী, ৬১১৬ (রাগ করো না); </a>
+                <a href="https://sunnah.com/muslim:2548" target="_blank">সহীহ মুসলিম, ২৫৪৮ (মায়ের সেবা)</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide">
+        <div class="point-card reveal active">
+            <div class="card-icon reveal"><i class="fa-solid fa-award"></i></div>
+            <h2 class="reveal">৮. প্রতিভার স্বীকৃতি: ইতিবাচক শক্তি</h2>
+            <p class="main-detail reveal">
+                শিক্ষার্থীদের <span style="color: var(--secondary-color);">যোগ্যতা, প্রচেষ্টা ও ভালো কাজকে</span> প্রকাশ্যে প্রশংসা করা, যা তাদের <B>আত্মবিশ্বাস</B> ও আগ্রহকে বাড়িয়ে দিত।
+            </p>
+            <div class="example reveal">
+                <B>সিরাত উদাহরণ:</B> রাসূল (সাঃ) ঘোষণা করেন, "আমার উম্মতের মধ্যে হালাল-হারামের বিষয়ে <B>মুআয ইবনু জাবাল</B> সবচেয়ে বেশি জানে।"
+            </div>
+            <div class="reference-box reveal">
+                <a href="https://sunnah.com/tirmidhi:3805" target="_blank">সুনানে তিরমিযী, ৩৮০৫ (মুআয (রাঃ)-এর প্রশংসা)</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="slide">
+        <div class="point-card reveal active" style="background: var(--primary-color); border-color: #fcd34d;">
+            <i class="fa-solid fa-lightbulb reveal active" style="font-size: 120px; color: var(--secondary-color); margin-bottom: 30px;"></i>
+            <h2 class="reveal" style="font-size: 55px;">🌟 সারকথা: উত্তম আদর্শ</h2>
+            <p class="main-detail reveal" style="color: #fff;">
+                নবীজির (সাঃ) পদ্ধতি ছিল জ্ঞান, চরিত্র ও হৃদয়ের এক <span style="color: var(--secondary-color);">পরিপূর্ণ সমন্বয়</span>। তাঁর শিক্ষাদান কৌশল সকল কালের শিক্ষকদের জন্য এক <B>উত্তম আদর্শ</B>।
+            </p>
+            <div class="reference-box reveal" style="margin-top: 40px;">
+                <a href="https://quran.com/33/21" target="_blank">রাসূলের জীবনে তোমাদের জন্য রয়েছে <B>উত্তম আদর্শ</B>। — সূরা আল-আহযাব, ৩৩:২১</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // স্লাইড নেভিগেশন লজিক
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+
+    function showSlide(index) {
+        const currentSlide = document.querySelector('.slide.current');
+        if (currentSlide) {
+            currentSlide.classList.remove('current');
+            currentSlide.querySelectorAll('.reveal').forEach(el => el.classList.remove('active'));
+        }
+        
+        const newSlide = slides[index];
+        if (newSlide) {
+            newSlide.classList.add('current');
+            currentSlideIndex = index;
+            
+            // নতুন স্লাইডের প্রথম উপাদানটি দেখাও
+            const firstReveal = newSlide.querySelector('.reveal');
+            if (firstReveal) {
+                // স্লাইড ট্রানজিশন শেষ হওয়ার জন্য সামান্য বিলম্ব
+                setTimeout(() => firstReveal.classList.add('active'), 100); 
+            }
+        }
+    }
+
+    function revealNext() {
+        const currentSlide = slides[currentSlideIndex];
+        // বর্তমান স্লাইডের পরবর্তী লুকানো উপাদানটি খুঁজে বের করো
+        const elementsToReveal = currentSlide.querySelectorAll('.reveal:not(.active)');
+        if (elementsToReveal.length > 0) {
+            // শুধুমাত্র একটি উপাদান দেখাও
+            elementsToReveal[0].classList.add('active');
+            return true;
+        }
+        return false;
+    }
+
+    function nextStep() {
+        // প্রথমে বর্তমান স্লাইডের পরবর্তী উপাদানটি রিভিল করার চেষ্টা করো
+        if (revealNext()) return;
+        
+        // যদি রিভিল করার কিছু না থাকে, তবে পরের স্লাইডে যাও
+        if (currentSlideIndex < slides.length - 1) showSlide(currentSlideIndex + 1);
+    }
+
+    function prevStep() {
+        // আগের স্লাইডে যাও (আগের স্লাইড একসাথে দেখা যাবে)
+        if (currentSlideIndex > 0) showSlide(currentSlideIndex - 1);
+    }
+
+    // ইভেন্ট লিসেনার
+    document.addEventListener('click', nextStep);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') nextStep();
+        else if (e.key === 'ArrowLeft') prevStep();
+    });
+
+    // স্লাইডশো শুরু করা
+    showSlide(0); 
+</script>
+
+</body>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>নবীজির ﷺ শিক্ষা পদ্ধতি: আধুনিক প্রেজেন্টেশন</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Noto+Sans+Bengali:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* কালার প্যালেট: গভীরতা ও স্বচ্ছতা */
+        :root {
+            --bg-primary: #1a1a2e; /* গভীর কালো-নীল */
+            --bg-secondary: #0f3460; /* একটু হালকা */
+            --text-light: #e0e0e0; /* প্রায় সাদা */
+            --text-accent: #bae8e8; /* ফ্যাকাশে সবুজ-নীল */
+            --highlight-color: #ff9a8d; /* হালকা কমলা */
+            --border-color: #3b3b54; /* স্লাইড বর্ডার */
+        }
+
+        /* বেসিক সেটআপ */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            width: 100%; height: 100%;
+            overflow: hidden;
+            font-family: 'Noto Sans Bengali', 'Roboto', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* স্লাইড কন্টেইনার */
+        .deck-container {
+            position: relative;
+            width: 100vw; /* 100% viewport width */
+            height: 100vh; /* 100% viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px; /* 3D perspective for transitions */
+        }
+
+        /* স্লাইড স্টাইল */
+        .slide {
+            position: absolute;
+            width: 90%;
+            max-width: 1200px;
+            height: 80%;
+            max-height: 700px;
+            background: linear-gradient(145deg, var(--bg-secondary), #16213e);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 100px rgba(var(--highlight-color), 0.1);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.9s cubic-bezier(0.65, 0.05, 0.36, 1); /* Smooth transition for slide change */
+            border: 1px solid var(--border-color);
+        }
+        .slide.current {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+            z-index: 10;
+        }
+
+        /* কন্টেন্ট অ্যানিমেশন */
+        .content-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .content-item.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* টাইটেল স্লাইড স্পেশাল */
+        .slide.title-slide {
+            background: radial-gradient(circle at top left, #2f2e5e, var(--bg-primary));
+        }
+        .title-slide .icon {
+            font-size: 150px;
+            color: var(--highlight-color);
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(255, 154, 141, 0.4);
+        }
+        .title-slide h1 {
+            font-size: 72px;
+            font-weight: 700;
+            color: var(--text-accent);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .title-slide p {
+            font-size: 30px;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        /* পয়েন্ট স্লাইড কন্টেন্ট */
+        .point-icon {
+            font-size: 90px;
+            color: var(--highlight-color);
+            margin-bottom: 25px;
+            text-shadow: 0 0 15px rgba(255, 154, 141, 0.3);
+        }
+        h2 {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-accent);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .description {
+            font-size: 26px;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 80%;
+            color: var(--text-light);
+        }
+        .example-box {
+            background-color: var(--bg-primary);
+            border-left: 5px solid var(--highlight-color);
+            padding: 20px 30px;
+            border-radius: 10px;
+            font-size: 20px;
+            color: var(--text-light);
+            max-width: 90%;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .reference {
+            font-size: 18px;
+            text-align: center;
+            margin-top: 20px;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 15px;
+            color: var(--text-light);
+        }
+        .reference a {
+            color: var(--highlight-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .reference a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        /* নেভিগেশন ডট (Slide Indicators) */
+        .nav-dots {
+            position: absolute;
+            bottom: 30px;
+            display: flex;
+            gap: 10px;
+            z-index: 20;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            background-color: var(--border-color);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .dot.active {
+            background-color: var(--highlight-color);
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="deck-container">
+
+    <div class="slide title-slide current" data-slide-index="0">
+        <i class="fas fa-quran icon content-item active"></i>
+        <h1 class="content-item">নবীজির ﷺ শিক্ষা পদ্ধতি</h1>
+        <p class="content-item" style="transition-delay: 0.2s;">জ্ঞান, প্রজ্ঞা ও নম্রতার অমর দৃষ্টান্ত</p>
+        <div class="reference content-item" style="transition-delay: 0.4s;">
+            <a href="https://sunnah.com/ibnmajah:229" target="_blank">আমি <B>শিক্ষক রূপে</B> প্রেরিত হয়েছি। — ইবনে মাজাহ, ২২৯</a>
+        </div>
+    </div>
+
+    <div class="slide" data-slide-index="1">
+        <i class="fas fa-question point-icon content-item"></i>
+        <h2 class="content-item">১. প্রশ্ন-উত্তর পদ্ধতি</h2>
+        <p class="description content-item" style="transition-delay: 0.1s;">
+            শিক্ষার্থীকে <B>সক্রিয় চিন্তাভাবনায়</B> উৎসাহিত করা এবং তাদের <span style="color: var(--highlight-color);">জানার আগ্রহকে</span> উদ্দীপিত করা।
+        </p>
+        <div class="example-box content-item" style="transition-delay: 0.2s;">
+            <B>সিরাত উদাহরণ:</B> রাসূলুল্লাহ (সাঃ) সাহাবীদের জিজ্ঞাসা করলেন, "তোমরা কি জানো, <B>গরিব কে?</B>" — এরপর তাদের উত্তরের পর সঠিক সংজ্ঞা দিলেন।
+        </div>
+        <div class="reference content-item" style="transition-delay: 0.3s;">
+            <a href="https://sunnah.com/muslim:2581" target="_blank">সহীহ মুসলিম, ২৫৮১</a>
+        </div>
+    </div>
+
+    <div class="slide" data-slide-index="2">
+        <i class="fas fa-lightbulb point-icon content-item"></i>
+        <h2 class="content-item">২. উপমা ও দৃষ্টান্ত</h2>
+        <p class="description content-item" style="transition-delay: 0.1s;">
+            জটিল বা অদৃশ্য ধারণাগুলোকে <span style="color: var(--highlight-color);">বাস্তব ও পরিচিত উদাহরণের</span> মাধ্যমে <B>সহজবোধ্য</B> করে তোলা।
+        </p>
+        <div class="example-box content-item" style="transition-delay: 0.2s;">
+            <B>সিরাত উদাহরণ:</B> সালাতের গুরুত্ব বোঝাতে বললেন, "পাঁচ ওয়াক্ত সালাতের উপমা হলো তোমাদের কারো দরজায় প্রবাহিত <B>গভীর নদী</B>, যেখানে সে প্রতিদিন <B>পাঁচবার</B> গোসল করে।"
+        </div>
+        <div class="reference content-item" style="transition-delay: 0.3s;">
+            <a href="https://sunnah.com/muslim:667" target="_blank">সহীহ মুসলিম, ৬৬৭</a>
+        </div>
+    </div>
+
+    <div class="slide" data-slide-index="3">
+        <i class="fas fa-paint-brush point-icon content-item"></i>
+        <h2 class="content-item">৩. বাস্তব প্রদর্শন ও অঙ্কন</h2>
+        <p class="description content-item" style="transition-delay: 0.1s;">
+            কথাকে <span style="color: var(--highlight-color);">চাক্ষুষ রূপে</span> উপস্থাপন করা, যেমন মাটিতে এঁকে বা অঙ্গভঙ্গি করে, যা <B>মনের গভীরে</B> গেঁথে যায়।
+        </p>
+        <div class="example-box content-item" style="transition-delay: 0.2s;">
+            <B>সিরাত উদাহরণ:</B> নবী (সাঃ) মাটিতে একটি <B>সরল রেখা</B> টেনে দেখিয়েছিলেন যে এটাই আল্লাহর সঠিক পথ।
+        </div>
+        <div class="reference content-item" style="transition-delay: 0.3s;">
+            <a href="https://quran.com/6/153" target="_blank">সূরা আল-আন'আম, ৬:১৫৩</a>
+        </div>
+    </div>
+
+    <div class="slide" data-slide-index="4">
+        <i class="fas fa-layer-group point-icon content-item"></i>
+        <h2 class="content-item">৪. স্তরভিত্তিক শিক্ষাদান</h2>
+        <p class="description content-item" style="transition-delay: 0.1s;">
+            শিক্ষার্থীর <span style="color: var(--highlight-color);">ক্ষমতা অনুযায়ী</span> <B>ধাপে ধাপে</B> জ্ঞান প্রদান করা, প্রথমে মৌলিক বিষয়, তারপর গভীর বিষয়।
+        </p>
+        <div class="example-box content-item" style="transition-delay: 0.2s;">
+            <B>সিরাত উদাহরণ:</B> মুয়ায ইবনু জাবাল (রাঃ)-কে ইয়েমেনে পাঠানোর সময় প্রথমে <B>তাওহীদ</B>, তারপর সালাত, তারপর জাকাতের নির্দেশ দেন।
+        </div>
+        <div class="reference content-item" style="transition-delay: 0.3s;">
+            <a href="https://sunnah.com/bukhari:7372" target="_blank">সহীহ বুখারী, ৭৩৭২</a>
+        </div>
+    </div>
+
+    <div class="slide" data-slide-index="5">
+        <i class="fas fa-heart point-icon content-item"></i>
+        <h2 class="content-item">৫. সহানুভূতিশীল ও নম্র আচরণ</h2>
+        <p class="description content-item" style="transition-delay: 0.1s;">
+            শিক্ষার্থীদের প্রতি <span style="color: var(--highlight-color);">ভালোবাসা ও ধৈর্যের</span> সাথে আচরণ করা, <B>কঠোরতা পরিহার</B> করে নম্রভাবে ভুল সংশোধন করা।
+        </p>
+        <div class="example-box content-item" style="transition-delay: 0.2s;">
+            <B>কুরআনের ঘোষণা:</B> "আপনি যদি কঠোর ও কর্কশভাষী হতেন, তবে তারা আপনার কাছ থেকে <B>দূরে সরে যেত</B>।"
+        </div>
+        <div class="reference content-item" style="transition-delay: 0.3s;">
+            <a href="https://quran.com/3/159" target="_blank">সূরা আলে ইমরান, ৩:১৫৯</a>
+        </div>
+    </div>
+
+    <div class="slide" data-slide-index="6">
+        <i class="fas fa-redo point-icon content-item"></i>
+        <h2 class="content-item">৬. পুনরাবৃত্তি</h2>
+        <p class="description content-item" style="transition-delay: 0.1s;">
+            গুরুত্বপূর্ণ তথ্য <span style="color: var(--highlight-color);">একাধিকবার</span> পুনরাবৃত্তি করে শ্রোতাদের <B>স্মৃতিতে স্থায়ী</B> করা এবং উপলব্ধিতে সহায়তা করা।
+        </p>
+        <div class="example-box content-item" style="transition-delay: 0.2s;">
+            <B>সিরাত উদাহরণ:</B> আনাস (রাঃ) থেকে বর্ণিত, নবী (সাঃ) যখন কোনো কথা বলতেন, তখন তা <B>তিনবার</B> পুনরাবৃত্তি করতেন।
+        </div>
+        <div class="reference content-item" style="transition-delay: 0.3s;">
+            <a href="https://sunnah.com/bukhari:95" target="_blank">সহীহ বুখারী, ৯৫</a>
+        </div>
+    </div>
+
+    <div class="slide" data-slide-index="7">
+        <i class="fas fa-user-check point-icon content-item"></i>
+        <h2 class="content-item">৭. ব্যক্তিকেন্দ্রিক নির্দেশনা</h2>
+        <p class="description content-item" style="transition-delay: 0.1s;">
+            প্রতিটি ব্যক্তির <span style="color: var(--highlight-color);">প্রয়োজন ও ব্যক্তিত্ব</span> অনুযায়ী <B>নির্দিষ্ট উপদেশ</B> প্রদান করা।
+        </p>
+        <div class="example-box content-item" style="transition-delay: 0.2s;">
+            <B>সিরাত উদাহরণ:</B> এক ব্যক্তিকে বললেন, <B>"রাগ করো না।"</B> অন্যকে বললেন, <B>"তোমার মায়ের সেবা করো।"</B> — উপদেশ ব্যক্তির জন্য কাস্টমাইজ করা হতো।
+        </div>
+        <div class="reference content-item" style="transition-delay: 0.3s;">
+            <a href="https://sunnah.com/bukhari:6116" target="_blank">সহীহ বুখারী, ৬১১৬ (রাগ করো না); </a>
+            <a href="https://sunnah.com/muslim:2548" target="_blank">সহীহ মুসলিম, ২৫৪৮ (মায়ের সেবা)</a>
+        </div>
+    </div>
+
+    <div class="slide" data-slide-index="8">
+        <i class="fas fa-award point-icon content-item"></i>
+        <h2 class="content-item">৮. প্রশংসা ও স্বীকৃতি</h2>
+        <p class="description content-item" style="transition-delay: 0.1s;">
+            শিক্ষার্থীদের <span style="color: var(--highlight-color);">ভাল কাজ ও প্রতিভার</span> প্রকাশ্যে প্রশংসা করা, যা তাদের <B>আত্মবিশ্বাস ও প্রেরণা</B> বাড়ায়।
+        </p>
+        <div class="example-box content-item" style="transition-delay: 0.2s;">
+            <B>সিরাত উদাহরণ:</B> রাসূল (সাঃ) ঘোষণা করেন, "আমার উম্মতের মধ্যে হালাল-হারামের বিষয়ে <B>মুআয ইবনু জাবাল</B> সবচেয়ে বেশি জানে।"
+        </div>
+        <div class="reference content-item" style="transition-delay: 0.3s;">
+            <a href="https://sunnah.com/tirmidhi:3805" target="_blank">সুনানে তিরমিযী, ৩৮০৫</a>
+        </div>
+    </div>
+    
+    <div class="slide" data-slide-index="9">
+        <i class="fas fa-star point-icon content-item"></i>
+        <h2 class="content-item">উপসংহার: শাশ্বত আদর্শ</h2>
+        <p class="description content-item" style="transition-delay: 0.1s;">
+            নবীজির (সাঃ) শিক্ষা পদ্ধতি ছিল জ্ঞান, চরিত্র ও হৃদয়ের এক <span style="color: var(--highlight-color);">পরিপূর্ণ সমন্বয়</span>। তাঁর কৌশল <B>সকল কালের শিক্ষকদের জন্য</B> এক <B>উত্তম আদর্শ</B>।
+        </p>
+        <div class="reference content-item" style="transition-delay: 0.2s;">
+            <a href="https://quran.com/33/21" target="_blank">রাসূলের জীবনে তোমাদের জন্য রয়েছে <B>উত্তম আদর্শ</B>। — সূরা আল-আহযাব, ৩৩:২১</a>
+        </div>
+    </div>
+
+    <div class="nav-dots"></div>
+
+</div>
+
+<script>
+    let currentSlideIndex = 0;
+    let currentContentItemIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const navDotsContainer = document.querySelector('.nav-dots');
+
+    function createNavDots() {
+        slides.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            dot.setAttribute('data-index', index);
+            dot.addEventListener('click', () => {
+                showSlide(index);
+            });
+            navDotsContainer.appendChild(dot);
+        });
+    }
+
+    function updateNavDots() {
+        document.querySelectorAll('.dot').forEach((dot, index) => {
+            if (index === currentSlideIndex) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+
+    function showSlide(index) {
+        if (index < 0 || index >= slides.length) return;
+
+        // Reset content items in the old slide
+        slides[currentSlideIndex].querySelectorAll('.content-item').forEach(item => {
+            item.classList.remove('active');
+        });
+
+        currentSlideIndex = index;
+        currentContentItemIndex = 0; // Reset content item index for the new slide
+
+        slides.forEach((slide, i) => {
+            if (i === currentSlideIndex) {
+                slide.classList.add('current');
+            } else {
+                slide.classList.remove('current');
+            }
+        });
+
+        // Activate the first content item of the new slide after a brief delay
+        const firstContentItem = slides[currentSlideIndex].querySelector('.content-item');
+        if (firstContentItem) {
+            // Delay to allow slide transition to start
+            setTimeout(() => {
+                firstContentItem.classList.add('active');
+                currentContentItemIndex = 1; // Mark first item as active
+            }, 500); // Increased delay for smoother effect after slide transition
+        }
+        updateNavDots();
+    }
+
+    function revealNextContentItem() {
+        const currentSlide = slides[currentSlideIndex];
+        const contentItems = currentSlide.querySelectorAll('.content-item');
+
+        if (currentContentItemIndex < contentItems.length) {
+            contentItems[currentContentItemIndex].classList.add('active');
+            currentContentItemIndex++;
+            return true;
+        }
+        return false;
+    }
+
+    function nextStep() {
+        // If there are more content items to reveal on the current slide, reveal the next one
+        if (revealNextContentItem()) {
+            return;
+        }
+        // Otherwise, move to the next slide
+        if (currentSlideIndex < slides.length - 1) {
+            showSlide(currentSlideIndex + 1);
+        }
+    }
+
+    function prevStep() {
+        // If on the first content item of a slide, go to the previous slide
+        if (currentContentItemIndex <= 1 && currentSlideIndex > 0) {
+            // Hide all content items in the current slide before switching
+            slides[currentSlideIndex].querySelectorAll('.content-item').forEach(item => item.classList.remove('active'));
+            showSlide(currentSlideIndex - 1);
+            // After moving to previous slide, reveal all its content items
+            setTimeout(() => {
+                const prevSlideContentItems = slides[currentSlideIndex].querySelectorAll('.content-item');
+                prevSlideContentItems.forEach(item => item.classList.add('active'));
+                currentContentItemIndex = prevSlideContentItems.length; // Set index to show all are active
+            }, 600); // Slightly delayed to ensure slide transition finishes
+            return;
+        }
+
+        // If there are previous content items on the current slide, hide the last one
+        if (currentContentItemIndex > 1) {
+            currentContentItemIndex--;
+            slides[currentSlideIndex].querySelectorAll('.content-item')[currentContentItemIndex].classList.remove('active');
+        }
+    }
+
+    // Event Listeners
+    document.addEventListener('click', nextStep);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            nextStep();
+        } else if (e.key === 'ArrowLeft') {
+            prevStep();
+        }
+    });
+
+    // Initial setup
+    createNavDots();
+    showSlide(0);
+</script>
+
+</body>
+</html>
