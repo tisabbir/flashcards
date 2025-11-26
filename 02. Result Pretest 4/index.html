@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sandwip Ananda Pathshala - Result Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Sandwip Ananda Pathshala</h1>
+            <p>Class Ten | Exam Result 2025</p>
+        </header>
+
+        <section class="top-performers">
+            <h2>🏆 Top 10 Students (Normalized Score)</h2>
+            <div class="top-list" id="topList">
+                </div>
+        </section>
+
+        <section class="search-section">
+            <h2>Check Individual Result</h2>
+            <div class="input-group">
+                <label for="studentSelect">Select Student (Roll - Name):</label>
+                <select id="studentSelect">
+                    <option value="" disabled selected>Select a student...</option>
+                    </select>
+            </div>
+        </section>
+
+        <section id="profileCard" class="profile-card hidden">
+            <div class="profile-header">
+                <div>
+                    <h3 id="pName">Student Name</h3>
+                    <p>Roll: <span id="pRoll">00</span> | Group: <span id="pGroup">N/A</span></p>
+                </div>
+                <div class="total-score">
+                    <span>Normalized Total</span>
+                    <strong id="pTotal">000</strong>
+                    <small style="display:block; font-size: 0.6em; opacity: 0.8;">(Sum of % marks)</small>
+                </div>
+            </div>
+            
+            <div class="marks-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Marks Obtained / Full</th>
+                            <th>Converted (100%)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="marksBody">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

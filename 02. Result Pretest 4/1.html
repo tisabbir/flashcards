@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 10 Students - Final Class Test</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #27ae60;
+            --bg-color: #f4f7f6;
+            --gold: #ffd700;
+            --silver: #c0c0c0;
+            --bronze: #cd7f32;
+        }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: white;
+            width: 100%;
+            max-width: 800px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            padding: 40px;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .school-name {
+            font-size: 2.2em;
+            color: var(--primary-color);
+            margin: 5px 0;
+            font-weight: 700;
+        }
+
+        .exam-info {
+            font-size: 1.2em;
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .badge {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 1.8em;
+            margin: 20px 0;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        thead {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            font-weight: 600;
+        }
+
+        td {
+            border-bottom: 1px solid #eee;
+            font-size: 1.1em;
+        }
+
+        /* Rank Column alignment */
+        td:first-child, th:first-child {
+            text-align: center;
+            width: 60px;
+        }
+        
+        /* Score alignment */
+        td:last-child, th:last-child {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Top 3 Highlighting */
+        .rank-1 { background-color: rgba(255, 215, 0, 0.15); border-left: 5px solid var(--gold); }
+        .rank-2 { background-color: rgba(192, 192, 192, 0.15); border-left: 5px solid var(--silver); }
+        .rank-3 { background-color: rgba(205, 127, 50, 0.15); border-left: 5px solid var(--bronze); }
+
+        .trophy {
+            margin-right: 5px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            th, td { padding: 10px; font-size: 0.9em; }
+            .school-name { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <img src="https://cdn-icons-png.flaticon.com/512/2997/2997287.png" alt="School Logo" class="logo">
+            
+            <h1 class="school-name">সন্দ্বীপ আনন্দ পাঠশালা</h1>
+            <p class="exam-info">Final Class Test | Class 10</p>
+            <span class="badge">Top 10 Students</span>
+        </div>
+
+        <h2 class="title">🏆 Leaderboard</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Student Name</th>
+                    <th>Roll</th>
+                    <th>Total Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="rank-1">
+                    <td>🥇 1</td>
+                    <td>NAZIFA ZAMAN</td>
+                    <td>17</td>
+                    <td>636</td>
+                </tr>
+                <tr class="rank-2">
+                    <td>🥈 2</td>
+                    <td>ARIN GUHA PUJA</td>
+                    <td>10</td>
+                    <td>621</td>
+                </tr>
+                <tr class="rank-3">
+                    <td>🥉 3</td>
+                    <td>Amir Hasnat Abir</td>
+                    <td>26</td>
+                    <td>604</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Meherunnesa Nadia</td>
+                    <td>29</td>
+                    <td>595</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Sudipta Nandi Aritra</td>
+                    <td>16</td>
+                    <td>578</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>Sayeedah Binte Kamal</td>
+                    <td>1</td>
+                    <td>572</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Samiha Islam</td>
+                    <td>15</td>
+                    <td>536</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>Arka Nandi</td>
+                    <td>2</td>
+                    <td>535</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>MOHSIN HOSSEN NIHAD</td>
+                    <td>9</td>
+                    <td>534</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>Taspiya Tabassum Tanha</td>
+                    <td>4</td>
+                    <td>529</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            Generated Result Sheet
+        </div>
+    </div>
+
+</body>
+</html>
