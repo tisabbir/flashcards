@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Nutrition Cheat Sheet</title>
+    <style>
+        :root {
+            --primary-color: #2E7D32; /* Medical Green */
+            --secondary-color: #1565C0; /* Clinical Blue */
+            --accent-color: #E65100; /* Alert Orange */
+            --bg-color: #f4f6f8;
+            --text-color: #333;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            background: var(--white);
+            padding: 50px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        /* Typography */
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 15px;
+            font-size: 2.5em;
+            text-align: center;
+        }
+
+        h2 {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-top: 40px;
+            font-size: 1.8em;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        h4 {
+            color: #555;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        /* Navigation / TOC */
+        .toc {
+            background-color: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            border: 1px solid #c8e6c9;
+        }
+        .toc h3 { margin-top: 0; border: none; color: var(--primary-color); }
+        .toc ul { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
+        .toc a { text-decoration: none; color: var(--secondary-color); font-weight: 600; }
+        .toc a:hover { text-decoration: underline; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Lists */
+        ul, ol {
+            padding-left: 25px;
+            margin-bottom: 15px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* Special Boxes */
+        .clinical-takeaway {
+            background-color: #fff3e0;
+            border-left: 5px solid var(--accent-color);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .clinical-takeaway strong {
+            display: block;
+            color: var(--accent-color);
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .pyramid-box {
+            border: 2px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .img-tag {
+            background-color: #e3f2fd;
+            color: #0d47a1;
+            padding: 5px 10px;
+            font-family: monospace;
+            font-size: 0.85em;
+            border: 1px dashed #2196F3;
+            display: inline-block;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 20px; }
+            table { display: block; overflow-x: auto; }
+            .toc ul { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Comprehensive Nutrition Cheat Sheet</h1>
+
+    <div class="toc">
+        <h3>Table of Contents</h3>
+        <ul>
+            <li><a href="#sec1">1.0 Fundamentals of Nutrition</a></li>
+            <li><a href="#sec2">2.0 Assessment Methodologies</a></li>
+            <li><a href="#sec3">3.0 Spectrum of Malnutrition</a></li>
+            <li><a href="#sec4">4.0 Nutrition & Immune System</a></li>
+            <li><a href="#sec5">5.0 Principles of Diet Therapy</a></li>
+            <li><a href="#sec6">6.0 Specific Diseases</a></li>
+            <li><a href="#sec7">7.0 Nutrition Across Life Cycle</a></li>
+            <li><a href="#sec8">8.0 Surveys & Public Health</a></li>
+        </ul>
+    </div>
+
+    <div id="sec1">
+        <h2>1.0 Fundamentals of Nutrition and Health</h2>
+        <p>Nutrition is a critical component of health and development, serving as the foundation for a strong immune system, safe pregnancies, healthy infant development, and longevity. A command of core nutritional concepts is essential for assessing and managing health, as it allows individuals and public health bodies to make informed decisions that can break cycles of poverty and hunger. Adequate nutrition empowers individuals to be more productive, fostering opportunities for both personal and societal advancement.</p>
+
+        <h3>1.1 Defining Key Terms</h3>
+        <p>The following table outlines fundamental terms in the study of nutrition, providing a clear framework for understanding its principles and applications.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th width="20%">Term</th>
+                    <th width="40%">Definition</th>
+                    <th width="40%">Key Concepts</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Nutrition</strong></td>
+                    <td>The process of eating and absorbing the food your body needs for nourishment.</td>
+                    <td>It involves breaking down food into essential chemical substances (nutrients) that the body requires to function.</td>
+                </tr>
+                <tr>
+                    <td><strong>Applied Nutrition</strong></td>
+                    <td>The application of nutritional knowledge to promote health and prevent disease.</td>
+                    <td>This field bridges the gap between the science of nutrition and the practical aspects of eating and living a healthy lifestyle.</td>
+                </tr>
+                <tr>
+                    <td><strong>Malnutrition</strong></td>
+                    <td>A condition of deficiencies, excesses, or imbalances in a person's intake of energy and/or nutrients.</td>
+                    <td>It encompasses both undernutrition and overnutrition, leading to a wide range of health issues.</td>
+                </tr>
+                <tr>
+                    <td><strong>Overnutrition</strong></td>
+                    <td>A form of malnutrition characterized by an excessive intake of nutrients.</td>
+                    <td>This leads to an accumulation of body fat and can cause serious diet-related chronic diseases like type 2 diabetes and cardiovascular disease.</td>
+                </tr>
+                <tr>
+                    <td><strong>Undernutrition</strong></td>
+                    <td>A form of malnutrition resulting from insufficient intake of energy and nutrients.</td>
+                    <td>Manifests as wasting (low weight-for-height), stunting (low height-for-age), underweight, and micronutrient deficiencies.</td>
+                </tr>
+                <tr>
+                    <td><strong>Nutritional Status</strong></td>
+                    <td>The current condition of a person's body as a result of their state of nourishment.</td>
+                    <td>It indicates whether an individual is well-nourished, undernourished, or overnourished based on the consumption and utilization of nutrients.</td>
+                </tr>
+                <tr>
+                    <td><strong>Nutrients</strong></td>
+                    <td>Chemical substances required by the body to sustain basic functions.</td>
+                    <td>
+                        <strong>Macronutrients:</strong> Carbohydrates, lipids (fats), and proteins.<br>
+                        <strong>Micronutrients:</strong> Vitamins, minerals, and water.*
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p><em>*Note: While water is essential, it is clinically classified as its own nutrient category. It is listed here per the source's classification.</em></p>
+
+        <h3>1.2 Determinants of Nutritional Status</h3>
+        <p>An individual's nutritional status is determined by a complex interplay of internal and external factors that influence both nutrient needs and access to food.</p>
+
+        <h4>1.2.1 Internal (Constitutional) Factors</h4>
+        <ul>
+            <li><strong>Age:</strong> Children and adolescents have higher nutrient needs to support growth and development.</li>
+            <li><strong>Sex:</strong> Nutritional requirements differ between males and females due to physiological and hormonal variations.</li>
+            <li><strong>Nutrition Behavior:</strong> Individual eating habits, food choices, and dietary patterns directly impact nutrient intake.</li>
+            <li><strong>Physical Activity:</strong> Active individuals require more energy and certain nutrients to fuel their activities and repair tissues.</li>
+            <li><strong>Diseases:</strong> Illness can significantly alter nutritional status by reducing nutrient absorption or increasing the body's needs.</li>
+        </ul>
+
+        <h4>1.2.2 External (Environmental) Factors</h4>
+        <ul>
+            <li><strong>Food Safety:</strong> The availability of safe, uncontaminated food is essential to prevent foodborne illnesses that can impair nutrient absorption.</li>
+            <li><strong>Cultural Factors:</strong> Traditions, food taboos, and culturally ingrained dietary preferences can shape food choices and practices.</li>
+            <li><strong>Social and Economic Circumstances:</strong> Factors like poverty, education level, and access to healthcare services directly influence the quality and quantity of food a household can afford and access.</li>
+        </ul>
+
+        <h4>1.2.3 The Pathway to Nutritional Outcomes</h4>
+        <p>Nutritional status is the end result of a multi-step process where internal and external factors interact at each stage.</p>
+        <ol>
+            <li><strong>Food Availability and Household Income:</strong> The process begins with the availability and price of food in the market (external factor), which, combined with household income (internal/external factor), determines a family's ability to acquire food.</li>
+            <li><strong>Household Food Acquisition and Allocation:</strong> Once food is acquired, its distribution among family members is influenced by cultural practices, income levels, and a woman's workload and decision-making power.</li>
+            <li><strong>Individual Food Intake:</strong> Each person's dietary intake is the result of household allocation. This intake can be adequate, leading to good health, or deficient, leading to malnutrition.</li>
+            <li><strong>Utilization of Nutrients:</strong> Consuming food is not enough; the body must be able to absorb and use the nutrients effectively. This is influenced by health status (e.g., diarrhea reduces absorption), sanitary conditions, and child care practices.</li>
+            <li><strong>Physiological Outcomes:</strong> Proper nutrient utilization directly affects growth, energy levels for activity, and disease resistance, ultimately impacting morbidity and mortality rates.</li>
+            <li><strong>General Well-being:</strong> The culmination of these steps determines an individual's overall nutritional status and general well-being.</li>
+        </ol>
+        <p>The key message is that nutritional status is the result of a chain of influence from <strong>income → food acquisition → intake → utilization</strong>, shaped by both internal and external factors.</p>
+
+        <h3>1.3 The Food Pyramid</h3>
+        <div class="img-tag">
+
+[Image of the food pyramid nutritional guide]
+</div>
+        <p>The food pyramid is a visual guide designed to promote balanced eating habits by illustrating the relative quantities of different food groups that should be consumed daily. It is structured to emphasize a plant-based, low-fat approach for optimal health.</p>
+        <div class="pyramid-box">
+            <ul>
+                <li><strong>Base Layer:</strong> This largest section includes foods that should be consumed most frequently, such as grains (bread, rice, pasta).</li>
+                <li><strong>Middle Layers:</strong> These feature fruits and vegetables, which should be eaten in moderate amounts.</li>
+                <li><strong>Top Layer:</strong> This smallest section contains foods like fats, oils, and sweets, which should be consumed sparingly.</li>
+            </ul>
+        </div>
+        <p>The food pyramid is a valuable tool for promoting balanced eating, understanding appropriate portion sizes, and helping individuals make informed food choices to achieve a healthy lifestyle. Understanding these fundamentals provides the necessary context for the various methodologies used to assess nutritional status.</p>
+    </div>
+
+    <div id="sec2">
+        <h2>2.0 Nutritional Assessment Methodologies</h2>
+        <p>Nutritional assessment is the systematic process of evaluating an individual's or a population's health as influenced by their intake and utilization of nutrients. The "ABCD" methods (Anthropometric, Biochemical, Clinical, and Dietary/Social) are not standalone tools but are used in concert to build a holistic picture of nutritional status. This evaluation is strategically important for identifying all forms of malnutrition, guiding targeted interventions, and monitoring health outcomes over time.</p>
+
+        <h3>2.1 Anthropometric Assessment</h3>
+        <p>Anthropometric assessment involves the measurement of the human body's physical dimensions, such as height, weight, and body composition, to evaluate nutritional status.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Measurement</th>
+                    <th>Formula/Description</th>
+                    <th>Indication</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Body Mass Index (BMI)</strong></td>
+                    <td>Weight (kg) / Height (m)²</td>
+                    <td>Assesses body fat content and classifies weight status in adults: <br> • < 18.5: Underweight <br> • 18.5 – 24.9: Normal Range <br> • 25.0 – 29.9: Overweight <br> • 30.0 – 40.0: Obesity Grade I & II <br> • > 40.0: Obesity Grade III</td>
+                </tr>
+                <tr>
+                    <td><strong>Waist Circumference</strong></td>
+                    <td>Measurement of the waist at the narrowest point.</td>
+                    <td>Indicates central obesity and metabolic syndrome risk. <br> • High Risk (Men): > 102 cm (> 40 inches) <br> • High Risk (Women): > 88 cm (> 35 inches)</td>
+                </tr>
+                <tr>
+                    <td><strong>Arm Circumference (MUAC)</strong></td>
+                    <td>Measurement of the mid-upper arm circumference.</td>
+                    <td>An important indicator of acute malnutrition (wasting), especially in children and emergency settings.</td>
+                </tr>
+                <tr>
+                    <td><strong>Weight for Age</strong></td>
+                    <td>A child's weight compared to a reference median for their age.</td>
+                    <td>Classifies degrees of malnutrition in children: <br> • 1st Degree: 75–90% of reference <br> • 2nd Degree: 60–75% of reference <br> • 3rd Degree: < 60% of reference</td>
+                </tr>
+                <tr>
+                    <td><strong>Body Fat (Skinfold Calipers)</strong></td>
+                    <td>Measurement of subcutaneous fat at various body sites using calipers.</td>
+                    <td>Assesses energy reserves in the form of body fat. <br> <div class="img-tag"></div></td>
+                </tr>
+                <tr>
+                    <td><strong>Ponderal Index</strong></td>
+                    <td>Weight (g) x 100 / Height (cm)³</td>
+                    <td>An alternative to BMI, primarily used for infants. In adults, an index less than 13 indicates obesity.</td>
+                </tr>
+                <tr>
+                    <td><strong>Broka's Index</strong></td>
+                    <td>Height (cm) – 100 = Ideal Weight (kg)</td>
+                    <td>A simple formula to estimate ideal body weight.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>2.2 Clinical Examination</h3>
+        <p>A clinical examination is a physical inspection used to detect visible signs of nutritional deficiencies or excesses. While it often reveals issues in later stages, it is a quick and non-invasive method that can guide further assessment.</p>
+
+        <h4>2.2.1 Steps in Clinical Examination</h4>
+        <ol>
+            <li><strong>General Observation:</strong> Evaluate the patient's overall appearance, including posture, alertness, and signs of lethargy, pallor, or edema.</li>
+            <li><strong>Head-to-Toe Examination:</strong> Conduct a systematic assessment of the hair, face, eyes, mouth, gums, skin, and nails for specific signs of deficiency.</li>
+            <li><strong>Muscle & Fat Evaluation:</strong> Examine for muscle wasting (e.g., temples, shoulders) and evaluate subcutaneous fat stores (e.g., triceps) to assess protein and energy reserves.</li>
+            <li><strong>Specialized Examination:</strong> Perform focused checks of the oral cavity, eyes (conjunctiva), neck (thyroid), and abdomen (hepatomegaly).</li>
+            <li><strong>Documentation & Interpretation:</strong> Systematically record all findings and correlate them with dietary, anthropometric, and biochemical data to plan an intervention.</li>
+        </ol>
+
+        <h4>2.2.2 Clinical Signs of Nutritional Deficiencies</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Body Area</th>
+                    <th>Clinical Signs</th>
+                    <th>Indicated Deficiency</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Hair</strong></td>
+                    <td>Sparse, thin, easily pluckable, loss of pigmentation, "flag sign"</td>
+                    <td>Protein-Energy Malnutrition (PEM), Zinc</td>
+                </tr>
+                <tr>
+                    <td><strong>Eyes</strong></td>
+                    <td>Bitot’s spots (triangular, foamy patches on conjunctiva) <br> <div class="img-tag">
+
+[Image of Bitot's spots in eye]
+</div> <br> Xerosis conjunctivae, Pale conjunctiva</td>
+                    <td>Vitamin A, Iron</td>
+                </tr>
+                <tr>
+                    <td><strong>Mouth/Gums</strong></td>
+                    <td>Angular stomatitis (cracks at corners of the mouth), Cheilosis</td>
+                    <td>Riboflavin, Niacin, Iron</td>
+                </tr>
+                <tr>
+                    <td><strong>Skin</strong></td>
+                    <td>Dry, rough, scaly (phrynoderma)</td>
+                    <td>Vitamin A, Essential Fatty Acids</td>
+                </tr>
+                <tr>
+                    <td><strong>Nails</strong></td>
+                    <td>Koilonychia (spoon-shaped nails) <br> <div class="img-tag">
+
+[Image of Koilonychia spoon nails]
+</div></td>
+                    <td>Iron</td>
+                </tr>
+                <tr>
+                    <td><strong>Muscles/Fat</strong></td>
+                    <td>Wasting (severe loss of muscle and fat) <br> Edema (pitting swelling)</td>
+                    <td>PEM (Marasmus) <br> PEM (Kwashiorkor)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>2.2.3 Clinical Signs of Overnutrition & Toxicities</h4>
+        <ul>
+            <li><strong>Obesity:</strong> Characterized by excessive subcutaneous fat. Central obesity is a key indicator of metabolic syndrome.</li>
+            <li><strong>Edema:</strong> Pitting swelling, often associated with excessive sodium intake or severe protein deficiency.</li>
+            <li><strong>Hypertension:</strong> Elevated blood pressure (≥140/90 mmHg), often linked to high sodium, low potassium, and obesity.</li>
+            <li><strong>Hypervitaminosis:</strong>
+                <ul>
+                    <li><em>Vitamin A Toxicity:</em> Headache, dry skin, hepatomegaly.</li>
+                    <li><em>Vitamin D Toxicity:</em> Hypercalcemia, nausea.</li>
+                </ul>
+            </li>
+            <li><strong>Carotenemia:</strong> Yellowish skin (palms/soles) from excess β-carotene. Distinguishable from jaundice as sclera remains white.</li>
+        </ul>
+
+        <div class="clinical-takeaway">
+            <strong>Clinical Takeaway</strong>
+            A clinical exam is a rapid, non-invasive starting point, but its signs are often late and non-specific. Never rely on it in isolation. Use clinical findings to guide targeted biochemical and dietary assessments for a definitive diagnosis.
+        </div>
+
+        <h3>2.3 Biochemical Assessment</h3>
+        <p>Biochemical assessment involves measuring nutrient levels, their metabolites, or specific biomarkers in biological samples. This method is crucial for detecting subclinical deficiencies before physical signs appear, confirming diagnoses, and monitoring the effectiveness of nutritional interventions.</p>
+
+        <h4>2.3.2 Common Biochemical Tests</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nutrient</th>
+                    <th>Common Test & Significance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Protein</strong></td>
+                    <td><strong>Serum Albumin:</strong> Reflects long-term status. <strong>Prealbumin:</strong> Sensitive marker for recent changes.</td>
+                </tr>
+                <tr>
+                    <td><strong>Carbohydrates</strong></td>
+                    <td><strong>Fasting Blood Glucose:</strong> Detects hyperglycemia/hypoglycemia. <strong>HbA1c:</strong> Avg. glucose over 2–3 months.</td>
+                </tr>
+                <tr>
+                    <td><strong>Lipids</strong></td>
+                    <td><strong>Total Cholesterol, LDL, HDL:</strong> Key indicators for heart health.</td>
+                </tr>
+                <tr>
+                    <td><strong>Vitamin A</strong></td>
+                    <td><strong>Serum retinol:</strong> Reflects liver stores.</td>
+                </tr>
+                <tr>
+                    <td><strong>Vitamin D</strong></td>
+                    <td><strong>Serum 25(OH)D:</strong> The gold standard for assessing vitamin D status.</td>
+                </tr>
+                <tr>
+                    <td><strong>Iron</strong></td>
+                    <td><strong>Serum ferritin, serum iron, TIBC:</strong> Used together to detect iron deficiency or overload.</td>
+                </tr>
+                <tr>
+                    <td><strong>Iodine</strong></td>
+                    <td><strong>Urinary iodine excretion:</strong> Monitors iodine intake and risk of goiter.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>2.4 & 2.5 Dietary and Social Assessment</h3>
+        <p>Dietary assessment evaluates food/fluid intake via 24-hour recalls or food frequency questionnaires. A comprehensive assessment must also consider:</p>
+        <ul>
+            <li><strong>Demographics:</strong> Family size, age.</li>
+            <li><strong>Environment:</strong> Geography (e.g., hilly regions at risk for iodine deficiency).</li>
+            <li><strong>Social Factors:</strong> Income, purchasing power, food taboos, and cultural habits.</li>
+        </ul>
+    </div>
+
+    <div id="sec3">
+        <h2>3.0 The Spectrum of Malnutrition</h2>
+        <p>Malnutrition exists on a spectrum from undernutrition to overnutrition. Today, the world faces a dual burden where both conditions often coexist within the same communities.</p>
+
+        <h3>3.1 Protein-Energy Malnutrition (PEM)</h3>
+        <p>PEM is a serious condition resulting from insufficient protein, calories, and micronutrients.</p>
+        <div class="img-tag"></div>
+        <ul>
+            <li><strong>Marasmus:</strong> Severe calorie, protein, and fat deficiency leading to extreme wasting ("skin and bones").</li>
+            <li><strong>Kwashiorkor:</strong> Primarily protein deficiency resulting in edema (swelling), hair/skin changes, and fatty liver.</li>
+            <li><strong>Marasmic Kwashiorkor:</strong> Combined form with features of both.</li>
+        </ul>
+
+        <h3>3.3 The Malnutrition-Poverty Cycle</h3>
+        <p><strong>Poverty <---> Malnutrition</strong></p>
+        <p>Low income limits access to nutritious food and healthcare, leading to malnutrition. Malnutrition impairs physical and cognitive development, reducing earning potential and trapping individuals in poverty.</p>
+        
+        <div class="clinical-takeaway">
+            <strong>Clinical Takeaway</strong>
+            The malnutrition-poverty cycle is bidirectional and intergenerational. Public health interventions must address both sides simultaneously—improving nutritional status to boost economic potential and implementing social safety nets.
+        </div>
+
+        <h3>3.4 Malnutrition and Psychosocial Development</h3>
+        <p>The first 1,000 days are critical. PEM can cause reduced brain size, delayed myelination, and reduced neurotransmitter synthesis. This leads to irritability, poor memory, short attention span, and difficulty forming social bonds.</p>
+    </div>
+
+    <div id="sec4">
+        <h2>4.0 Nutrition and the Immune System</h2>
+        <p>Both undernutrition and overnutrition can compromise immune defenses. The immune system requires a constant supply of nutrients to function.</p>
+
+        <h3>4.1 Essential Nutrients for Immunity</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nutrient</th>
+                    <th>Role in Immune Function</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Proteins</strong></td>
+                    <td>Building blocks for antibodies, cytokines, and complement proteins.</td>
+                </tr>
+                <tr>
+                    <td><strong>Vitamin A</strong></td>
+                    <td>Maintains integrity of mucosal barriers (gut, respiratory).</td>
+                </tr>
+                <tr>
+                    <td><strong>Vitamin C</strong></td>
+                    <td>Potent antioxidant; enhances killing capacity of neutrophils.</td>
+                </tr>
+                <tr>
+                    <td><strong>Vitamin D</strong></td>
+                    <td>Regulates antimicrobial peptides and T-cell differentiation.</td>
+                </tr>
+                <tr>
+                    <td><strong>Zinc</strong></td>
+                    <td>Key for thymus function and T-cell maturation.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>4.3 Immunodeficiency Disorders</h3>
+        <ul>
+            <li><strong>HIV/AIDS:</strong> Increases nutrient needs. Diet: High energy (10-30% higher) and protein (1.2–2.0 g/kg/day).</li>
+            <li><strong>Tuberculosis (TB):</strong> Causes severe wasting. Diet: High energy/protein. Supplement Vitamin B6 if taking isoniazid.</li>
+            <li><strong>Measles:</strong> Worsened by Vitamin A deficiency. Diet: High-dose Vitamin A supplementation is life-saving.</li>
+            <li><strong>Diarrhea:</strong> Causes dehydration and zinc loss. Diet: Oral Rehydration Therapy (ORS) and Zinc supplementation.</li>
+        </ul>
+    </div>
+
+    <div id="sec5">
+        <h2>5.0 Principles of Diet Therapy</h2>
+        <p>Diet therapy modifies a regular diet to meet medical needs. Key principles include basing it on a normal diet, ensuring nutritional adequacy, and considering patient preferences and economics.</p>
+
+        <h3>5.3 Types of Therapeutic Diets</h3>
+        <ul>
+            <li><strong>Clear-Liquid Diet:</strong> Transparent liquids (broth, tea) for short-term hydration. Nutritionally incomplete.</li>
+            <li><strong>Full-Liquid Diet:</strong> All liquids (milk, soup, custard). Can be nutritionally adequate with planning.</li>
+            <li><strong>Soft Diets:</strong> Transition diets. <em>Mechanical Soft</em> (chopped/ground) for chewing issues; <em>Pureed</em> for swallowing difficulty.</li>
+        </ul>
+
+        <h3>5.4 Methods of Feeding</h3>
+        <ul>
+            <li><strong>Oral Feeding:</strong> Preferred whenever GI tract is functional.</li>
+            <li><strong>Tube Feeding (Enteral):</strong> Liquid formula via tube into GI tract. Used when patient cannot swallow but GI tract works.</li>
+            <li><strong>Parenteral Nutrition (IV):</strong> Nutrients directly into bloodstream. <strong>TPN (Total Parenteral Nutrition)</strong> is used when GI tract is non-functional.</li>
+        </ul>
+    </div>
+
+    <div id="sec6">
+        <h2>6.0 Dietary Management of Specific Diseases</h2>
+        
+        <h3>6.1 Diabetes Mellitus</h3>
+        <p><strong>Goal:</strong> Control blood glucose and weight.</p>
+        <ul>
+            <li><strong>Carbs (50-60%):</strong> Complex carbs (whole grains, legumes). Avoid refined sugar.</li>
+            <li><strong>Protein (15-20%):</strong> Lean sources.</li>
+            <li><strong>Fats (20-30%):</strong> Unsaturated fats (olive oil, nuts).</li>
+            <li><strong>Sodium:</strong> < 2,300 mg/day.</li>
+        </ul>
+
+        <h3>6.3 Atherosclerosis</h3>
+        <p><strong>Goal:</strong> Lower cholesterol and prevent heart events.</p>
+        <ul>
+            <li><strong>Eat:</strong> Oats, brown rice, fatty fish (salmon), nuts, olive oil, fruits/veg.</li>
+            <li><strong>Avoid:</strong> Red meat, butter, cream, palm oil, processed meats.</li>
+            <li><strong>Cholesterol Limit:</strong> < 300 mg/day.</li>
+        </ul>
+
+        <h3>6.5 Gastrointestinal Ailments</h3>
+        <ul>
+            <li><strong>Constipation:</strong> Increase fluid (5-6 glasses) and fiber (whole grains, fruits). Exercise.</li>
+            <li><strong>Diarrhea:</strong> Rehydration (ORS) and Low Residue Diet (soft dal, refined bread, banana). Avoid milk and fiber.</li>
+        </ul>
+    </div>
+
+    <div id="sec7">
+        <h2>7.0 Nutrition Across the Life Cycle</h2>
+        
+        <h3>7.1 Fertility, Pregnancy, and Lactation</h3>
+        <div class="img-tag">
+
+[Image of nutritional requirements during pregnancy chart]
+</div>
+        <ul>
+            <li><strong>Pregnancy:</strong> Weight gain 25-35 lbs. +300 kcal/day in 2nd/3rd trimesters. Needs: Iron, Folic Acid.</li>
+            <li><strong>Lactation:</strong> +500 kcal/day for milk production.</li>
+        </ul>
+
+        <h3>7.2 Infancy (Birth to 12 months)</h3>
+        <ul>
+            <li><strong>0-6 Months:</strong> Breastmilk/Formula only.</li>
+            <li><strong>4-6 Months:</strong> Introduce iron-fortified cereals, pureed veg/fruit.</li>
+            <li><strong>6-9 Months:</strong> Finger foods (toast, crackers).</li>
+            <li><strong>9-12 Months:</strong> Chopped table foods.</li>
+        </ul>
+
+        <h3>7.4 Elderly Stage</h3>
+        <p>Energy needs decrease, but nutrient density must increase. <strong>Vitamin D</strong> needs rise to prevent fractures. Watch for dehydration and drug-nutrient interactions.</p>
+    </div>
+
+    <div id="sec8">
+        <h2>8.0 Nutritional Surveys and Public Health</h2>
+        <p>Surveys assess population status to inform policy and monitor interventions.</p>
+
+        <h3>8.2 Data Collection and Sampling</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Sampling Method</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Simple Random</strong></td>
+                    <td>Every individual has an equal chance of selection (e.g., random number generator).</td>
+                </tr>
+                <tr>
+                    <td><strong>Systematic</strong></td>
+                    <td>Selection at a fixed interval from a list (e.g., every 15th person).</td>
+                </tr>
+                <tr>
+                    <td><strong>Stratified</strong></td>
+                    <td>Population divided into subgroups (strata); random samples taken from each.</td>
+                </tr>
+                <tr>
+                    <td><strong>Clustered</strong></td>
+                    <td>Population divided into clusters (e.g., schools); random clusters selected and surveyed fully.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>8.3 Objectives of Surveillance</h3>
+        <ol>
+            <li>Describe nutritional status and identify at-risk groups.</li>
+            <li>Analyze causes of malnutrition.</li>
+            <li>Promote government resource allocation.</li>
+            <li>Predict future trends.</li>
+            <li>Monitor and evaluate program effectiveness.</li>
+        </ol>
+    </div>
+
+</div>
+
+</body>
+</html>
